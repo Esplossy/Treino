@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<link rel="manifest" href="/Treino/manifest.json">
+<meta name="theme-color" content="#111111">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0a0a0a">
@@ -2803,6 +2805,13 @@ document.getElementById('btn-add-livre').addEventListener('click', addExercicioL
 document.getElementById('btn-save').addEventListener('click', salvarTreino);
 document.getElementById('btn-relatorio').addEventListener('click', gerarRelatorio);
 init();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/Treino/service-worker.js')
+    .then(() => console.log("Service Worker registrado"))
+    .catch(err => console.log("Erro:", err));
+}
 </script>
 </body>
 </html>
