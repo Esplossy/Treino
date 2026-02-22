@@ -37,12 +37,7 @@ select option{background:var(--bg2)}
 .btn-ghost{background:transparent;color:var(--red);border:1px solid var(--red);padding:7px 10px;font-size:11px;width:auto;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;text-transform:uppercase}
 .btn-add{background:transparent;border:1px dashed var(--accent);color:var(--accent);padding:12px;border-radius:var(--r);width:100%;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;margin-top:10px}
 .ex-card{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:14px;margin-bottom:10px}
-.ex-card .top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:8px}
-.ex-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#333;line-height:1;min-width:36px}
-.last-hint{background:var(--bg3);border-left:2px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:8px 10px;margin-bottom:12px;font-size:12px;color:var(--muted);display:none;line-height:1.6}
-.ac-wrap{position:relative;flex:1}
-.ac-list{position:absolute;left:0;right:0;background:var(--bg3);border:1px solid var(--accent);border-top:none;border-radius:0 0 var(--r) var(--r);z-index:999;max-height:180px;overflow-y:auto;display:none}
-.ac-item{padding:10px 12px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);color:var(--text)}
+.ex-card .ex-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#333;line-height:1;min-width:36px}
 .ac-item:last-child{border-bottom:none}
 .ac-item:active{color:var(--accent);background:var(--bg2)}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
@@ -72,13 +67,9 @@ select option{background:var(--bg2)}
 .empty{text-align:center;padding:40px 20px;color:var(--muted)}
 .row-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .warn-box{background:rgba(255,78,78,.1);border:1px solid var(--red);border-radius:var(--r);padding:12px 14px;color:var(--red);font-size:13px;margin-bottom:10px;line-height:1.5}
-.ok-box{background:rgba(212,255,78,.1);border:1px solid var(--accent);border-radius:var(--r);padding:12px 14px;color:var(--accent);font-size:13px;margin-bottom:10px;line-height:1.5}
-.info-box{background:rgba(78,159,255,.1);border:1px solid var(--blue);border-radius:var(--r);padding:12px 14px;color:var(--blue);font-size:13px;margin-bottom:10px;line-height:1.5}
 .badge{display:inline-block;padding:2px 7px;border-radius:2px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
 .badge-green{background:rgba(212,255,78,.2);color:var(--accent)}
 .badge-red{background:rgba(255,78,78,.2);color:var(--red)}
-.badge-blue{background:rgba(78,159,255,.2);color:var(--blue)}
-.badge-gray{background:var(--bg3);color:var(--muted)}
 .prog-row{margin-bottom:12px}
 .prog-row-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
 .reps-input{font-size:16px;font-weight:700;letter-spacing:1px}
@@ -136,56 +127,286 @@ select option{background:var(--bg2)}
 
   <!-- TREINAR -->
   <div id="s-treinar" class="screen active">
-    <div class="row-between">
-      <div><div class="page-title">TREINAR</div><div class="subtext" id="data-hoje"></div></div>
-      <button class="btn btn-primary" id="btn-save" style="width:auto;padding:10px 20px">SALVAR</button>
-    </div>
-    <div class="card">
-      <span class="sec-label">Sessão</span>
-      <div class="g2" style="margin-bottom:10px">
-        <div class="ig" style="margin:0"><label>Data</label><input type="date" id="s-data"></div>
-        <div class="ig" style="margin:0"><label>Treino</label>
-          <select id="s-treino">
-            <option value="">Selecione</option>
-            <option value="A">A — Segunda (Ombro+Peito)</option>
-            <option value="B">B — Terça (Costas+Bíceps)</option>
-            <option value="C">C — Quarta (Pernas+Core)</option>
-            <option value="D">D — Quinta (Ombro+Tríceps)</option>
-            <option value="E">E — Sexta (Costas Upper)</option>
-          </select>
-        </div>
+
+    <!-- Header dia -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+      <div>
+        <div class="page-title" style="line-height:1">TREINAR</div>
+        <div class="subtext" id="data-hoje" style="margin-top:2px"></div>
       </div>
-      <div class="g2">
-        <div class="ig" style="margin:0">
-          <label>Dormiu às 😴</label>
-          <select id="s-sono">
-            <option value="">—</option>
-            <option value="21:00">21:00 → 7h40</option>
-            <option value="21:30">21:30 → 7h10</option>
-            <option value="22:00">22:00 → 6h40</option>
-            <option value="22:30">22:30 → 6h10</option>
-            <option value="23:00">23:00 → 5h40</option>
-            <option value="23:30">23:30 → 5h10</option>
-            <option value="00:00">00:00 → 4h40</option>
-            <option value="00:30">00:30 → 4h10</option>
-          </select>
-        </div>
-        <div class="ig" style="margin:0"><label>Duração (min)</label><input type="number" id="s-duracao" placeholder="Ex: 60"></div>
+      <button class="btn btn-primary" id="btn-save" style="width:auto;padding:10px 20px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px">SALVAR</button>
+    </div>
+
+    <!-- Seletor de dia — visual compacto -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px">
+      <button class="dia-btn" data-letra="A" onclick="selecionarDia('A')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
+        A<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Seg</div>
+      </button>
+      <button class="dia-btn" data-letra="B" onclick="selecionarDia('B')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
+        B<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Ter</div>
+      </button>
+      <button class="dia-btn" data-letra="C" onclick="selecionarDia('C')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
+        C<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Qua</div>
+      </button>
+      <button class="dia-btn" data-letra="D" onclick="selecionarDia('D')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
+        D<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Qui</div>
+      </button>
+      <button class="dia-btn" data-letra="E" onclick="selecionarDia('E')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
+        E<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Sex</div>
+      </button>
+    </div>
+
+    <!-- Nome do treino selecionado -->
+    <div id="treino-nome-label" style="display:none;margin-bottom:10px;padding:10px 14px;background:var(--bg2);border-radius:var(--r);border-left:3px solid var(--accent)">
+      <div id="treino-nome-txt" style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px"></div>
+      <div id="treino-obs-txt" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
+    </div>
+
+    <!-- BRIEFING DO TREINADOR — aparece ao selecionar o dia -->
+    <div id="coach-briefing" style="display:none;margin-bottom:12px"></div>
+
+    <!-- Campos da sessão (sono + duração) -->
+    <div class="g2" style="margin-bottom:12px">
+      <div class="ig" style="margin:0">
+        <label>Dormiu às 😴</label>
+        <select id="s-sono">
+          <option value="">—</option>
+          <option value="21:00">21:00 → 7h40</option>
+          <option value="21:30">21:30 → 7h10</option>
+          <option value="22:00">22:00 → 6h40</option>
+          <option value="22:30">22:30 → 6h10</option>
+          <option value="23:00">23:00 → 5h40</option>
+          <option value="23:30">23:30 → 5h10</option>
+          <option value="00:00">00:00 → 4h40</option>
+          <option value="00:30">00:30 → 4h10</option>
+        </select>
+      </div>
+      <div class="ig" style="margin:0">
+        <label>Data</label>
+        <input type="date" id="s-data">
       </div>
     </div>
+
+    <!-- Input hidden para compatibilidade com salvarTreino -->
+    <input type="hidden" id="s-treino" value="">
+    <input type="hidden" id="s-duracao" value="">
+
+    <!-- Lista de exercícios do dia -->
     <div id="ex-list"></div>
-    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px">
-      <button class="btn-add" id="btn-add" style="margin:0">+ ADICIONAR DO TREINO</button>
-      <button id="btn-add-livre" style="background:transparent;border:1px dashed var(--blue);color:var(--blue);padding:12px 16px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;white-space:nowrap">+ LIVRE</button>
+
+    <!-- Estado vazio -->
+    <div id="treino-vazio" style="text-align:center;padding:40px 20px;color:var(--muted)">
+      <div style="font-size:32px;margin-bottom:8px">👆</div>
+      <div style="font-size:13px">Selecione o treino do dia acima</div>
     </div>
-    <button class="btn btn-primary" id="btn-iniciar" style="margin-top:12px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;padding:16px">▶ INICIAR TREINO</button>
+
+    <!-- Botões de ação -->
+    <div id="treino-acoes" style="display:none">
+      <button id="btn-add-livre" style="width:100%;background:transparent;border:1px dashed var(--border);color:var(--muted);padding:10px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px">+ ADICIONAR EXERCÍCIO EXTRA</button>
+    </div>
+
+  </div>
+
+  <!-- PROGRAMA -->
+  <div id="s-programa" class="screen">
+    <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+      <div>
+        <div class="page-title">V-SHAPE</div>
+        <div class="subtext">Diogo · 25 anos · 1,60m · Dez 2025 → Dez 2026</div>
+      </div>
+    </div>
+
+    <!-- Meta -->
+    <div style="background:linear-gradient(135deg,#111 0%,#1a1a1a 100%);border:1px solid var(--accent);border-radius:var(--r);padding:16px;margin:12px 0">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:6px">🏆 Meta Final</div>
+      <div style="font-size:14px;color:var(--text);line-height:1.6">V-shape CLARO — ombros largos, cintura fina, dorsal em V.<br><span style="color:var(--muted);font-size:12px">Shape Atlético de Elite · Frequência 5x/semana</span></div>
+    </div>
+
+    <!-- Aquecimento -->
+    <div class="card">
+      <span class="sec-label">Aquecimento Obrigatório</span>
+      <div style="font-size:13px;color:var(--text);line-height:1.8">
+        ⏱ <strong>8–12 min</strong> de mobilidade + cardio leve antes de cada sessão<br>
+        <span style="color:var(--muted);font-size:12px">Mobilidade escapular, rotação de ombros, hip flexor stretch</span>
+      </div>
+    </div>
+
+    <!-- Volume alvo -->
+    <div class="card">
+      <span class="sec-label">📊 Volume Semanal Alvo — Prioridades V-Shape</span>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Baseado em evidências — músculos-chave para o V-shape</div>
+
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-weight:600;font-size:13px">Latíssimo (largura costas)</span>
+          <span style="font-size:10px;color:var(--muted)">2x/sem</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:6px">
+          <span style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--muted)">Mín: 10 sets</span>
+          <span style="background:#4e9fff22;border:1px solid var(--blue);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--blue)">Ideal: 14–18 sets</span>
+        </div>
+        <div class="bar-wrap"><div class="bar" style="width:85%;background:var(--blue)"></div></div>
+      </div>
+
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-weight:600;font-size:13px">Deltóide Lateral (largura ombros)</span>
+          <span style="font-size:10px;color:var(--muted)">3x/sem</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:6px">
+          <span style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--muted)">Mín: 8 sets</span>
+          <span style="background:#d4ff4e22;border:1px solid var(--accent);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--accent)">Ideal: 12–15 sets</span>
+        </div>
+        <div class="bar-wrap"><div class="bar" style="width:75%;background:var(--accent)"></div></div>
+      </div>
+
+      <div style="margin-bottom:4px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-weight:600;font-size:13px">Deltóide Posterior (equilíbrio V)</span>
+          <span style="font-size:10px;color:var(--muted)">2x/sem</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:6px">
+          <span style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--muted)">Mín: 4 sets</span>
+          <span style="background:#a78bfa22;border:1px solid #a78bfa;border-radius:4px;padding:3px 8px;font-size:11px;color:#a78bfa">Ideal: 8–10 sets</span>
+        </div>
+        <div class="bar-wrap"><div class="bar" style="width:50%;background:#a78bfa"></div></div>
+      </div>
+    </div>
+
+    <!-- Divisão semanal -->
+    <div class="card">
+      <span class="sec-label">📅 Divisão Semanal</span>
+
+      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start">
+        <div style="background:var(--accent);color:#000;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">A</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:13px">Segunda</div>
+          <div style="font-size:12px;color:var(--accent);margin-top:1px">Ombro (Foco Lateral) + Peito Superior</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Elev. Lateral Sentado 5×12-15 🔥 · Desenv. Militar 4×6-8</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start">
+        <div style="background:var(--blue);color:#000;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">B</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:13px">Terça</div>
+          <div style="font-size:12px;color:var(--blue);margin-top:1px">Costas (Largura) + Bíceps</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Barra Fixa 5×5-8 🔥 · Puxada Wide 4×8-10</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start">
+        <div style="background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">C</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:13px">Quarta</div>
+          <div style="font-size:12px;color:var(--red);margin-top:1px">Pernas + Core</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Stiff 4×6-8 · Agachamento 4×6-8 · Leg Press 3×10-12</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start">
+        <div style="background:var(--accent);color:#000;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">D</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:13px">Quinta</div>
+          <div style="font-size:12px;color:var(--accent);margin-top:1px">Ombro (Força) + Tríceps</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Desenv. em Pé 5×5-6 🔥 · Elev. Lateral Máquina 5×10-12</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;padding:10px 0;align-items:flex-start">
+        <div style="background:var(--blue);color:#000;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">E</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:13px">Sexta</div>
+          <div style="font-size:12px;color:var(--blue);margin-top:1px">Costas (Técnica) + Upper Body</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Puxada Aberta 4×8-10 🔥 · Drop Set Ombros</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regras de progressão -->
+    <div class="card">
+      <span class="sec-label">📈 Regras de Progressão</span>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:3px">Progressão de Carga</div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">Quando completar <strong>todas as séries no topo da faixa</strong> (ex: 3×12), aumente a carga em 2,5–5% ou +1 rep.</div>
+        </div>
+        <div style="background:var(--bg3);border-left:3px solid var(--red);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--red);margin-bottom:3px">Estagnação</div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">Se estagnar por <strong>3–4 semanas</strong>, adicione 1 set a um exercício-chave por semana até atingir o teto de volume.</div>
+        </div>
+        <div style="background:var(--bg3);border-left:3px solid var(--blue);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:3px">Tempo de Repetição</div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">Concêntrico: <strong>1–2s</strong> | Excêntrico (descida): <strong>2–3s</strong><br><span style="color:var(--muted)">O controle na descida gera mais tensão mecânica.</span></div>
+        </div>
+        <div style="background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:3px">RPE Alvo</div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">Treine a <strong>RPE 7–9</strong> (1–3 reps em reserva). Séries máximas demais aumentam fadiga sem benefício proporcional.</div>
+        </div>
+        <div style="background:var(--bg3);border-left:3px solid var(--blue);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:3px">Grip — Exercícios de Costas</div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">Alterne pegada média/pronada (força + segurança) com pegada aberta (variação) entre sessões. A diferença de ativação é pequena, mas a variedade evita estagnação.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ajustes técnicos desta versão -->
+    <div class="card">
+      <span class="sec-label">✏️ Ajustes Técnicos Desta Versão</span>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--text);line-height:1.6">
+          <span style="color:var(--blue);font-weight:700">Terça — Remada:</span> Pegada NEUTRA/FECHADA em vez de aberta — ativa mais latíssimo = mais largura dorsal
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--text);line-height:1.6">
+          <span style="color:var(--blue);font-weight:700">Terça — Face Pull MANTIDO:</span> essencial para saúde escapular e deltóide posterior (proporção do V)
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--text);line-height:1.6">
+          <span style="color:var(--blue);font-weight:700">Sexta — Remada Baixa:</span> Pegada NEUTRA — mesma razão da Terça. Alterne com pegada aberta periodicamente para espessura.
+        </div>
+      </div>
+    </div>
+
+    <!-- Visualização dos treinos expandidos -->
+    <div class="card" id="prog-treinos-detalhe">
+      <span class="sec-label">Exercícios por Dia</span>
+      <div id="prog-ex-tabs" style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px">
+        <button onclick="progShowTreino('A')" class="prog-tab active" data-t="A" style="padding:6px 16px;border-radius:20px;border:1px solid var(--accent);background:var(--accent);color:#000;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">A — Seg</button>
+        <button onclick="progShowTreino('B')" class="prog-tab" data-t="B" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">B — Ter</button>
+        <button onclick="progShowTreino('C')" class="prog-tab" data-t="C" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">C — Qua</button>
+        <button onclick="progShowTreino('D')" class="prog-tab" data-t="D" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">D — Qui</button>
+        <button onclick="progShowTreino('E')" class="prog-tab" data-t="E" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">E — Sex</button>
+      </div>
+      <div id="prog-ex-lista"></div>
+    </div>
   </div>
 
   <!-- STATS -->
   <div id="s-stats" class="screen">
-    <div class="row-between" style="margin-bottom:4px">
+    <div class="row-between" style="margin-bottom:8px">
       <div class="page-title">STATS</div>
       <button class="btn btn-secondary" id="btn-relatorio" style="width:auto;padding:8px 14px;font-size:11px">📋 RELATÓRIO</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button onclick="abrirCoach('dia')" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:left">
+        <div style="font-size:16px;margin-bottom:2px">📊</div>
+        <div>Resumo do Dia</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:1px">Análise da última sessão</div>
+      </button>
+      <button onclick="abrirCoach('semana')" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:left">
+        <div style="font-size:16px;margin-bottom:2px">📅</div>
+        <div>Resumo da Semana</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:1px">Volume, lacunas e alertas</div>
+      </button>
+    </div>
+    <!-- Modal coach -->
+    <div id="coach-modal" style="display:none;position:fixed;inset:0;background:#000c;z-index:500;padding:16px;overflow-y:auto" onclick="if(event.target===this)this.style.display='none'">
+      <div style="background:var(--bg2);border-radius:var(--r);max-width:480px;margin:0 auto;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border)">
+          <div id="coach-modal-title" style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent);letter-spacing:1px"></div>
+          <button onclick="document.getElementById('coach-modal').style.display='none'" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1">✕</button>
+        </div>
+        <div id="coach-modal-body" style="padding:16px"></div>
+      </div>
     </div>
     <div class="subtext" style="margin-bottom:16px" id="stats-mes"></div>
     <div id="stats-content"><div class="loading">Carregando...</div></div>
@@ -367,10 +588,10 @@ select option{background:var(--bg2)}
 
       <!-- FASE: RESUMO FINAL -->
       <div class="mt-fase" id="mt-fase-final">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--accent);margin-bottom:4px">TREINO COMPLETO! 🎯</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--accent);margin-bottom:4px" id="mt-final-titulo">EXERCÍCIO CONCLUÍDO ✓</div>
         <div id="mt-tempo-final" style="font-size:13px;color:var(--muted);margin-bottom:16px"></div>
         <div class="mt-final-scroll" id="mt-final-lista"></div>
-        <button class="mt-btn-salvar" id="mt-btn-salvar-final">💾 SALVAR TREINO</button>
+        <button class="mt-btn-salvar" id="mt-btn-salvar-final">✓ VOLTAR AO TREINO</button>
       </div>
 
     </div>
@@ -389,10 +610,10 @@ select option{background:var(--bg2)}
 
   <nav class="bottom-nav">
     <button class="nav-btn active" data-s="treinar"><span class="ico">🏋️</span>Treinar</button>
+    <button class="nav-btn" data-s="programa"><span class="ico">📋</span>Programa</button>
     <button class="nav-btn" data-s="stats"><span class="ico">📊</span>Stats</button>
     <button class="nav-btn" data-s="peso"><span class="ico">⚖️</span>Peso</button>
     <button class="nav-btn" data-s="historico"><span class="ico">📅</span>Histórico</button>
-    <button class="nav-btn" data-s="config"><span class="ico">⚙️</span>Config</button>
   </nav>
 </div>
 <div class="toast" id="toast"></div>
@@ -403,60 +624,230 @@ select option{background:var(--bg2)}
 // =====================================================
 const TREINOS = {
   A: {
-    nome: "Ombro + Peito",
+    nome: "Ombro (Foco Lateral) + Peito Superior",
+    dia: "Segunda",
+    cor: "#d4ff4e",
     exercicios: [
-      { nome:"Supino Inclinado com Halteres", musculo:"Peito", subs:["Supino Inclinado na Máquina Smith","Supino Inclinado na Máquina Convergente","Supino Inclinado com Barra"] },
-      { nome:"Desenvolvimento Militar", musculo:"Ombro", subs:["Desenvolvimento na Máquina","Desenvolvimento Arnold","Desenvolvimento com Halteres Sentado"] },
-      { nome:"Elevação Lateral Sentado", musculo:"Ombro", subs:["Elevação Lateral em Pé com Halteres","Elevação Lateral na Máquina","Elevação Lateral no Cabo"] },
-      { nome:"Elevação Lateral no Cabo", musculo:"Ombro", subs:["Elevação Lateral com Halteres","Elevação Lateral na Máquina","Remada Alta com Pegada Aberta"] },
-      { nome:"Crucifixo Inclinado", musculo:"Peito", subs:["Crucifixo na Máquina (Peck Deck)","Crucifixo no Cabo","Flexão de Braço com Pés Elevados"] },
-      { nome:"Face Pull", musculo:"Ombro", subs:["Crucifixo Inverso na Máquina","Crucifixo Inverso com Halteres","Remada Alta com Corda"] }
+      {
+        nome:"Supino Inclinado Halteres",
+        musculo:"Peito", series:4, reps:"8-10", descanso:"90s",
+        foco:"Peito Superior",
+        subs:["Supino Inclinado na Máquina Smith","Supino Inclinado na Máquina Convergente","Supino Inclinado com Barra"]
+      },
+      {
+        nome:"Desenvolvimento Militar Halteres",
+        musculo:"Ombro", series:4, reps:"6-8", descanso:"2min",
+        foco:"Força Ombros",
+        subs:["Desenvolvimento na Máquina","Desenvolvimento Arnold","Desenvolvimento com Halteres Sentado"]
+      },
+      {
+        nome:"Elevação Lateral Sentado",
+        musculo:"Ombro", series:5, reps:"12-15", descanso:"60s",
+        foco:"🔥 Largura Ombros — PRIORIDADE",
+        subs:["Elevação Lateral em Pé com Halteres","Elevação Lateral na Máquina","Elevação Lateral no Cabo"]
+      },
+      {
+        nome:"Elevação Lateral a Cabo",
+        musculo:"Ombro", series:3, reps:"12-15", descanso:"45s",
+        foco:"🔥 Largura Ombros",
+        subs:["Elevação Lateral com Halteres","Elevação Lateral na Máquina","Remada Alta com Pegada Aberta"]
+      },
+      {
+        nome:"Crucifixo Inclinado a Cabo",
+        musculo:"Peito", series:3, reps:"10-12", descanso:"60s",
+        foco:"Finalização Peito",
+        subs:["Crucifixo na Máquina (Peck Deck)","Crucifixo no Cabo","Flexão de Braço com Pés Elevados"]
+      },
+      {
+        nome:"Face Pull",
+        musculo:"Ombro", series:3, reps:"15", descanso:"45s",
+        foco:"Saúde do Ombro + Posterior",
+        subs:["Crucifixo Inverso na Máquina","Crucifixo Inverso com Halteres","Remada Alta com Corda"]
+      }
     ]
   },
   B: {
-    nome: "Costas + Bíceps",
+    nome: "Costas (Largura) + Bíceps",
+    dia: "Terça",
+    cor: "#4e9fff",
     exercicios: [
-      { nome:"Barra Fixa / Pull-ups", musculo:"Costas", subs:["Máquina de Graviton","Puxada Frontal Aberta","Puxada com Pegada Supinada (Chin-up)"] },
-      { nome:"Puxada Wide Pronada", musculo:"Costas", subs:["Puxada com Pegada Neutra","Puxada Frontal na Máquina Articulada","Barra Fixa"] },
-      { nome:"Remada Unilateral no Cabo", musculo:"Costas", subs:["Remada Serrote com Halter","Remada Baixa Sentado","Remada na Máquina Articulada"] },
-      { nome:"Pullover com Halter", musculo:"Costas", subs:["Pullover na Máquina","Pulldown com Braços Retos","Pullover no Cabo"] },
-      { nome:"Face Pull Alto", musculo:"Ombro", subs:["Crucifixo Inverso na Máquina","Remada Alta com Corda","Elevação Y com Halteres"] },
-      { nome:"Rosca Direta EZ", musculo:"Bíceps", subs:["Rosca Direta com Barra Reta","Rosca com Halteres em Pé","Rosca na Máquina Scott"] },
-      { nome:"Rosca Alternada Concentrada", musculo:"Bíceps", subs:["Rosca Scott com Halter","Rosca no Cabo Unilateral","Rosca Martelo"] }
+      {
+        nome:"Barra Fixa / Pull-ups",
+        musculo:"Costas", series:5, reps:"5-8", descanso:"2min",
+        foco:"🔥 Largura Dorsal — PRIORIDADE",
+        subs:["Máquina de Graviton","Puxada Frontal Aberta","Puxada com Pegada Supinada (Chin-up)"]
+      },
+      {
+        nome:"Puxada Wide Pronada",
+        musculo:"Costas", series:4, reps:"8-10", descanso:"90s",
+        foco:"🔥 Largura Dorsal",
+        subs:["Puxada com Pegada Neutra","Puxada Frontal na Máquina Articulada","Barra Fixa"]
+      },
+      {
+        nome:"Remada Sentado Pegada NEUTRA ✏️",
+        musculo:"Costas", series:4, reps:"8-10", descanso:"75s",
+        foco:"✏️ Pegada neutra/fechada — ativa mais latíssimo (largura)",
+        subs:["Remada Serrote com Halter","Remada Baixa Sentado","Remada na Máquina Articulada"]
+      },
+      {
+        nome:"Pullover com Halter",
+        musculo:"Costas", series:3, reps:"10-12", descanso:"60s",
+        foco:"Extensão do Lat / Expansão",
+        subs:["Pullover na Máquina","Pulldown com Braços Retos","Pullover no Cabo"]
+      },
+      {
+        nome:"Crucifixo Inverso Halteres",
+        musculo:"Ombro", series:3, reps:"12-15", descanso:"60s",
+        foco:"Ombro Posterior — V-shape completo",
+        subs:["Crucifixo Inverso na Máquina","Remada Alta com Corda","Elevação Y com Halteres"]
+      },
+      {
+        nome:"Face Pull (manter) ✏️",
+        musculo:"Ombro", series:3, reps:"15", descanso:"60s",
+        foco:"✏️ Mantido — saúde escapular e deltóide posterior",
+        subs:["Crucifixo Inverso na Máquina","Crucifixo Inverso com Halteres","Remada Alta com Corda"]
+      },
+      {
+        nome:"Rosca Direta Barra EZ",
+        musculo:"Bíceps", series:3, reps:"8-10", descanso:"75s",
+        foco:"Bíceps",
+        subs:["Rosca Direta com Barra Reta","Rosca com Halteres em Pé","Rosca na Máquina Scott"]
+      },
+      {
+        nome:"Rosca Alternada Concentrada",
+        musculo:"Bíceps", series:2, reps:"10-12", descanso:"60s",
+        foco:"Pico de Bíceps",
+        subs:["Rosca Scott com Halter","Rosca no Cabo Unilateral","Rosca Martelo"]
+      }
     ]
   },
   C: {
     nome: "Pernas + Core",
+    dia: "Quarta",
+    cor: "#ff4e4e",
     exercicios: [
-      { nome:"Stiff com Barra", musculo:"Pernas", subs:["Stiff com Halteres","Mesa Flexora","Bom Dia (Good Morning)"] },
-      { nome:"Agachamento Frontal", musculo:"Pernas", subs:["Agachamento no Smith","Leg Press 45°","Agachamento Hack"] },
-      { nome:"Leg Press 45°", musculo:"Pernas", subs:["Agachamento Hack","Agachamento no Smith","Afundo com Halteres"] },
-      { nome:"Mesa Flexora", musculo:"Pernas", subs:["Cadeira Flexora","Stiff Unilateral com Halter","Flexão Nórdica"] },
-      { nome:"Glúteo no Cabo / Hip Thrust", musculo:"Glúteo", subs:["Elevação Pélvica na Máquina","Cadeira de Extensão de Glúteo","Afundo Búlgaro"] },
-      { nome:"Elevação de Pernas", musculo:"Core", subs:["Abdominal Infra no Banco Declinado","Abdominal na Máquina","Abdominal Remador"] },
-      { nome:"Prancha Frontal", musculo:"Core", subs:["Abdominal na Roda (Ab Wheel)","Prancha com Toque no Ombro","Hollow Hold"] }
+      {
+        nome:"Stiff com Barra",
+        musculo:"Pernas", series:4, reps:"6-8", descanso:"2min",
+        foco:"Posterior de Coxa",
+        subs:["Stiff com Halteres","Mesa Flexora","Bom Dia (Good Morning)"]
+      },
+      {
+        nome:"Agachamento Frontal / Hack",
+        musculo:"Pernas", series:4, reps:"6-8", descanso:"2min",
+        foco:"Quadríceps",
+        subs:["Agachamento no Smith","Leg Press 45°","Agachamento Hack"]
+      },
+      {
+        nome:"Leg Press 45°",
+        musculo:"Pernas", series:3, reps:"10-12", descanso:"90s",
+        foco:"Volume Pernas",
+        subs:["Agachamento Hack","Agachamento no Smith","Afundo com Halteres"]
+      },
+      {
+        nome:"Mesa Flexora",
+        musculo:"Pernas", series:3, reps:"12-15", descanso:"60s",
+        foco:"Isolamento Posterior",
+        subs:["Cadeira Flexora","Stiff Unilateral com Halter","Flexão Nórdica"]
+      },
+      {
+        nome:"Elevação de Pernas (Infra)",
+        musculo:"Core", series:4, reps:"12-15", descanso:"45s",
+        foco:"Abdômen Inferior",
+        subs:["Abdominal Infra no Banco Declinado","Abdominal na Máquina","Abdominal Remador"]
+      },
+      {
+        nome:"Prancha Frontal",
+        musculo:"Core", series:3, reps:"45-60s", descanso:"60s",
+        foco:"Estabilidade Core",
+        subs:["Abdominal na Roda (Ab Wheel)","Prancha com Toque no Ombro","Hollow Hold"]
+      }
     ]
   },
   D: {
-    nome: "Ombro Força + Tríceps",
+    nome: "Ombro (Força) + Tríceps",
+    dia: "Quinta",
+    cor: "#d4ff4e",
     exercicios: [
-      { nome:"Desenvolvimento em Pé", musculo:"Ombro", subs:["Desenvolvimento Sentado com Barra","Desenvolvimento na Máquina Smith","Desenvolvimento com Halteres"] },
-      { nome:"Elevação Lateral na Máquina", musculo:"Ombro", subs:["Elevação Lateral com Halteres","Elevação Lateral no Cabo","Remada Alta com Pegada Aberta"] },
-      { nome:"Remada Alta Leve", musculo:"Ombro", subs:["Elevação Frontal com Barra ou Halteres","Encolhimento de Ombros com Halteres","Desenvolvimento Arnold"] },
-      { nome:"Elevação Lateral Inclinada", musculo:"Ombro", subs:["Elevação Lateral no Cabo com Inclinação","Elevação Lateral com Halter Deitado","Elevação Lateral Padrão"] },
-      { nome:"Tríceps Supinado", musculo:"Tríceps", subs:["Tríceps Pulley com Corda ou Barra Reta","Tríceps na Máquina","Mergulho entre Bancos"] },
-      { nome:"Tríceps Francês", musculo:"Tríceps", subs:["Tríceps Testa com Barra ou Halteres","Extensão de Tríceps Acima da Cabeça","Tríceps Coice com Halter ou no Cabo"] }
+      {
+        nome:"Desenvolvimento em Pé (Barra)",
+        musculo:"Ombro", series:5, reps:"5-6", descanso:"3min+",
+        foco:"🔥 Força Ombros — PRIORIDADE",
+        subs:["Desenvolvimento Sentado com Barra","Desenvolvimento na Máquina Smith","Desenvolvimento com Halteres"]
+      },
+      {
+        nome:"Elevação Lateral Máquina",
+        musculo:"Ombro", series:5, reps:"10-12", descanso:"75s",
+        foco:"🔥 Largura Ombros — VOLUME ALTO",
+        subs:["Elevação Lateral com Halteres","Elevação Lateral no Cabo","Remada Alta com Pegada Aberta"]
+      },
+      {
+        nome:"Remada Alta Leve",
+        musculo:"Ombro", series:3, reps:"8-10", descanso:"75s",
+        foco:"Trapézio Superior",
+        subs:["Elevação Frontal com Barra ou Halteres","Encolhimento de Ombros com Halteres","Desenvolvimento Arnold"]
+      },
+      {
+        nome:"Elevação Lateral Inclinada",
+        musculo:"Ombro", series:3, reps:"12-15", descanso:"60s",
+        foco:"🔥 Largura Ombros",
+        subs:["Elevação Lateral no Cabo com Inclinação","Elevação Lateral com Halter Deitado","Elevação Lateral Padrão"]
+      },
+      {
+        nome:"Tríceps Supinado (Cabo)",
+        musculo:"Tríceps", series:3, reps:"10-12", descanso:"60s",
+        foco:"Tríceps",
+        subs:["Tríceps Pulley com Corda ou Barra Reta","Tríceps na Máquina","Mergulho entre Bancos"]
+      },
+      {
+        nome:"Tríceps Francês Unilateral",
+        musculo:"Tríceps", series:2, reps:"10-12", descanso:"60s",
+        foco:"Tríceps",
+        subs:["Tríceps Testa com Barra ou Halteres","Extensão de Tríceps Acima da Cabeça","Tríceps Coice com Halter ou no Cabo"]
+      }
     ]
   },
   E: {
-    nome: "Costas Técnica + Upper",
+    nome: "Costas (Técnica) + Upper Body",
+    dia: "Sexta",
+    cor: "#4e9fff",
     exercicios: [
-      { nome:"Puxada Neutra Técnica", musculo:"Costas", subs:["Remada Baixa com Triângulo","Remada Curvada com Pegada Supinada","Remada T"] },
-      { nome:"Remada Baixa Sentado", musculo:"Costas", subs:["Remada na Máquina Articulada","Remada Serrote com Halter","Remada Curvada com Barra"] },
-      { nome:"Pull-over na Máquina", musculo:"Costas", subs:["Pullover com Halter no Banco","Pulldown com Braços Retos","Pullover no Cabo Declinado"] },
-      { nome:"Supino Reto Leve", musculo:"Peito", subs:["Supino na Máquina Convergente","Flexão de Braço","Crucifixo na Máquina (Peck Deck)"] },
-      { nome:"Elevação Lateral Drop", musculo:"Ombro", subs:["Drop Set com Halteres","Drop Set no Cabo","Série até a Falha + Isometria"] },
-      { nome:"Face Pull", musculo:"Ombro", subs:["Crucifixo Inverso na Máquina","Crucifixo Inverso com Halteres","Remada Alta com Corda"] }
+      {
+        nome:"Puxada Aberta Pronada",
+        musculo:"Costas", series:4, reps:"8-10", descanso:"90s",
+        foco:"🔥 Largura Dorsal — PRIORIDADE",
+        subs:["Puxada com Pegada Neutra","Remada Curvada com Pegada Supinada","Remada T"]
+      },
+      {
+        nome:"Remada Baixa Sentado (Pegada Neutra) ✏️",
+        musculo:"Costas", series:4, reps:"8-10", descanso:"90s",
+        foco:"✏️ Prefira pegada neutra — ativa mais latíssimo (largura)",
+        subs:["Remada na Máquina Articulada","Remada Serrote com Halter","Remada Curvada com Barra"]
+      },
+      {
+        nome:"Remada Alta com Cabo",
+        musculo:"Ombro", series:3, reps:"12-15", descanso:"60s",
+        foco:"Trapézio Médio",
+        subs:["Pull-over na Máquina","Pulldown com Braços Retos","Pullover no Cabo Declinado"]
+      },
+      {
+        nome:"Supino Reto Leve",
+        musculo:"Peito", series:3, reps:"8-10", descanso:"90s",
+        foco:"Peito Geral",
+        subs:["Supino na Máquina Convergente","Flexão de Braço","Crucifixo na Máquina (Peck Deck)"]
+      },
+      {
+        nome:"Elevação Lateral Drop Set",
+        musculo:"Ombro", series:3, reps:"3 rounds", descanso:"90s",
+        foco:"🔥 Queima Final Ombros",
+        subs:["Drop Set com Halteres","Drop Set no Cabo","Série até a Falha + Isometria"]
+      },
+      {
+        nome:"Face Pull (Sexta)",
+        musculo:"Ombro", series:3, reps:"15", descanso:"45s",
+        foco:"Saúde do Ombro",
+        subs:["Crucifixo Inverso na Máquina","Crucifixo Inverso com Halteres","Remada Alta com Corda"]
+      }
     ]
   }
 };
@@ -488,6 +879,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     if (btn.dataset.s === 'historico') renderHistorico();
     if (btn.dataset.s === 'peso') renderPeso();
     if (btn.dataset.s === 'config') renderConfig();
+    if (btn.dataset.s === 'programa') progShowTreino('A');
   });
 });
 
@@ -506,14 +898,236 @@ function init() {
   const diaSem = today.getDay();
   if (diasTreino[diaSem]) document.getElementById('s-treino').value = diasTreino[diaSem];
   if (API) { document.getElementById('cfg-url').value = API; carregarDados(); }
-  // Atualiza exercícios quando muda treino
-  document.getElementById('s-treino').addEventListener('change', () => {
-    document.querySelectorAll('.ex-card').forEach(c => c.remove());
-    exCount = 0;
-    addExercicio();
-  });
-  addExercicio();
+  // Seleciona dia automaticamente pela data
+  (function autoDetectDia() {
+    const hoje = new Date();
+    const diasTreino = {1:'A',2:'B',3:'C',4:'D',5:'E'};
+    const letra = diasTreino[hoje.getDay()];
+    if (letra) selecionarDia(letra);
+  })();
 }
+
+// ---- PROGRAMA: mostra exercícios por treino ----
+function progShowTreino(letra) {
+  const t = TREINOS[letra];
+  if (!t) return;
+  // Atualiza tabs
+  document.querySelectorAll('.prog-tab').forEach(btn => {
+    const isActive = btn.dataset.t === letra;
+    btn.style.background   = isActive ? (t.cor||'var(--accent)') : 'var(--bg3)';
+    btn.style.color        = isActive ? '#000' : 'var(--muted)';
+    btn.style.borderColor  = isActive ? (t.cor||'var(--accent)') : 'var(--border)';
+  });
+  const el = document.getElementById('prog-ex-lista');
+  if (!el) return;
+  el.innerHTML = t.exercicios.map((ex, i) => {
+    const isFire   = ex.foco && ex.foco.includes('🔥');
+    const isAjuste = ex.foco && ex.foco.includes('✏️');
+    const corBorda = isFire ? 'var(--accent)' : isAjuste ? 'var(--blue)' : 'var(--border)';
+    return `<div style="background:var(--bg3);border-left:3px solid ${corBorda};border-radius:0 var(--r) var(--r) 0;padding:12px 14px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:13px;margin-bottom:2px">
+            ${i+1}. ${ex.nome}
+          </div>
+          <div style="font-size:10px;color:${corBorda};text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px">${ex.musculo}</div>
+          ${ex.foco ? `<div style="font-size:11px;color:${corBorda};margin-bottom:4px">${ex.foco}</div>` : ''}
+          <div style="font-size:11px;color:var(--muted)">
+            💡 Subs: ${ex.subs.slice(0,2).join(' · ')}
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${corBorda};line-height:1">${ex.series}×${ex.reps}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">⏱ ${ex.descanso}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ---- Auto-popular exercícios do programa ao selecionar treino ----
+function selecionarDia(letra) {
+  if (!letra || !TREINOS[letra]) return;
+  const t = TREINOS[letra];
+
+  // Atualiza botões
+  document.querySelectorAll('.dia-btn').forEach(btn => {
+    const isAtivo = btn.dataset.letra === letra;
+    btn.style.background  = isAtivo ? (t.cor||'var(--accent)') : 'var(--bg3)';
+    btn.style.color       = isAtivo ? '#000' : 'var(--muted)';
+    btn.style.borderColor = isAtivo ? (t.cor||'var(--accent)') : 'var(--border)';
+    btn.style.fontWeight  = isAtivo ? '700' : '400';
+  });
+
+  // Atualiza hidden + nome
+  document.getElementById('s-treino').value = letra;
+  const label = document.getElementById('treino-nome-label');
+  const nomeTxt = document.getElementById('treino-nome-txt');
+  const obsTxt  = document.getElementById('treino-obs-txt');
+  if (label && nomeTxt) {
+    label.style.display = 'block';
+    label.style.borderLeftColor = t.cor || 'var(--accent)';
+    nomeTxt.style.color = t.cor || 'var(--accent)';
+    nomeTxt.textContent = `${t.dia} — ${t.nome}`;
+    obsTxt.textContent  = t.obs || '';
+  }
+
+  // Limpa e popula exercícios na ordem do programa
+  document.querySelectorAll('.ex-card').forEach(c => c.remove());
+  exCount = 0;
+  t.exercicios.forEach(ex => addExercicioProgramado(ex, false));
+
+  // Mostra/oculta estados
+  document.getElementById('treino-vazio').style.display  = 'none';
+  document.getElementById('treino-acoes').style.display  = 'block';
+
+  // Briefing do treinador
+  renderCoachBriefing(letra);
+}
+
+
+function addExercicioProgramado(exData, isExtra) {
+  exCount++;
+  const idx = exCount;
+  const list = document.getElementById('ex-list');
+  const div = document.createElement('div');
+  div.className = 'ex-card'; div.id = 'ex-'+idx;
+
+  const isFire   = exData.foco && exData.foco.includes('🔥');
+  const isAjuste = exData.foco && exData.foco.includes('✏️');
+  const corBorda = isExtra ? 'var(--blue)' : isFire ? 'var(--accent)' : isAjuste ? 'var(--blue)' : 'var(--border)';
+  div.style.borderLeftColor = corBorda;
+  div.style.borderLeft = `3px solid ${corBorda}`;
+
+  // Mapeia descanso do documento para o select
+  const descMap = {'45s':'45s','60s':'60s','75s':'75s','90s':'90s','120s':'2min','150s':'3min+','2min':'2min','3min+':'3min+'};
+  const descSel = descMap[exData.descanso] || '90s';
+
+  // Reps alvo: topo da faixa ex "8-10" → 10
+  const repsAlvoNum = exData.reps && exData.reps.toString().includes('-')
+    ? exData.reps.toString().split('-')[1].replace(/[^0-9]/g,'')
+    : (exData.reps || '12').toString().replace(/[^0-9]/g,'') || '12';
+
+  // Histórico deste exercício
+  const h = lastWeights[exData.nome];
+  const temHistorico = !!h;
+  const orm = temHistorico ? calcORM(parseFloat(h.carga)||0, parseInt(h.repeticoes)||0) : null;
+  const dAnt = temHistorico && h.data ? new Date(h.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}) : '';
+
+  div.innerHTML = `
+    <!-- Nome + musculo fixos -->
+    <input type="hidden" class="ex-nome" value="${exData.nome}">
+    <input type="hidden" class="ex-grupo" value="${exData.musculo||''}">
+    <input type="hidden" class="ex-tipo"  value="">
+    <input type="hidden" class="ex-rpe"   value="">
+    <input type="hidden" class="ex-rir"   value="">
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">
+      <div style="flex:1;min-width:0">
+        ${isExtra ? '<div style="font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:2px">Extra</div>' : ''}
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text);line-height:1.1;margin-bottom:2px">${exData.nome}</div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:${corBorda}">${exData.musculo||''}${isFire?' · 🔥 PRIORIDADE':isAjuste?' · ✏️ AJUSTE':''}</div>
+      </div>
+      <button onclick="document.getElementById('ex-${idx}').remove()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0">✕</button>
+    </div>
+
+    <!-- Foco do programa -->
+    ${exData.foco && !isExtra ? `<div style="font-size:11px;color:${corBorda};margin-bottom:8px;padding:5px 8px;background:${corBorda}15;border-radius:4px;line-height:1.4">${exData.foco}</div>` : ''}
+
+    <!-- Alvo do programa + histórico lado a lado -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px 10px">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px;font-weight:700">Alvo do programa</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent);line-height:1">${exData.series||'?'}×${exData.reps||'?'}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">⏱ ${exData.descanso||'90s'}</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px 10px">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px;font-weight:700">Última sessão</div>
+        ${temHistorico
+          ? `<div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);line-height:1">${h.carga}kg</div>
+             <div style="font-size:10px;color:var(--muted);margin-top:2px">${h.serie}s × ${h.repeticoes} reps${dAnt?' · '+dAnt:''}${orm?' · <span style="color:var(--blue)">1RM ~'+orm+'</span>':''}</div>`
+          : `<div style="font-size:12px;color:var(--muted)">—</div><div style="font-size:10px;color:var(--muted);margin-top:2px">sem histórico</div>`
+        }
+      </div>
+    </div>
+
+    <!-- Inputs: o que você fez hoje -->
+    <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700;margin-bottom:6px">Hoje</div>
+    <div style="display:grid;grid-template-columns:80px 1fr 1fr;gap:8px;margin-bottom:6px">
+      <div class="ig" style="margin:0"><label>Séries</label>
+        <input type="number" class="ex-serie" value="${exData.series||3}" min="1">
+      </div>
+      <div class="ig" style="margin:0"><label>Carga (kg)</label>
+        <input type="number" class="ex-carga" value="${temHistorico ? h.carga : ''}" placeholder="0" step="0.5">
+      </div>
+      <div class="ig" style="margin:0">
+        <label>Reps</label>
+        <input type="text" class="ex-reps reps-input" value="${repsAlvoNum}" placeholder="${repsAlvoNum}">
+      </div>
+    </div>
+    <div id="reps-prev-${idx}" class="reps-preview"></div>
+
+    <!-- Descanso (menor destaque, já vem do programa) -->
+    <div style="margin-top:8px">
+      <div class="ig" style="margin:0">
+        <label style="display:flex;justify-content:space-between"><span>Descanso</span><span style="color:var(--muted);font-weight:400">padrão: ${exData.descanso||'90s'}</span></label>
+        <select class="ex-descanso">
+          <option value="30s"  ${descSel==='30s' ?'selected':''}>30s</option>
+          <option value="45s"  ${descSel==='45s' ?'selected':''}>45s</option>
+          <option value="60s"  ${descSel==='60s' ?'selected':''}>60s</option>
+          <option value="75s"  ${descSel==='75s' ?'selected':''}>75s</option>
+          <option value="90s"  ${descSel==='90s' ?'selected':''}>90s</option>
+          <option value="2min" ${descSel==='2min'?'selected':''}>2min</option>
+          <option value="3min+"${descSel==='3min+'?'selected':''}>3min+</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Substitutos como dica colapsável -->
+    ${exData.subs && exData.subs.length ? `
+    <details style="margin-top:10px">
+      <summary style="font-size:11px;color:var(--muted);cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px">
+        <span style="color:var(--border);font-size:14px">▸</span> Substitutos disponíveis
+      </summary>
+      <div style="margin-top:6px;padding:8px 10px;background:var(--bg3);border-radius:var(--r)">
+        ${exData.subs.map((s,i)=>`<div style="font-size:12px;padding:4px 0;color:var(--muted);${i<exData.subs.length-1?'border-bottom:1px solid var(--border)':''}">${i+1}. <span style="color:var(--text)">${s}</span></div>`).join('')}
+      </div>
+    </details>` : ''}
+
+    <div class="rec-box" id="rec-${idx}"></div>
+
+    <!-- Botão iniciar este exercício -->
+    <button id="btn-iniciar-ex-${idx}" onclick="iniciarExercicio(${idx})"
+      style="width:100%;margin-top:12px;padding:14px;background:var(--accent);color:#000;border:none;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+      ▶ INICIAR
+    </button>`;
+
+  list.appendChild(div);
+
+  // Reps preview + análise
+  const repsInput  = div.querySelector('.ex-reps');
+  const serieInput = div.querySelector('.ex-serie');
+  const repsPrev   = document.getElementById('reps-prev-'+idx);
+  const recBox     = document.getElementById('rec-'+idx);
+  function atualizarReps() {
+    const serie = parseInt(serieInput.value)||0;
+    const { repsArr, totalReps, media } = parseReps(repsInput.value, serie);
+    if (!repsArr.length) { repsPrev.textContent=''; recBox.style.display='none'; return; }
+    const carga = parseFloat(div.querySelector('.ex-carga').value)||0;
+    const vol = carga * totalReps;
+    repsPrev.textContent = `Total: ${totalReps} reps · Média: ${media}/série${vol?' · Vol: '+Math.round(vol)+'kg':''}`;
+    const rec = analisarReps(repsArr, serie);
+    if (rec) {
+      recBox.textContent = rec.msg; recBox.style.display='block';
+      recBox.style.borderLeftColor = rec.tipo==='red'?'var(--red)':rec.tipo==='green'?'var(--accent)':'var(--blue)';
+      recBox.style.color = rec.tipo==='red'?'var(--red)':rec.tipo==='green'?'var(--accent)':'var(--blue)';
+    } else { recBox.style.display='none'; }
+  }
+  repsInput.addEventListener('input', atualizarReps);
+  serieInput.addEventListener('input', atualizarReps);
+  div.querySelector('.ex-carga').addEventListener('input', atualizarReps);
+}
+
 
 // =====================================================
 // API
@@ -599,165 +1213,7 @@ function analisarReps(repsArr, series) {
 
 // =====================================================
 // EXERCÍCIOS
-// =====================================================
-function getExerciciosTreino() {
-  const t = document.getElementById('s-treino').value;
-  return t && TREINOS[t] ? TREINOS[t].exercicios : null;
-}
 
-function addExercicio() {
-  exCount++;
-  const idx = exCount;
-  const list = document.getElementById('ex-list');
-  const exTreino = getExerciciosTreino();
-  const div = document.createElement('div');
-  div.className='ex-card'; div.id='ex-'+idx;
-
-  // Monta opções de exercício do treino selecionado
-  let exOpts = '';
-  if (exTreino) {
-    exOpts = exTreino.map(e=>`<option value="${e.nome}">${e.nome}</option>`).join('');
-    // Adiciona substitutos
-    const subs = [...new Set(exTreino.flatMap(e=>e.subs))];
-    exOpts += '<option disabled>── Substitutos ──</option>';
-    exOpts += subs.map(s=>`<option value="${s}">${s}</option>`).join('');
-  }
-
-  div.innerHTML = `
-    <div class="top-row">
-      <span class="ex-num">${String(idx).padStart(2,'0')}</span>
-      <div class="ac-wrap" style="flex:1">
-        ${exTreino
-          ? `<select class="ex-nome" style="font-weight:600"><option value="">Selecione o exercício</option>${exOpts}</select>`
-          : `<input class="ex-nome" type="text" placeholder="Nome do exercício" autocomplete="off" style="font-weight:600"><div class="ac-list"></div>`
-        }
-      </div>
-      <button class="btn-ghost" onclick="document.getElementById('ex-${idx}').remove()">✕</button>
-    </div>
-    <div class="last-hint" id="hint-${idx}"></div>
-    <div style="margin-bottom:8px">
-      <div class="ig" style="margin:0"><label>Grupo Muscular</label>
-        <select class="ex-grupo"><option value="">Selecione</option><option>Peito</option><option>Costas</option><option>Ombro</option><option>Bíceps</option><option>Tríceps</option><option>Pernas</option><option>Glúteo</option><option>Core</option><option>Cardio</option></select>
-      </div>
-    </div>
-    <div class="g3" style="margin-bottom:8px">
-      <div class="ig" style="margin:0"><label>Séries</label><input type="number" class="ex-serie" value="3" min="1"></div>
-      <div class="ig" style="margin:0"><label>Carga (kg)</label><input type="number" class="ex-carga" placeholder="0" step="0.5"></div>
-      <div class="ig" style="margin:0">
-        <label>Reps <span style="color:var(--muted);font-size:9px">ex: 12x8x7</span></label>
-        <input type="text" class="ex-reps reps-input" value="12" placeholder="12">
-        <div class="reps-preview" id="reps-prev-${idx}"></div>
-      </div>
-    </div>
-    <div class="g2">
-      <div class="ig" style="margin:0"><label>Descanso</label>
-        <select class="ex-descanso"><option value="">—</option><option>30s</option><option>60s</option><option value="90s" selected>90s</option><option>2min</option><option>3min+</option></select>
-      </div>
-      <div class="ig" style="margin:0"><label>Tipo</label>
-        <select class="ex-tipo"><option value="">—</option><option>Bilateral</option><option>Unilateral</option></select>
-      </div>
-    </div>
-    <input type="hidden" class="ex-rpe" value="">
-    <input type="hidden" class="ex-rir" value="">
-    <div class="rec-box" id="rec-${idx}"></div>`;
-
-  list.appendChild(div);
-
-  // Setup reps preview + recomendação
-  const repsInput = div.querySelector('.ex-reps');
-  const serieInput = div.querySelector('.ex-serie');
-  const repsPrev = document.getElementById('reps-prev-'+idx);
-  const recBox = document.getElementById('rec-'+idx);
-
-  function atualizarReps() {
-    const serie = parseInt(serieInput.value)||0;
-    const { repsArr, totalReps, media } = parseReps(repsInput.value, serie);
-    if (!repsArr.length) { repsPrev.textContent=''; recBox.style.display='none'; return; }
-    const carga = parseFloat(div.querySelector('.ex-carga').value)||0;
-    const vol = carga * totalReps;
-    repsPrev.textContent = `Total: ${totalReps} reps · Média: ${media}/série${vol?' · Vol: '+Math.round(vol)+'kg':''}`;
-    const rec = analisarReps(repsArr, serie);
-    if (rec) {
-      recBox.textContent = rec.msg;
-      recBox.style.display='block';
-      recBox.style.borderLeftColor = rec.tipo==='red'?'var(--red)':rec.tipo==='green'?'var(--accent)':'var(--blue)';
-      recBox.style.color = rec.tipo==='red'?'var(--red)':rec.tipo==='green'?'var(--accent)':'var(--blue)';
-    } else { recBox.style.display='none'; }
-  }
-
-  repsInput.addEventListener('input', atualizarReps);
-  serieInput.addEventListener('input', atualizarReps);
-  div.querySelector('.ex-carga').addEventListener('input', atualizarReps);
-
-  // Setup nome (select ou input)
-  const nomeEl = div.querySelector('.ex-nome');
-  nomeEl.addEventListener('change', () => {
-    const nome = nomeEl.value;
-    if (!nome) return;
-    // Auto-preenche grupo muscular
-    if (exTreino) {
-      const ex = exTreino.find(e=>e.nome===nome) || exTreino.flatMap(e=>e.subs.map(s=>({nome:s,musculo:e.musculo}))).find(e=>e.nome===nome);
-      if (ex) div.querySelector('.ex-grupo').value = ex.musculo;
-    }
-    mostrarHint(div, idx, nome);
-  });
-
-  if (!exTreino) setupAC(div, idx);
-}
-
-function setupAC(card, idx) {
-  const input = card.querySelector('.ex-nome');
-  if (!input || input.tagName==='SELECT') return;
-  const list = card.querySelector('.ac-list');
-  input.addEventListener('input', () => {
-    const val = input.value.trim().toLowerCase();
-    if (!val) { list.style.display='none'; return; }
-    const matches = knownEx.filter(n=>n.toLowerCase().includes(val)).slice(0,7);
-    matches.sort((a,b)=>(lastWeights[b]?1:0)-(lastWeights[a]?1:0));
-    if (!matches.length) { list.style.display='none'; return; }
-    list.innerHTML = matches.map(n=>`<div class="ac-item" data-n="${n}">${n}${lastWeights[n]?' <span style="color:var(--accent);font-size:10px">●</span>':''}</div>`).join('');
-    list.style.display='block';
-  });
-  list.addEventListener('mousedown', e => {
-    const item = e.target.closest('.ac-item');
-    if (!item) return;
-    input.value=item.dataset.n; list.style.display='none';
-    mostrarHint(card, idx, item.dataset.n);
-  });
-  input.addEventListener('blur', () => {
-    setTimeout(()=>{ list.style.display='none'; },200);
-    const n=input.value.trim(); if(n) mostrarHint(card,idx,n);
-  });
-}
-
-function mostrarHint(card, idx, nome) {
-  const h = lastWeights[nome];
-  const hint = document.getElementById('hint-'+idx);
-  if (!hint) return;
-  let html = '';
-  if (h) {
-    const d = h.data?new Date(h.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):'';
-    const orm = calcORM(parseFloat(h.carga)||0, parseInt(h.repeticoes)||0);
-    html += `<div style="margin-bottom:4px">📌 Última: <strong style="color:var(--accent)">${h.carga}kg × ${h.repeticoes} reps × ${h.serie}s${h.rpe?' | RPE '+h.rpe:''}${d?' ('+d+')':''}</strong>${orm?' | <span style="color:var(--blue)">1RM ~'+orm+'kg</span>':''}</div>`;
-    if (!card.querySelector('.ex-carga').value) card.querySelector('.ex-carga').value=h.carga;
-    if (!card.querySelector('.ex-serie').value) card.querySelector('.ex-serie').value=h.serie;
-    if (!card.querySelector('.ex-reps').value) card.querySelector('.ex-reps').value=h.repeticoes;
-  }
-  // Substitutos do treino
-  const t = document.getElementById('s-treino').value;
-  if (t && TREINOS[t]) {
-    const exOriginal = TREINOS[t].exercicios.find(e=>e.nome===nome);
-    const exSubstituto = !exOriginal && TREINOS[t].exercicios.find(e=>e.subs.includes(nome));
-    if (exOriginal && exOriginal.subs.length) {
-      // É exercício principal — mostra substitutos
-      html += `<div style="font-size:11px;color:var(--muted);${h?'border-top:1px solid var(--border);padding-top:6px;margin-top:4px':''}">💡 Substitutos para este exercício:<br>${exOriginal.subs.map((s,i)=>`<span style="color:var(--accent)">${i+1}. ${s}</span>`).join('<br>')}</div>`;
-    } else if (exSubstituto) {
-      // É um substituto — mostra de qual exercício é substituto
-      html += `<div style="font-size:11px;${h?'border-top:1px solid var(--border);padding-top:6px;margin-top:4px':''}"><span style="color:var(--blue)">↩ Substituto de: <strong>${exSubstituto.nome}</strong></span><br><span style="color:var(--muted)">Outros substitutos: ${exSubstituto.subs.filter(s=>s!==nome).map(s=>'<span style="color:var(--accent)">'+s+'</span>').join(' · ')}</span></div>`;
-    }
-  }
-  if (html) { hint.innerHTML=html; hint.style.display='block'; }
-}
 
 function calcORM(carga, reps) {
   if (!carga||!reps||reps>15) return null;
@@ -771,7 +1227,6 @@ function resetarSessao() {
   document.getElementById('ex-list').innerHTML='';
   exCount=0;
   document.getElementById('s-data').value=new Date().toISOString().split('T')[0];
-  addExercicio();
 }
 
 // =====================================================
@@ -840,16 +1295,17 @@ function renderStats() {
   });
   const semanas = Math.max(1, Math.ceil(dias/5));
 
-  // Faixas científicas MEV/MAV/MRV por músculo (sets/semana) — baseado em Israetel et al.
+  // Faixas MEV/MAV/MRV — calibradas para o programa V-Shape (Israetel et al.)
+  // Latíssimo (largura costas): mín 10, ideal 14-18 | Deltóide Lateral: mín 8, ideal 12-15
   const FAIXAS = {
-    'Peito':   { mev:8,  mav:12, mrv:20 },
-    'Costas':  { mev:10, mav:14, mrv:25 },
-    'Ombro':   { mev:6,  mav:16, mrv:22 },
-    'Bíceps':  { mev:6,  mav:14, mrv:20 },
-    'Tríceps': { mev:6,  mav:12, mrv:18 },
-    'Pernas':  { mev:8,  mav:16, mrv:20 },
-    'Glúteo':  { mev:4,  mav:12, mrv:16 },
-    'Core':    { mev:4,  mav:10, mrv:16 }
+    'Peito':   { mev:6,  mav:10, mrv:18 },
+    'Costas':  { mev:10, mav:16, mrv:22 },  // V-shape: latíssimo é prioridade
+    'Ombro':   { mev:8,  mav:14, mrv:22 },  // V-shape: deltóide lateral é prioridade
+    'Bíceps':  { mev:5,  mav:10, mrv:18 },
+    'Tríceps': { mev:4,  mav:8,  mrv:16 },
+    'Pernas':  { mev:8,  mav:14, mrv:20 },
+    'Glúteo':  { mev:4,  mav:10, mrv:16 },
+    'Core':    { mev:4,  mav:8,  mrv:14 }
   };
 
   function classificarVolume(sets, faixa) {
@@ -1369,44 +1825,39 @@ function descansoParaSegundos(d) {
   return 90;
 }
 
-function iniciarModoTreino() {
-  // Coleta exercícios dos cards
-  const cards = document.querySelectorAll('.ex-card');
-  if (!cards.length) { toast('Adicione exercícios primeiro!', true); return; }
+function iniciarExercicio(idx) {
+  // Pega o card pelo idx
+  const card = document.getElementById('ex-' + idx);
+  if (!card) return;
 
-  const exs = [];
-  let erro = false;
-  cards.forEach(card => {
-    const nome = card.querySelector('.ex-nome').value.trim();
-    if (!nome) { erro = true; return; }
-    const series = parseInt(card.querySelector('.ex-serie').value) || 3;
-    const carga  = parseFloat(card.querySelector('.ex-carga').value) || 0;
-    const repsRaw = card.querySelector('.ex-reps').value.trim();
-    const repsAlvo = repsRaw ? repsRaw.split('x')[0] : '12';
-    exs.push({
-      nome,
-      musculo:  card.querySelector('.ex-grupo').value || '',
-      tipo:     card.querySelector('.ex-tipo').value || '',
-      descanso: card.querySelector('.ex-descanso').value || '90s',
-      rir:      card.querySelector('.ex-rir').value || '',
-      rpe:      card.querySelector('.ex-rpe').value || '',
-      series,
-      carga,
-      repsAlvo,
-      cardEl: card
-    });
-  });
+  const nome    = card.querySelector('.ex-nome').value.trim();
+  if (!nome) { toast('Exercício sem nome!', true); return; }
 
-  if (erro || !exs.length) { toast('Preencha o nome de todos os exercícios!', true); return; }
+  const series  = parseInt(card.querySelector('.ex-serie').value) || 3;
+  const carga   = parseFloat(card.querySelector('.ex-carga').value) || 0;
+  const repsRaw = card.querySelector('.ex-reps').value.trim();
+  const repsAlvo = repsRaw ? repsRaw.split('x')[0] : '12';
 
-  MT.exercicios = exs;
-  MT.exIdx = 0;
-  MT.serieIdx = 0;
-  MT.repsFeitas   = exs.map(() => []);
-  MT.descansoReal = exs.map(() => []);
-  MT.rpeFeito     = exs.map(() => '');
-  MT.rirFeito     = exs.map(() => '');
-  MT.revezando = false;
+  const ex = {
+    nome,
+    musculo:  card.querySelector('.ex-grupo').value || '',
+    tipo:     card.querySelector('.ex-tipo').value || '',
+    descanso: card.querySelector('.ex-descanso').value || '90s',
+    rir:      card.querySelector('.ex-rir').value || '',
+    rpe:      card.querySelector('.ex-rpe').value || '',
+    series, carga, repsAlvo,
+    cardEl: card,
+    cardIdx: idx
+  };
+
+  MT.exercicios   = [ex];
+  MT.exIdx        = 0;
+  MT.serieIdx     = 0;
+  MT.repsFeitas   = [[]];
+  MT.descansoReal = [[]];
+  MT.rpeFeito     = [''];
+  MT.rirFeito     = [''];
+  MT.revezando    = false;
   MT.inicioTreino = Date.now();
 
   // Wake Lock
@@ -1414,7 +1865,7 @@ function iniciarModoTreino() {
     navigator.wakeLock.request('screen').then(wl => { MT.wakeLock = wl; }).catch(()=>{});
   }
 
-  // Timer de tempo total do treino
+  // Cronômetro do exercício
   MT.tempoInterval = setInterval(() => {
     const elapsed = Math.floor((Date.now() - MT.inicioTreino) / 1000);
     const m = String(Math.floor(elapsed/60)).padStart(2,'0');
@@ -1425,6 +1876,9 @@ function iniciarModoTreino() {
   document.getElementById('modo-treino').classList.add('ativo');
   mtMostrarExercicio();
 }
+
+// mantida para compatibilidade interna (não exposta no UI)
+function iniciarModoTreino() { iniciarExercicio(1); }
 
 function sairModoTreino() {
   if (!confirm('Sair do modo treino? O progresso não salvo será perdido.')) return;
@@ -1643,6 +2097,9 @@ function mtMostrarFinal() {
   const elapsed = Math.floor((Date.now() - MT.inicioTreino) / 1000);
   const m = Math.floor(elapsed/60), s = elapsed%60;
   document.getElementById('mt-tempo-final').textContent = `Duração: ${m}min${s>0?' '+s+'s':''}`;
+  document.getElementById('mt-final-titulo').textContent = MT.exercicios[0]?.nome
+    ? MT.exercicios[0].nome + ' ✓'
+    : 'EXERCÍCIO CONCLUÍDO ✓';
 
   // Atualiza campo duração no formulário
   document.getElementById('s-duracao').value = m;
@@ -1693,9 +2150,41 @@ function mtMostrarFinal() {
   mtSetFase('final');
 }
 
-document.getElementById('mt-btn-salvar-final').addEventListener('click', async () => {
+document.getElementById('mt-btn-salvar-final').addEventListener('click', () => {
+  // Escreve dados de volta no card e marca como feito
+  const ex = MT.exercicios[0];
+  if (ex && ex.cardEl) {
+    const repsStr = MT.repsFeitas[0].join('x');
+    if (repsStr) {
+      ex.cardEl.querySelector('.ex-reps').value = repsStr;
+      ex.cardEl.querySelector('.ex-reps').dispatchEvent(new Event('input'));
+      if (ex.cardEl.querySelector('.ex-carga') && ex.carga)
+        ex.cardEl.querySelector('.ex-carga').value = ex.carga;
+    }
+    if (MT.rpeFeito[0]) ex.cardEl.querySelector('.ex-rpe').value = MT.rpeFeito[0];
+    if (MT.rirFeito[0]) ex.cardEl.querySelector('.ex-rir').value = MT.rirFeito[0];
+    const descArr = MT.descansoReal[0].filter(d => d > 0);
+    if (descArr.length) {
+      const med = Math.round(descArr.reduce((a,b)=>a+b,0)/descArr.length);
+      const str = med<=30?'30s':med<=60?'60s':med<=90?'90s':med<=120?'2min':'3min+';
+      ex.cardEl.querySelector('.ex-descanso').value = str;
+    }
+    // Marca card como concluído visualmente
+    const btnIniciar = document.getElementById('btn-iniciar-ex-' + ex.cardIdx);
+    if (btnIniciar) {
+      btnIniciar.textContent = '✓ CONCLUÍDO';
+      btnIniciar.style.background = 'var(--bg3)';
+      btnIniciar.style.color = 'var(--accent)';
+      btnIniciar.style.border = '1px solid var(--accent)';
+      btnIniciar.style.cursor = 'default';
+      btnIniciar.onclick = null;
+    }
+    ex.cardEl.style.opacity = '0.7';
+  }
   fecharModoTreino();
-  await salvarTreino();
+  // Rola para o próximo card não concluído
+  const prox = [...document.querySelectorAll('.ex-card')].find(c => c.style.opacity !== '0.7');
+  if (prox) prox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
 // ---- REVEZAMENTO (compartilhar equipamento com outra pessoa) ----
@@ -1766,61 +2255,19 @@ function mtVoltarDeRevezamento() {
   mtMostrarExercicio();
 }
 
-// ---- EXERCÍCIO LIVRE ----
 function addExercicioLivre() {
-  // Temporariamente seta treino como vazio para forçar input livre
-  const tEl = document.getElementById('s-treino');
-  const tPrev = tEl.value;
-  tEl.value = '';
-  addExercicio();
-  tEl.value = tPrev;
-  // Foca no nome do novo card
+  const nome = prompt('Nome do exercício extra:');
+  if (!nome || !nome.trim()) return;
+  const exLivre = {
+    nome: nome.trim(), musculo:'', foco:'', subs:[],
+    series:3, reps:'12', descanso:'90s'
+  };
+  addExercicioProgramado(exLivre, true);
   const cards = document.querySelectorAll('.ex-card');
   const newCard = cards[cards.length-1];
-  const nomeEl = newCard.querySelector('.ex-nome');
-  if (nomeEl && nomeEl.tagName==='INPUT') {
-    newCard.scrollIntoView({behavior:'smooth'});
-    setTimeout(()=>nomeEl.focus(), 200);
-  }
+  if (newCard) newCard.scrollIntoView({behavior:'smooth'});
 }
 
-function mtAdicionarLivre() {
-  // No modo treino: adiciona ao vivo durante o treino
-  const nome = prompt('Nome do exercício:');
-  if (!nome || !nome.trim()) return;
-  const carga = parseFloat(prompt('Carga (kg):') || '0') || 0;
-  const series = parseInt(prompt('Séries:') || '3') || 3;
-
-  // Cria card (temporariamente seta treino como vazio)
-  const tEl = document.getElementById('s-treino');
-  const tPrev = tEl.value; tEl.value = '';
-  addExercicio();
-  tEl.value = tPrev;
-  const cards = document.querySelectorAll('.ex-card');
-  const newCard = cards[cards.length - 1];
-  const nomeEl = newCard.querySelector('.ex-nome');
-  if (nomeEl && nomeEl.tagName==='INPUT') nomeEl.value = nome.trim();
-  newCard.querySelector('.ex-carga').value = carga;
-  newCard.querySelector('.ex-serie').value = series;
-
-  const exLivre = {
-    nome: nome.trim(),
-    musculo: '',
-    tipo: '',
-    descanso: '90s',
-    series,
-    carga,
-    repsAlvo: '12',
-    cardEl: newCard
-  };
-
-  MT.exercicios.push(exLivre);
-  MT.repsFeitas.push([]);
-  MT.descansoReal.push([]);
-  MT.rpeFeito.push('');
-  MT.rirFeito.push('');
-  toast('✅ ' + nome.trim() + ' adicionado!');
-}
 
 // Beep com Web Audio
 function beep(vezes=1) {
@@ -1845,6 +2292,345 @@ function vibrar() {
 }
 
 // =====================================================
+// =====================================================
+// COACH — BRIEFING E RESUMOS
+// =====================================================
+
+// Cores e emojis de status
+function coachStatus(tipo) {
+  return {
+    sobe:    { emoji:'🔺', cor:'var(--accent)',  label:'SOBE A CARGA' },
+    desce:   { emoji:'🔻', cor:'var(--red)',     label:'REDUZ A CARGA' },
+    ok:      { emoji:'✅', cor:'var(--accent)',  label:'MANTÉM' },
+    alerta:  { emoji:'⚠️', cor:'#f97316',       label:'ATENÇÃO' },
+    info:    { emoji:'💡', cor:'var(--blue)',    label:'INFO' },
+    erro:    { emoji:'🔴', cor:'var(--red)',     label:'CRÍTICO' },
+  }[tipo] || { emoji:'—', cor:'var(--muted)', label:'' };
+}
+
+// ---- BRIEFING automático ao selecionar dia ----
+function renderCoachBriefing(letra) {
+  const el = document.getElementById('coach-briefing');
+  if (!el || !sessions.length) return;
+
+  const treino = TREINOS[letra];
+  if (!treino) return;
+
+  const linhas = [];
+
+  // 1. Alertas de volume semanal dos músculos do dia
+  const hoje = new Date();
+  const semanaAtras = new Date(hoje - 7*24*60*60*1000).toISOString().split('T')[0];
+  const sessSemana = sessions.filter(s => s.date >= semanaAtras);
+
+  // Sets por músculo nos últimos 7 dias
+  const setsMus = {};
+  sessSemana.forEach(sess => sess.exercises.forEach(ex => {
+    const m = ex.grupoMuscular;
+    if (m) setsMus[m] = (setsMus[m]||0) + (parseInt(ex.serie)||0);
+  }));
+
+  const MEV_VSHAPE = {
+    'Costas': 10, 'Ombro': 8, 'Peito': 6,
+    'Bíceps': 5, 'Tríceps': 4, 'Pernas': 8, 'Core': 4
+  };
+
+  const muscDoTreino = [...new Set(treino.exercicios.map(e => e.musculo))];
+  muscDoTreino.forEach(m => {
+    const sets = setsMus[m] || 0;
+    const mev  = MEV_VSHAPE[m] || 0;
+    if (mev && sets < mev) {
+      linhas.push({ tipo:'alerta', msg:`${m}: ${sets} sets esta semana — mínimo é ${mev}. Hoje é essencial completar todas as séries.` });
+    }
+  });
+
+  // 2. Por exercício — carga e reps da última sessão
+  const exAlertas = [];
+  treino.exercicios.forEach(ex => {
+    const h = lastWeights[ex.nome];
+    if (!h) return;
+
+    const carga    = parseFloat(h.carga) || 0;
+    const reps     = parseInt(h.repeticoes) || 0;
+    const serie    = parseInt(h.serie) || 0;
+    const repsStr  = h.repsDetalhado || '';
+    const alvo     = ex.reps; // ex: "8-10"
+    const alvoMax  = alvo.toString().includes('-') ? parseInt(alvo.split('-')[1]) : parseInt(alvo);
+
+    // Analisa queda de reps se detalhado
+    if (repsStr && repsStr.includes('x')) {
+      const arr = repsStr.split('x').map(Number).filter(n => !isNaN(n));
+      if (arr.length >= 2) {
+        const queda = ((arr[0] - arr[arr.length-1]) / arr[0]) * 100;
+        if (queda > 30) {
+          exAlertas.push({ tipo:'desce', nome:ex.nome, msg:`Queda de ${Math.round(queda)}% nas reps (${repsStr}). Reduz 5% da carga hoje — ${(carga*0.95).toFixed(1)}kg.` });
+          return;
+        }
+      }
+    }
+
+    // Completou no topo da faixa → sobe
+    if (reps >= alvoMax && serie >= ex.series) {
+      const nova = (carga + 2.5).toFixed(1);
+      exAlertas.push({ tipo:'sobe', nome:ex.nome, msg:`Completou ${serie}×${reps} (alvo ${ex.series}×${alvo}) — SOBE para ${nova}kg hoje.` });
+    }
+    // Completou mas abaixo do alvo máximo → mantém
+    else if (reps >= alvoMax - 2) {
+      exAlertas.push({ tipo:'ok', nome:ex.nome, msg:`Mantém ${carga}kg. Faltou ${alvoMax - reps} rep(s) para liberar aumento.` });
+    }
+  });
+
+  if (!linhas.length && !exAlertas.length) {
+    el.style.display = 'none';
+    return;
+  }
+
+  // Renderiza
+  let html = `<div style="border-radius:var(--r);overflow:hidden;border:1px solid var(--border)">
+    <div style="background:var(--bg3);padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent)">🧠 Briefing do Treinador</div>
+      <button onclick="document.getElementById('coach-briefing').style.display='none'" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:0;line-height:1">✕</button>
+    </div>`;
+
+  // Volume alerts primeiro (mais urgente)
+  linhas.forEach(l => {
+    const s = coachStatus(l.tipo);
+    html += `<div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
+      <span style="font-size:16px;flex-shrink:0">${s.emoji}</span>
+      <span style="font-size:12px;color:var(--text);line-height:1.5">${l.msg}</span>
+    </div>`;
+  });
+
+  // Exercícios
+  exAlertas.slice(0, 5).forEach(a => {
+    const s = coachStatus(a.tipo);
+    html += `<div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
+      <span style="font-size:16px;flex-shrink:0">${s.emoji}</span>
+      <div style="flex:1">
+        <div style="font-size:10px;font-weight:700;color:${s.cor};text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">${a.nome.length>30?a.nome.slice(0,30)+'…':a.nome}</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.5">${a.msg}</div>
+      </div>
+    </div>`;
+  });
+
+  html += `</div>`;
+  el.innerHTML = html;
+  el.style.display = 'block';
+}
+
+// ---- Abre modal coach (dia ou semana) ----
+function abrirCoach(tipo) {
+  const modal = document.getElementById('coach-modal');
+  const title = document.getElementById('coach-modal-title');
+  const body  = document.getElementById('coach-modal-body');
+  if (!modal || !sessions.length) {
+    toast('Sem dados ainda — registre alguns treinos primeiro.', true);
+    return;
+  }
+  modal.style.display = 'block';
+  if (tipo === 'dia') {
+    title.textContent = '📊 RESUMO DO DIA';
+    body.innerHTML = gerarResumoDia();
+  } else {
+    title.textContent = '📅 RESUMO DA SEMANA';
+    body.innerHTML = gerarResumoSemana();
+  }
+}
+
+// ---- Resumo do Dia ----
+function gerarResumoDia() {
+  // Pega a sessão mais recente
+  const sorted = [...sessions].sort((a,b) => b.date.localeCompare(a.date));
+  const sess = sorted[0];
+  if (!sess) return '<p style="color:var(--muted)">Nenhum treino registrado ainda.</p>';
+
+  const d = new Date(sess.date+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit'});
+  const nomeTreino = TREINOS[sess.treino] ? TREINOS[sess.treino].nome : sess.treino;
+
+  let totalVol = 0, totalSeries = 0, totalReps = 0;
+  let html = `<div style="font-size:11px;color:var(--muted);margin-bottom:12px">${d} · ${nomeTreino}</div>`;
+
+  // Cards de exercício
+  const exHtml = [];
+  sess.exercises.forEach(ex => {
+    const carga = parseFloat(ex.carga)||0;
+    const serie = parseInt(ex.serie)||0;
+    const reps  = parseInt(ex.repeticoes)||0;
+    const vol   = carga * serie * reps;
+    totalVol   += vol; totalSeries += serie; totalReps += serie*reps;
+    const orm   = calcORM(carga, reps);
+
+    // Compara com anterior (penúltima sessão com esse exercício)
+    const hist = sessions.filter(s => s.date < sess.date && s.exercises.some(e => e.exercicio === ex.exercicio));
+    const ant  = hist.length ? hist[hist.length-1].exercises.find(e => e.exercicio === ex.exercicio) : null;
+    const diffCarga = ant ? (carga - (parseFloat(ant.carga)||0)).toFixed(1) : null;
+    const seta = diffCarga === null ? '' : parseFloat(diffCarga) > 0 ? `<span style="color:var(--accent)">↑${diffCarga}kg</span>` : parseFloat(diffCarga) < 0 ? `<span style="color:var(--red)">↓${Math.abs(diffCarga)}kg</span>` : '<span style="color:var(--muted)">→</span>';
+
+    // Análise de reps
+    let recMsg = '', recCor = 'var(--muted)';
+    if (ex.repsDetalhado && ex.repsDetalhado.includes('x')) {
+      const arr = ex.repsDetalhado.split('x').map(Number).filter(n=>!isNaN(n));
+      const rec = analisarReps(arr, serie);
+      if (rec) { recMsg = rec.msg; recCor = rec.tipo==='red'?'var(--red)':rec.tipo==='green'?'var(--accent)':'var(--blue)'; }
+    }
+
+    // Sugestão de carga para próxima
+    const exProg = TREINOS[sess.treino]?.exercicios.find(e=>e.nome===ex.exercicio);
+    let sugestao = '';
+    if (exProg) {
+      const alvoMax = exProg.reps.toString().includes('-') ? parseInt(exProg.reps.split('-')[1]) : parseInt(exProg.reps);
+      if (reps >= alvoMax && serie >= exProg.series) {
+        sugestao = `<div style="margin-top:4px;padding:4px 8px;background:var(--accent)1a;border-radius:4px;font-size:11px;color:var(--accent)">🔺 Próximo treino: tente ${(carga+2.5).toFixed(1)}kg</div>`;
+      } else if (reps < alvoMax - 3) {
+        sugestao = `<div style="margin-top:4px;padding:4px 8px;background:var(--red)1a;border-radius:4px;font-size:11px;color:var(--red)">🔻 Considere ${(carga*0.95).toFixed(1)}kg na próxima</div>`;
+      }
+    }
+
+    exHtml.push(`<div style="padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+        <span style="font-size:13px;font-weight:600">${ex.exercicio}</span>
+        <span style="font-size:12px;font-family:'Bebas Neue',sans-serif;color:var(--accent)">${serie}×${reps} · ${carga}kg ${seta}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted)">Volume: ${Math.round(vol)}kg${orm?' · 1RM ~<span style="color:var(--blue)">'+orm+'kg</span>':''}${ex.rpe?' · RPE '+ex.rpe:''}</div>
+      ${recMsg ? `<div style="font-size:11px;color:${recCor};margin-top:3px">${recMsg}</div>` : ''}
+      ${sugestao}
+    </div>`);
+  });
+
+  // Totais
+  const volStr = totalVol >= 1000 ? (totalVol/1000).toFixed(1)+'k' : Math.round(totalVol)+'';
+  html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${volStr}kg</div>
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Volume</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${totalSeries}</div>
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Séries</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${sess.sono?sonoLabel(sess.sono):'—'}</div>
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Sono</div>
+    </div>
+  </div>`;
+
+  html += exHtml.join('');
+  return html;
+}
+
+// ---- Resumo da Semana ----
+function gerarResumoSemana() {
+  const hoje = new Date();
+  const seteDias = new Date(hoje - 7*24*60*60*1000).toISOString().split('T')[0];
+  const sessSem  = sessions.filter(s => s.date >= seteDias);
+  if (!sessSem.length) return '<p style="color:var(--muted)">Nenhum treino nos últimos 7 dias.</p>';
+
+  // Volume e sets por músculo
+  const setsMus = {}, volMus = {};
+  let totalVol = 0, totalSeries = 0;
+  sessSem.forEach(sess => {
+    sess.exercises.forEach(ex => {
+      const m = ex.grupoMuscular; if(!m) return;
+      const s = parseInt(ex.serie)||0;
+      const c = parseFloat(ex.carga)||0;
+      const r = parseInt(ex.repeticoes)||0;
+      setsMus[m] = (setsMus[m]||0) + s;
+      volMus[m]  = (volMus[m]||0) + c*s*r;
+      totalVol   += c*s*r; totalSeries += s;
+    });
+  });
+
+  const MEV = { 'Costas':10,'Ombro':8,'Peito':6,'Bíceps':5,'Tríceps':4,'Pernas':8,'Core':4 };
+  const MAV = { 'Costas':16,'Ombro':14,'Peito':10,'Bíceps':10,'Tríceps':8,'Pernas':14,'Core':8 };
+  const MRV = { 'Costas':22,'Ombro':22,'Peito':18,'Bíceps':18,'Tríceps':16,'Pernas':20,'Core':14 };
+
+  // Treinos feitos
+  const treinosStr = sessSem.map(s => s.treino).filter(Boolean).join(', ') || '—';
+  const volStr = totalVol>=1000?(totalVol/1000).toFixed(1)+'k':Math.round(totalVol)+'';
+
+  let html = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${sessSem.length}</div>
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Treinos</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${volStr}kg</div>
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Volume</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${totalSeries}</div>
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Séries</div>
+    </div>
+  </div>`;
+
+  // Volume por músculo com status
+  html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px">Volume por músculo</div>`;
+
+  const muscOrdem = ['Costas','Ombro','Pernas','Peito','Bíceps','Tríceps','Core'];
+  muscOrdem.forEach(m => {
+    const sets = setsMus[m] || 0;
+    const mev  = MEV[m] || 0;
+    const mav  = MAV[m] || 0;
+    const mrv  = MRV[m] || 0;
+    const pct  = mrv ? Math.min(100, Math.round(sets/mrv*100)) : 0;
+    let cor, label, msg;
+    if (!sets) {
+      cor='var(--red)'; label='❌ Não treinou'; msg=`Mínimo: ${mev} sets`;
+    } else if (sets < mev) {
+      cor='var(--red)'; label=`⚠️ ${sets}/${mev} sets`; msg=`Faltam ${mev-sets} sets para o mínimo`;
+    } else if (sets <= mav) {
+      cor='var(--blue)'; label=`✅ ${sets} sets`; msg='Low Volume — válido com alta intensidade';
+    } else if (sets <= mrv) {
+      cor='var(--accent)'; label=`🔥 ${sets} sets`; msg='Faixa ótima de hipertrofia';
+    } else {
+      cor='var(--red)'; label=`⛔ ${sets} sets`; msg='Acima do MRV — risco de overtraining';
+    }
+
+    html += `<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:13px;font-weight:600">${m}</span>
+        <span style="font-size:12px;color:${cor};font-weight:700">${label}</span>
+      </div>
+      <div style="background:var(--bg3);border-radius:2px;height:6px;margin-bottom:3px">
+        <div style="height:6px;background:${cor};border-radius:2px;width:${pct}%"></div>
+      </div>
+      <div style="font-size:10px;color:var(--muted)">${msg}</div>
+    </div>`;
+  });
+
+  // Alertas de estagnação (exercícios sem progresso há 3+ sessões)
+  const estagnados = [];
+  const allEx = [...new Set(sessSem.flatMap(s=>s.exercises.map(e=>e.exercicio)))];
+  allEx.forEach(nome => {
+    const hist = sessions.filter(s => s.exercises.some(e=>e.exercicio===nome));
+    if (hist.length < 3) return;
+    const cargas = hist.slice(-3).map(s => parseFloat(s.exercises.find(e=>e.exercicio===nome)?.carga)||0);
+    if (cargas.every(c=>c===cargas[0]) && cargas[0] > 0) estagnados.push(nome);
+  });
+
+  if (estagnados.length) {
+    html += `<div style="margin-top:8px;padding:10px 12px;background:var(--red)1a;border-left:3px solid var(--red);border-radius:0 var(--r) var(--r) 0">
+      <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px">⚠️ Estagnação detectada (3+ sessões sem progresso)</div>
+      <div style="font-size:12px;color:var(--text)">${estagnados.join(' · ')}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Adicione 1 rep ou 2,5kg no próximo treino</div>
+    </div>`;
+  }
+
+  // Sono médio da semana
+  const sonoSess = sessSem.filter(s=>s.sono);
+  if (sonoSess.length) {
+    const medH = sonoSess.reduce((a,s)=>a+(sonoParaHoras(s.sono)||0),0)/sonoSess.length;
+    const corSono = medH>=7?'var(--accent)':medH>=6?'var(--blue)':medH>=5?'#f97316':'var(--red)';
+    const hInt=Math.floor(medH), mInt=Math.round((medH-hInt)*60);
+    html += `<div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg3);border-radius:var(--r)">
+      <span style="font-size:13px">😴 Sono médio da semana</span>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${corSono}">${hInt}h${mInt>0?mInt+'min':''}</span>
+    </div>`;
+  }
+
+  return html;
+}
+
 // RELATÓRIO GERAL
 // =====================================================
 function gerarRelatorio() {
@@ -2013,11 +2799,9 @@ function toast(msg,err=false){
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>{el.className='toast';},3500);
 }
 
-document.getElementById('btn-add').addEventListener('click',addExercicio);
-document.getElementById('btn-add-livre').addEventListener('click',addExercicioLivre);
-document.getElementById('btn-save').addEventListener('click',salvarTreino);
-document.getElementById('btn-relatorio').addEventListener('click',gerarRelatorio);
-document.getElementById('btn-iniciar').addEventListener('click',iniciarModoTreino);
+document.getElementById('btn-add-livre').addEventListener('click', addExercicioLivre);
+document.getElementById('btn-save').addEventListener('click', salvarTreino);
+document.getElementById('btn-relatorio').addEventListener('click', gerarRelatorio);
 init();
 </script>
 </body>
