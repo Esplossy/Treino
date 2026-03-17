@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<link rel="manifest" href="/Treino/manifest.json">
-<meta name="theme-color" content="#111111">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0a0a0a">
@@ -123,6 +121,21 @@ select option{background:var(--bg2)}
 .mt-final-scroll{flex:1;overflow-y:auto}
 .mt-btn-salvar{background:var(--accent);color:#000;border:none;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;width:100%;padding:18px;cursor:pointer;flex-shrink:0;margin-top:12px}
 </style>
+<link rel="manifest" href="data:application/json,{
+  %22name%22:%22GymLog V-Shape%22,
+  %22short_name%22:%22GymLog%22,
+  %22start_url%22:%22.%22,
+  %22display%22:%22standalone%22,
+  %22background_color%22:%22%23000000%22,
+  %22theme_color%22:%22%23d4ff4e%22,
+  %22orientation%22:%22portrait%22,
+  %22icons%22:[{%22src%22:%22https://esplossy.github.io/Treino/icon.png%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22}]
+}">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GymLog">
+<meta name="theme-color" content="#d4ff4e">
 </head>
 <body>
 <div id="app">
@@ -465,16 +478,23 @@ select option{background:var(--bg2)}
   <div id="s-config" class="screen">
     <div class="page-title">CONFIG</div>
     <div class="card">
-      <span class="sec-label">Conexão Google Sheets</span>
+      <span class="sec-label">⚙️ Conexão Google Sheets</span>
       <div class="ig"><label>URL do Apps Script</label><input type="url" id="cfg-url" placeholder="https://script.google.com/macros/s/.../exec"></div>
-      <button class="btn btn-primary" id="btn-cfg-save" style="margin-bottom:8px">SALVAR</button>
-      <button class="btn btn-secondary" id="btn-cfg-test">TESTAR CONEXÃO</button>
+      <button class="btn btn-primary" id="btn-cfg-save" style="margin-bottom:8px">💾 SALVAR URL</button>
+      <button class="btn btn-secondary" id="btn-cfg-test">🔌 TESTAR CONEXÃO</button>
     </div>
     <div class="card">
-      <span class="sec-label">Progresso do Cut</span>
-      <div style="font-size:13px;margin-bottom:8px">
+      <span class="sec-label">⚖️ Peso — Registrar</span>
+      <div class="g2" style="margin-bottom:10px">
+        <div class="ig" style="margin:0"><label>Data</label><input type="date" id="peso-data"></div>
+        <div class="ig" style="margin:0"><label>Peso (kg)</label><input type="number" id="peso-val" placeholder="65.5" step="0.1"></div>
+      </div>
+      <div class="ig" style="margin-bottom:10px"><label>Observação</label><input type="text" id="peso-obs" placeholder="Ex: após treino, em jejum..."></div>
+      <button class="btn btn-primary" id="btn-peso-save">💾 REGISTRAR PESO</button>
+      <div style="margin-top:14px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px">Progresso do Cut</div>
         <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-          <span>71,5kg → <strong style="color:var(--accent)" id="peso-atual-cut">65,5kg</strong> → 58kg</span>
+          <span style="font-size:13px">71,5kg → <strong style="color:var(--accent)" id="peso-atual-cut">65,5kg</strong> → 58kg</span>
           <span style="color:var(--accent);font-weight:700" id="cut-pct">54%</span>
         </div>
         <div class="bar-wrap"><div class="bar" id="cut-bar" style="width:54%"></div></div>
@@ -482,8 +502,25 @@ select option{background:var(--bg2)}
       </div>
     </div>
     <div class="card">
-      <span class="sec-label">Dados</span>
-      <button class="btn btn-secondary" id="btn-reload">🔄 RECARREGAR DADOS</button>
+      <span class="sec-label">🔄 Dados</span>
+      <button class="btn btn-secondary" id="btn-reload">🔄 SINCRONIZAR / RECARREGAR</button>
+    </div>
+    <div class="card">
+      <span class="sec-label">📱 Instalar como App no Android</span>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--bg3);border-radius:var(--r);padding:12px;font-size:12px;color:var(--text);line-height:1.8">
+          <div style="font-weight:700;color:var(--accent);margin-bottom:6px">Via GitHub Pages (recomendado):</div>
+          1. Abra o app no Chrome do Android<br>
+          2. Toque nos <strong>⋮ três pontos</strong> no canto superior<br>
+          3. Toque em <strong>"Adicionar à tela inicial"</strong><br>
+          4. Confirme → ícone aparece na gaveta de apps<br>
+          <span style="color:var(--muted);font-size:11px;margin-top:4px;display:block">Funciona offline, tela cheia, igual a um APK nativo.</span>
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:12px;font-size:12px;color:var(--text);line-height:1.8">
+          <div style="font-weight:700;color:var(--blue);margin-bottom:6px">URL do seu app:</div>
+          <div style="font-family:monospace;font-size:11px;color:var(--accent);word-break:break-all;background:var(--bg2);padding:8px;border-radius:4px">https://esplossy.github.io/Treino/</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -614,8 +651,8 @@ select option{background:var(--bg2)}
     <button class="nav-btn active" data-s="treinar"><span class="ico">🏋️</span>Treinar</button>
     <button class="nav-btn" data-s="programa"><span class="ico">📋</span>Programa</button>
     <button class="nav-btn" data-s="stats"><span class="ico">📊</span>Stats</button>
-    <button class="nav-btn" data-s="peso"><span class="ico">⚖️</span>Peso</button>
     <button class="nav-btn" data-s="historico"><span class="ico">📅</span>Histórico</button>
+    <button class="nav-btn" data-s="config"><span class="ico">⚙️</span>Config</button>
   </nav>
 </div>
 <div class="toast" id="toast"></div>
@@ -1744,6 +1781,10 @@ async function excluirTreino(date,treino,idx){
 // CONFIG
 // =====================================================
 function renderConfig(){
+  // Inicializa campos
+  const hoje = new Date().toISOString().split('T')[0];
+  const pesoDataEl = document.getElementById('peso-data');
+  if (pesoDataEl && !pesoDataEl.value) pesoDataEl.value = hoje;
   const entradas=Object.entries(pesoData).sort((a,b)=>a[0].localeCompare(b[0]));
   if(entradas.length){
     const ultimo=parseFloat(entradas[entradas.length-1][1].peso);
@@ -1767,6 +1808,23 @@ document.getElementById('btn-cfg-test').addEventListener('click',async()=>{
   if(!API){toast('Salve a URL primeiro!',true);return;}
   try{const r=await fetch(API+'?action=ping',{redirect:'follow'});const j=JSON.parse(await r.text());toast(j.status==='ok'?'✅ Conexão OK! Aba: '+j.sheet:'❌ Erro',j.status!=='ok');}
   catch(err){toast('❌ Erro: '+err.message,true);}
+});
+
+document.getElementById('btn-peso-save').addEventListener('click', async () => {
+  const data = document.getElementById('peso-data').value;
+  const val  = document.getElementById('peso-val').value;
+  const obs  = document.getElementById('peso-obs').value;
+  if (!data || !val) { toast('Preencha data e peso!', true); return; }
+  if (!API) { toast('Configure a URL do Apps Script primeiro!', true); return; }
+  try {
+    const body = JSON.stringify({ rows: [{ data, peso: val, obs }], action: 'savePeso' });
+    await fetch(API, { method:'POST', redirect:'follow', headers:{'Content-Type':'text/plain'}, body });
+    pesoData[data] = { peso: val, obs };
+    toast(`✅ ${val}kg em ${data} salvo!`);
+    renderConfig();
+    document.getElementById('peso-val').value = '';
+    document.getElementById('peso-obs').value = '';
+  } catch(e) { toast('Erro ao salvar peso!', true); }
 });
 
 document.getElementById('btn-reload').addEventListener('click',async()=>{
@@ -2806,12 +2864,6 @@ document.getElementById('btn-save').addEventListener('click', salvarTreino);
 document.getElementById('btn-relatorio').addEventListener('click', gerarRelatorio);
 init();
 </script>
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/Treino/service-worker.js')
-    .then(() => console.log("Service Worker registrado"))
-    .catch(err => console.log("Erro:", err));
-}
-</script>
 </body>
-  </html>
+</html>
+
