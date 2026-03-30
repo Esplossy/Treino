@@ -1878,14 +1878,20 @@ let MT = {
 // Converte horário de dormir em horas de sono (acorda 04:40 fixo)
 function sonoParaHoras(horario) {
   if (!horario) return null;
-  const [hStr, mStr] = horario.split(':');
-  const h = parseInt(hStr), m = parseInt(mStr)||0;
-  // Acorda 04:40 = 4*60+40 = 280 minutos
-  const acorda = 4*60+40;
+  // Garante que é string no formato HH:MM
+  const str = String(horario).trim();
+  const match = str.match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return null;
+  const h = parseInt(match[1]), m = parseInt(match[2]);
+  if (isNaN(h) || isNaN(m)) return null;
+  const acorda = 4*60+40; // 04:40
   const dorme  = h*60+m;
-  // Se dormiu antes de meia noite
-  const dormeMins = dorme >= acorda ? 24*60 - dorme + acorda : acorda - dorme;
-  return parseFloat((dormeMins/60).toFixed(2));
+  // Dormiu depois de meia-noite (00:xx, 01:xx etc) → adiciona 24h
+  const dormeMins = dorme < acorda ? acorda - dorme : (24*60 - dorme + acorda);
+  const resultado = parseFloat((dormeMins/60).toFixed(2));
+  // Sanidade: sono entre 1h e 14h
+  if (resultado < 1 || resultado > 14) return null;
+  return resultado;
 }
 
 function sonoLabel(horario) {
