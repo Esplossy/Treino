@@ -1056,7 +1056,10 @@ function addExercicioProgramado(exData, isExtra) {
   div.innerHTML = `
     <!-- Nome + musculo fixos -->
     <input type="hidden" class="ex-nome" value="${exData.nome}">
-    <input type="hidden" class="ex-grupo" value="${exData.musculo||''}">
+    ${isExtra
+      ? `<select class="ex-grupo" style="display:none"></select>`
+      : `<input type="hidden" class="ex-grupo" value="${exData.musculo||''}">`
+    }
     <input type="hidden" class="ex-tipo"  value="">
     <input type="hidden" class="ex-rpe"   value="">
     <input type="hidden" class="ex-rir"   value="">
@@ -1065,7 +1068,20 @@ function addExercicioProgramado(exData, isExtra) {
       <div style="flex:1;min-width:0">
         ${isExtra ? '<div style="font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:2px">Extra</div>' : ''}
         <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text);line-height:1.1;margin-bottom:2px">${exData.nome}</div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:${corBorda}">${exData.musculo||''}${isFire?' · 🔥 PRIORIDADE':isAjuste?' · ✏️ AJUSTE':''}</div>
+        ${isExtra
+          ? `<select class="ex-grupo-vis" style="width:100%;margin-top:4px;background:var(--bg3);border:1px solid var(--blue);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;padding:6px 10px;outline:none;-webkit-appearance:none">
+              <option value="">Grupo Muscular</option>
+              <option value="Costas"  ${exData.musculo==='Costas' ?'selected':''}>Costas</option>
+              <option value="Ombro"   ${exData.musculo==='Ombro'  ?'selected':''}>Ombro</option>
+              <option value="Peito"   ${exData.musculo==='Peito'  ?'selected':''}>Peito</option>
+              <option value="Bíceps"  ${exData.musculo==='Bíceps' ?'selected':''}>Bíceps</option>
+              <option value="Tríceps" ${exData.musculo==='Tríceps'?'selected':''}>Tríceps</option>
+              <option value="Pernas"  ${exData.musculo==='Pernas' ?'selected':''}>Pernas</option>
+              <option value="Core"    ${exData.musculo==='Core'   ?'selected':''}>Core</option>
+              <option value="Cardio"  ${exData.musculo==='Cardio' ?'selected':''}>Cardio</option>
+            </select>`
+          : `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:${corBorda}">${exData.musculo||''}${isFire?' · 🔥 PRIORIDADE':isAjuste?' · ✏️ AJUSTE':''}</div>`
+        }
       </div>
       <button onclick="document.getElementById('ex-${idx}').remove()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0">✕</button>
     </div>
@@ -1176,10 +1192,12 @@ async function carregarDados() {
   try {
     const r1 = await fetch(API+'?action=getHistory',{redirect:'follow'});
     const r2 = await fetch(API+'?action=getLastWeights',{redirect:'follow'});
+    const r3 = await fetch(API+'?action=getPeso',{redirect:'follow'});
     sessions = await r1.json();
     lastWeights = await r2.json();
     const doHistorico = Object.keys(lastWeights);
     knownEx = [...new Set([...doHistorico,...TODOS_EXERCICIOS])];
+    try { const p = await r3.json(); if (p && typeof p === 'object') Object.assign(pesoData, p); } catch(e) {}
   } catch(err) { console.warn('Aviso:', err); }
 }
 
@@ -1201,7 +1219,9 @@ async function salvarTreino() {
     const { totalReps } = parseReps(repsRaw, parseInt(serie)||0);
     rows.push({
       data, treino,
-      grupoMuscular: card.querySelector('.ex-grupo').value,
+      grupoMuscular: card.querySelector('.ex-grupo-vis') 
+        ? card.querySelector('.ex-grupo-vis').value 
+        : card.querySelector('.ex-grupo').value,
       tipo: card.querySelector('.ex-tipo').value,
       descanso: card.querySelector('.ex-descanso').value,
       rir: card.querySelector('.ex-rir').value,
@@ -1900,7 +1920,9 @@ function iniciarExercicio(idx) {
 
   const ex = {
     nome,
-    musculo:  card.querySelector('.ex-grupo').value || '',
+    musculo: card.querySelector('.ex-grupo-vis')
+      ? card.querySelector('.ex-grupo-vis').value
+      : card.querySelector('.ex-grupo').value || '',
     tipo:     card.querySelector('.ex-tipo').value || '',
     descanso: card.querySelector('.ex-descanso').value || '90s',
     rir:      card.querySelector('.ex-rir').value || '',
@@ -2318,15 +2340,8 @@ function mtVoltarDeRevezamento() {
 function addExercicioLivre() {
   const nome = prompt('Nome do exercício extra:');
   if (!nome || !nome.trim()) return;
-  const grupos = ['Costas','Ombro','Peito','Bíceps','Tríceps','Pernas','Core','Cardio'];
-  const musculo = prompt('Grupo muscular:\n' + grupos.map((g,i)=>`${i+1}. ${g}`).join('\n') + '\n\nDigite o número ou o nome:');
-  if (musculo === null) return;
-  const idx = parseInt(musculo);
-  const musculoFinal = (!isNaN(idx) && idx >= 1 && idx <= grupos.length)
-    ? grupos[idx-1]
-    : musculo.trim() || 'Outro';
   const exLivre = {
-    nome: nome.trim(), musculo: musculoFinal, foco:'', subs:[],
+    nome: nome.trim(), musculo:'', foco:'', subs:[],
     series:3, reps:'12', descanso:'90s'
   };
   addExercicioProgramado(exLivre, true);
