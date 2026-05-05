@@ -1,2897 +1,693 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0a0a0a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>GymLog</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<style>
-:root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--card:#151515;--border:#2a2a2a;--accent:#d4ff4e;--red:#ff4e4e;--blue:#4e9fff;--text:#f0f0f0;--muted:#666;--r:6px;--nav:64px}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;height:100%;overflow:hidden}
-#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
-.screen{display:none;flex:1;overflow-y:auto;padding:16px 16px calc(var(--nav) + 20px)}
-.screen.active{display:block}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav);background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.nav-btn{flex:1;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px}
-.nav-btn .ico{font-size:20px}
-.nav-btn.active{color:var(--accent)}
-.page-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--accent)}
-.sec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:8px;display:block}
-.subtext{font-size:12px;color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px}
-input,select{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;outline:none;-webkit-appearance:none;appearance:none}
-input:focus,select:focus{border-color:var(--accent)}
-select option{background:var(--bg2)}
-.ig{margin-bottom:10px}
-.ig label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:5px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.btn{width:100%;padding:13px;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:opacity .15s,transform .1s}
-.btn:active{transform:scale(.98);opacity:.8}
-.btn-primary{background:var(--accent);color:#000}
-.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
-.btn-ghost{background:transparent;color:var(--red);border:1px solid var(--red);padding:7px 10px;font-size:11px;width:auto;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;text-transform:uppercase}
-.btn-add{background:transparent;border:1px dashed var(--accent);color:var(--accent);padding:12px;border-radius:var(--r);width:100%;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;margin-top:10px}
-.ex-card{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:14px;margin-bottom:10px}
-.ex-card .ex-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#333;line-height:1;min-width:36px}
-.ac-item:last-child{border-bottom:none}
-.ac-item:active{color:var(--accent);background:var(--bg2)}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.stat-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
-.stat-val{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--accent);line-height:1}
-.stat-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
-.bar-wrap{background:var(--bg3);border-radius:2px;height:6px;margin-top:6px}
-.bar{height:6px;background:var(--accent);border-radius:2px;transition:width .6s}
-.sess-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
-.sess-head{background:var(--bg3);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-.sess-date{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px}
-.sess-body{padding:10px 14px;display:none}
-.sess-body.open{display:block}
-.sess-badge{background:var(--accent);color:#000;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:2px}
-.ex-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
-.ex-row:last-child{border-bottom:none}
-.ex-row-name{font-weight:600}
-.ex-row-muscle{font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700}
-.ex-row-stats{color:var(--muted);font-size:12px;text-align:right}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px}
-.chip{padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:12px;white-space:nowrap;cursor:pointer;color:var(--muted);font-weight:600}
-.chip.active{background:var(--accent);color:#000;border-color:var(--accent)}
-.toast{position:fixed;bottom:calc(var(--nav) + 12px);left:16px;right:16px;background:var(--accent);color:#000;padding:13px 16px;border-radius:var(--r);font-size:13px;font-weight:700;text-align:center;z-index:300;transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none}
-.toast.show{transform:translateY(0);opacity:1}
-.toast.err{background:var(--red);color:#fff}
-.loading{text-align:center;color:var(--muted);padding:40px;font-size:12px;letter-spacing:2px;text-transform:uppercase}
-.empty{text-align:center;padding:40px 20px;color:var(--muted)}
-.row-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.warn-box{background:rgba(255,78,78,.1);border:1px solid var(--red);border-radius:var(--r);padding:12px 14px;color:var(--red);font-size:13px;margin-bottom:10px;line-height:1.5}
-.badge{display:inline-block;padding:2px 7px;border-radius:2px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.badge-green{background:rgba(212,255,78,.2);color:var(--accent)}
-.badge-red{background:rgba(255,78,78,.2);color:var(--red)}
-.prog-row{margin-bottom:12px}
-.prog-row-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
-.reps-input{font-size:16px;font-weight:700;letter-spacing:1px}
-.reps-preview{font-size:11px;color:var(--muted);margin-top:4px;min-height:16px}
-.rec-box{background:var(--bg3);border-left:3px solid var(--blue);border-radius:0 var(--r) var(--r) 0;padding:8px 10px;margin-top:8px;font-size:12px;color:var(--blue);display:none;line-height:1.5}
-/* MODO TREINO */
-#modo-treino{display:none;position:fixed;inset:0;background:var(--bg);z-index:600;flex-direction:column;overflow:hidden}
-#modo-treino.ativo{display:flex}
-.mt-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.mt-progress{height:3px;background:var(--border);flex-shrink:0}
-.mt-progress-bar{height:3px;background:var(--accent);transition:width .4s}
-.mt-body{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column}
-.mt-fase{display:none;flex:1;flex-direction:column}
-.mt-fase.ativa{display:flex}
-/* Fase execução */
-.mt-ex-num{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.mt-ex-nome{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:var(--text);line-height:1.1;margin-bottom:6px}
-.mt-serie-dots{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.mt-dot{width:12px;height:12px;border-radius:50%;background:var(--border)}
-.mt-dot.feita{background:var(--accent)}
-.mt-dot.atual{background:var(--accent);box-shadow:0 0 0 3px rgba(212,255,78,.3)}
-.mt-alvo{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px}
-.mt-alvo-row{display:flex;gap:16px;flex-wrap:wrap}
-.mt-alvo-item{text-align:center;flex:1;min-width:60px}
-.mt-alvo-val{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent);line-height:1}
-.mt-alvo-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-.mt-last{background:var(--bg3);border-left:2px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:8px 10px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.6}
-.mt-btn-concluiu{background:var(--accent);color:#000;border:none;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;width:100%;padding:22px;cursor:pointer;margin-top:auto;flex-shrink:0}
-.mt-btn-concluiu:active{opacity:.8;transform:scale(.98)}
-/* Fase reps */
-.mt-reps-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
-.mt-reps-input{font-family:'Bebas Neue',sans-serif;font-size:80px;color:var(--accent);background:none;border:none;border-bottom:3px solid var(--accent);text-align:center;width:100%;outline:none;letter-spacing:4px;margin-bottom:16px;padding:8px 0}
-.mt-reps-feitas{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.mt-rep-badge{background:var(--bg3);border:1px solid var(--accent);border-radius:4px;padding:6px 12px;font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent)}
-.mt-btn-confirmar{background:var(--accent);color:#000;border:none;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;width:100%;padding:18px;cursor:pointer;margin-top:auto;flex-shrink:0}
-/* Fase timer */
-.mt-timer-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1}
-.mt-timer-ring{position:relative;width:200px;height:200px;margin-bottom:20px}
-.mt-timer-svg{transform:rotate(-90deg)}
-.mt-timer-circle-bg{fill:none;stroke:var(--border);stroke-width:8}
-.mt-timer-circle{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .9s linear}
-.mt-timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:64px;color:var(--accent);letter-spacing:2px}
-.mt-timer-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:24px}
-.mt-btn-pular{background:var(--bg3);color:var(--muted);border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;padding:12px 32px;cursor:pointer;text-transform:uppercase;letter-spacing:1px}
-.mt-btn-pular:active{opacity:.8}
-/* Fase resumo exercício */
-.mt-resumo-ex{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px}
-/* Fase final */
-.mt-final-scroll{flex:1;overflow-y:auto}
-.mt-btn-salvar{background:var(--accent);color:#000;border:none;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;width:100%;padding:18px;cursor:pointer;flex-shrink:0;margin-top:12px}
-</style>
-<link rel="manifest" href="data:application/json,{
-  %22name%22:%22GymLog V-Shape%22,
-  %22short_name%22:%22GymLog%22,
-  %22start_url%22:%22.%22,
-  %22display%22:%22standalone%22,
-  %22background_color%22:%22%23000000%22,
-  %22theme_color%22:%22%23d4ff4e%22,
-  %22orientation%22:%22portrait%22,
-  %22icons%22:[{%22src%22:%22https://esplossy.github.io/Treino/icon.png%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22}]
-}">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="GymLog">
-<meta name="theme-color" content="#d4ff4e">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diogo — Segurança da Informação</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #0d0f10;
+      --surface:   #141618;
+      --border:    #242729;
+      --muted:     #3a3e42;
+      --text:      #c8cdd2;
+      --text-dim:  #636c74;
+      --accent:    #e8a020;
+      --accent2:   #4ea8de;
+      --danger:    #c0392b;
+      --mono:      'IBM Plex Mono', monospace;
+      --sans:      'IBM Plex Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    main, header, footer, section { position: relative; z-index: 1; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 80px 0 60px;
+    }
+
+    .header-inner { display: flex; flex-direction: column; gap: 20px; }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-weight: 600;
+      color: #e8eaec;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-dim);
+      max-width: 520px;
+      line-height: 1.8;
+    }
+
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 8px;
+    }
+
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #27ae60;
+      box-shadow: 0 0 6px #27ae6088;
+      flex-shrink: 0;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    h2 {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e3e6;
+      margin-bottom: 12px;
+    }
+
+    p { color: var(--text); max-width: 640px; }
+
+    /* ── SKILLS GRID ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .skill-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      transition: border-color 0.2s;
+    }
+
+    .skill-group:hover { border-color: var(--muted); }
+
+    .skill-group-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--accent2);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .skill-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .skill-list li {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .skill-list li::before {
+      content: '› ';
+      color: var(--accent);
+    }
+
+    /* ── PROJECTS ── */
+    .projects-list { display: flex; flex-direction: column; gap: 20px; }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: start;
+      transition: border-color 0.2s;
+    }
+
+    .project-card:hover { border-color: var(--muted); }
+
+    .project-title {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: #e0e3e6;
+      margin-bottom: 6px;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-width: 100%;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .tag-pill {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      letter-spacing: 0.08em;
+    }
+
+    .project-link {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .project-link:hover { border-color: var(--accent); }
+
+    /* ── TIMELINE (experience / edu) ── */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 24px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .timeline-item:last-child { border-bottom: none; }
+
+    .timeline-period {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      padding-top: 3px;
+      line-height: 1.6;
+    }
+
+    .timeline-content h3 {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: #e0e3e6;
+      margin-bottom: 2px;
+    }
+
+    .timeline-content .org {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent2);
+      margin-bottom: 8px;
+    }
+
+    .timeline-content p {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .contact-item {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .contact-item:hover { border-color: var(--accent); color: var(--accent); }
+
+    .contact-icon { font-size: 14px; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-inner span {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* ── CURSOR BLINK ── */
+    .cursor {
+      display: inline-block;
+      width: 10px; height: 1.2em;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-left: 4px;
+      animation: blink 1.1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .timeline-item { grid-template-columns: 1fr; gap: 4px; }
+      .project-card  { grid-template-columns: 1fr; }
+      .project-link  { margin-top: 8px; display: inline-block; }
+    }
+
+    /* ── FADE IN ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
 <body>
-<div id="app">
 
-  <!-- TREINAR -->
-  <div id="s-treinar" class="screen active">
-
-    <!-- Header dia -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-      <div>
-        <div class="page-title" style="line-height:1">TREINAR</div>
-        <div class="subtext" id="data-hoje" style="margin-top:2px"></div>
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <span class="tag">Portfólio / v1.0</span>
+      <h1>Diogo<br/>Esplossy<span class="cursor"></span></h1>
+      <p class="subtitle">
+        Segurança da Informação · Desenvolvimento Web · Automação<br/>
+        Taboão da Serra, SP — Brasil
+      </p>
+      <div class="status-line">
+        <span class="dot"></span>
+        <span>Disponível para oportunidades em SI · Atualmente em formação</span>
       </div>
-      <button class="btn btn-primary" id="btn-save" style="width:auto;padding:10px 20px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px">SALVAR</button>
-    </div>
-
-    <!-- Seletor de dia — visual compacto -->
-    <div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px">
-      <button class="dia-btn" data-letra="A" onclick="selecionarDia('A')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
-        A<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Seg</div>
-      </button>
-      <button class="dia-btn" data-letra="B" onclick="selecionarDia('B')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
-        B<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Ter</div>
-      </button>
-      <button class="dia-btn" data-letra="C" onclick="selecionarDia('C')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
-        C<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Qua</div>
-      </button>
-      <button class="dia-btn" data-letra="D" onclick="selecionarDia('D')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
-        D<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Qui</div>
-      </button>
-      <button class="dia-btn" data-letra="E" onclick="selecionarDia('E')" style="flex:1;min-width:52px;padding:10px 4px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;text-align:center;transition:all .15s">
-        E<div style="font-size:8px;font-family:'DM Sans',sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.5px">Sex</div>
-      </button>
-    </div>
-
-    <!-- Nome do treino selecionado -->
-    <div id="treino-nome-label" style="display:none;margin-bottom:10px;padding:10px 14px;background:var(--bg2);border-radius:var(--r);border-left:3px solid var(--accent)">
-      <div id="treino-nome-txt" style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px"></div>
-      <div id="treino-obs-txt" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
-    </div>
-
-    <!-- BRIEFING DO TREINADOR — aparece ao selecionar o dia -->
-    <div id="coach-briefing" style="display:none;margin-bottom:12px"></div>
-
-    <!-- Campos da sessão (sono + duração) -->
-    <div class="g2" style="margin-bottom:12px">
-      <div class="ig" style="margin:0">
-        <label>Dormiu às 😴</label>
-        <select id="s-sono">
-          <option value="">—</option>
-          <option value="21:00">21:00 → 7h40</option>
-          <option value="21:30">21:30 → 7h10</option>
-          <option value="22:00">22:00 → 6h40</option>
-          <option value="22:30">22:30 → 6h10</option>
-          <option value="23:00">23:00 → 5h40</option>
-          <option value="23:30">23:30 → 5h10</option>
-          <option value="00:00">00:00 → 4h40</option>
-          <option value="00:30">00:30 → 4h10</option>
-        </select>
-      </div>
-      <div class="ig" style="margin:0">
-        <label>Data</label>
-        <input type="date" id="s-data">
-      </div>
-    </div>
-
-    <!-- Input hidden para compatibilidade com salvarTreino -->
-    <input type="hidden" id="s-treino" value="">
-    <input type="hidden" id="s-duracao" value="">
-
-    <!-- Lista de exercícios do dia -->
-    <div id="ex-list"></div>
-
-    <!-- Estado vazio -->
-    <div id="treino-vazio" style="text-align:center;padding:40px 20px;color:var(--muted)">
-      <div style="font-size:32px;margin-bottom:8px">👆</div>
-      <div style="font-size:13px">Selecione o treino do dia acima</div>
-    </div>
-
-    <!-- Botões de ação -->
-    <div id="treino-acoes" style="display:none">
-      <button id="btn-add-livre" style="width:100%;background:transparent;border:1px dashed var(--border);color:var(--muted);padding:10px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px">+ ADICIONAR EXERCÍCIO EXTRA</button>
-    </div>
-
-  </div>
-
-  <!-- PROGRAMA -->
-  <div id="s-programa" class="screen">
-    <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
-      <div>
-        <div class="page-title">V-SHAPE</div>
-        <div class="subtext">Diogo · 25 anos · 1,60m · Dez 2025 → Dez 2026</div>
-      </div>
-    </div>
-
-    <!-- Meta -->
-    <div style="background:linear-gradient(135deg,#111 0%,#1a1a1a 100%);border:1px solid var(--accent);border-radius:var(--r);padding:16px;margin:12px 0">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:6px">🏆 Meta Final</div>
-      <div style="font-size:14px;color:var(--text);line-height:1.6">V-shape CLARO — ombros largos, cintura fina, dorsal em V.<br><span style="color:var(--muted);font-size:12px">Shape Atlético de Elite · Frequência 5x/semana</span></div>
-    </div>
-
-    <!-- Aquecimento -->
-    <div class="card">
-      <span class="sec-label">Aquecimento Obrigatório</span>
-      <div style="font-size:13px;color:var(--text);line-height:1.8">
-        ⏱ <strong>8–12 min</strong> de mobilidade + cardio leve antes de cada sessão<br>
-        <span style="color:var(--muted);font-size:12px">Mobilidade escapular, rotação de ombros, hip flexor stretch</span>
-      </div>
-    </div>
-
-    <!-- Volume alvo -->
-    <div class="card">
-      <span class="sec-label">📊 Volume Semanal Alvo — Prioridades V-Shape</span>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Baseado em evidências — músculos-chave para o V-shape</div>
-
-      <div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <span style="font-weight:600;font-size:13px">Latíssimo (largura costas)</span>
-          <span style="font-size:10px;color:var(--muted)">2x/sem</span>
-        </div>
-        <div style="display:flex;gap:8px;margin-bottom:6px">
-          <span style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--muted)">Mín: 10 sets</span>
-          <span style="background:#4e9fff22;border:1px solid var(--blue);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--blue)">Ideal: 14–18 sets</span>
-        </div>
-        <div class="bar-wrap"><div class="bar" style="width:85%;background:var(--blue)"></div></div>
-      </div>
-
-      <div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <span style="font-weight:600;font-size:13px">Deltóide Lateral (largura ombros)</span>
-          <span style="font-size:10px;color:var(--muted)">3x/sem</span>
-        </div>
-        <div style="display:flex;gap:8px;margin-bottom:6px">
-          <span style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--muted)">Mín: 8 sets</span>
-          <span style="background:#d4ff4e22;border:1px solid var(--accent);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--accent)">Ideal: 12–15 sets</span>
-        </div>
-        <div class="bar-wrap"><div class="bar" style="width:75%;background:var(--accent)"></div></div>
-      </div>
-
-      <div style="margin-bottom:4px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <span style="font-weight:600;font-size:13px">Deltóide Posterior (equilíbrio V)</span>
-          <span style="font-size:10px;color:var(--muted)">2x/sem</span>
-        </div>
-        <div style="display:flex;gap:8px;margin-bottom:6px">
-          <span style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--muted)">Mín: 4 sets</span>
-          <span style="background:#a78bfa22;border:1px solid #a78bfa;border-radius:4px;padding:3px 8px;font-size:11px;color:#a78bfa">Ideal: 8–10 sets</span>
-        </div>
-        <div class="bar-wrap"><div class="bar" style="width:50%;background:#a78bfa"></div></div>
-      </div>
-    </div>
-
-    <!-- Divisão semanal -->
-    <div class="card">
-      <span class="sec-label">📅 Divisão Semanal</span>
-
-      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start">
-        <div style="background:var(--accent);color:#000;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">A</div>
-        <div style="flex:1">
-          <div style="font-weight:600;font-size:13px">Segunda</div>
-          <div style="font-size:12px;color:var(--accent);margin-top:1px">Ombro (Foco Lateral) + Peito Superior</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Elev. Lateral Sentado 5×12-15 🔥 · Desenv. Militar 4×6-8</div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start">
-        <div style="background:var(--blue);color:#000;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">B</div>
-        <div style="flex:1">
-          <div style="font-weight:600;font-size:13px">Terça</div>
-          <div style="font-size:12px;color:var(--blue);margin-top:1px">Costas (Largura) + Bíceps</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Barra Fixa 5×5-8 🔥 · Puxada Wide 4×8-10</div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start">
-        <div style="background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">C</div>
-        <div style="flex:1">
-          <div style="font-weight:600;font-size:13px">Quarta</div>
-          <div style="font-size:12px;color:var(--red);margin-top:1px">Pernas + Core</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Stiff 4×6-8 · Agachamento 4×6-8 · Leg Press 3×10-12</div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start">
-        <div style="background:var(--accent);color:#000;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">D</div>
-        <div style="flex:1">
-          <div style="font-weight:600;font-size:13px">Quinta</div>
-          <div style="font-size:12px;color:var(--accent);margin-top:1px">Ombro (Força) + Tríceps</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Desenv. em Pé 5×5-6 🔥 · Elev. Lateral Máquina 5×10-12</div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:12px;padding:10px 0;align-items:flex-start">
-        <div style="background:var(--blue);color:#000;font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">E</div>
-        <div style="flex:1">
-          <div style="font-weight:600;font-size:13px">Sexta</div>
-          <div style="font-size:12px;color:var(--blue);margin-top:1px">Costas (Técnica) + Upper Body</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Puxada Aberta 4×8-10 🔥 · Drop Set Ombros</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Regras de progressão -->
-    <div class="card">
-      <span class="sec-label">📈 Regras de Progressão</span>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:3px">Progressão de Carga</div>
-          <div style="font-size:12px;color:var(--text);line-height:1.6">Quando completar <strong>todas as séries no topo da faixa</strong> (ex: 3×12), aumente a carga em 2,5–5% ou +1 rep.</div>
-        </div>
-        <div style="background:var(--bg3);border-left:3px solid var(--red);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--red);margin-bottom:3px">Estagnação</div>
-          <div style="font-size:12px;color:var(--text);line-height:1.6">Se estagnar por <strong>3–4 semanas</strong>, adicione 1 set a um exercício-chave por semana até atingir o teto de volume.</div>
-        </div>
-        <div style="background:var(--bg3);border-left:3px solid var(--blue);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:3px">Tempo de Repetição</div>
-          <div style="font-size:12px;color:var(--text);line-height:1.6">Concêntrico: <strong>1–2s</strong> | Excêntrico (descida): <strong>2–3s</strong><br><span style="color:var(--muted)">O controle na descida gera mais tensão mecânica.</span></div>
-        </div>
-        <div style="background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:3px">RPE Alvo</div>
-          <div style="font-size:12px;color:var(--text);line-height:1.6">Treine a <strong>RPE 7–9</strong> (1–3 reps em reserva). Séries máximas demais aumentam fadiga sem benefício proporcional.</div>
-        </div>
-        <div style="background:var(--bg3);border-left:3px solid var(--blue);border-radius:0 var(--r) var(--r) 0;padding:10px 12px">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:3px">Grip — Exercícios de Costas</div>
-          <div style="font-size:12px;color:var(--text);line-height:1.6">Alterne pegada média/pronada (força + segurança) com pegada aberta (variação) entre sessões. A diferença de ativação é pequena, mas a variedade evita estagnação.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ajustes técnicos desta versão -->
-    <div class="card">
-      <span class="sec-label">✏️ Ajustes Técnicos Desta Versão</span>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--text);line-height:1.6">
-          <span style="color:var(--blue);font-weight:700">Terça — Remada:</span> Pegada NEUTRA/FECHADA em vez de aberta — ativa mais latíssimo = mais largura dorsal
-        </div>
-        <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--text);line-height:1.6">
-          <span style="color:var(--blue);font-weight:700">Terça — Face Pull MANTIDO:</span> essencial para saúde escapular e deltóide posterior (proporção do V)
-        </div>
-        <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--text);line-height:1.6">
-          <span style="color:var(--blue);font-weight:700">Sexta — Remada Baixa:</span> Pegada NEUTRA — mesma razão da Terça. Alterne com pegada aberta periodicamente para espessura.
-        </div>
-      </div>
-    </div>
-
-    <!-- Visualização dos treinos expandidos -->
-    <div class="card" id="prog-treinos-detalhe">
-      <span class="sec-label">Exercícios por Dia</span>
-      <div id="prog-ex-tabs" style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px">
-        <button onclick="progShowTreino('A')" class="prog-tab active" data-t="A" style="padding:6px 16px;border-radius:20px;border:1px solid var(--accent);background:var(--accent);color:#000;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">A — Seg</button>
-        <button onclick="progShowTreino('B')" class="prog-tab" data-t="B" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">B — Ter</button>
-        <button onclick="progShowTreino('C')" class="prog-tab" data-t="C" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">C — Qua</button>
-        <button onclick="progShowTreino('D')" class="prog-tab" data-t="D" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">D — Qui</button>
-        <button onclick="progShowTreino('E')" class="prog-tab" data-t="E" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">E — Sex</button>
-      </div>
-      <div id="prog-ex-lista"></div>
+      <nav class="nav-links">
+        <a href="#sobre">Sobre</a>
+        <a href="#habilidades">Habilidades</a>
+        <a href="#projetos">Projetos</a>
+        <a href="#experiencia">Experiência</a>
+        <a href="#formacao">Formação</a>
+        <a href="#contato">Contato</a>
+      </nav>
     </div>
   </div>
+</header>
 
-  <!-- STATS -->
-  <div id="s-stats" class="screen">
-    <div class="row-between" style="margin-bottom:8px">
-      <div class="page-title">STATS</div>
-      <button class="btn btn-secondary" id="btn-relatorio" style="width:auto;padding:8px 14px;font-size:11px">📋 RELATÓRIO</button>
+<main>
+
+  <!-- SOBRE -->
+  <section id="sobre">
+    <div class="container fade-in">
+      <div class="section-label">Sobre</div>
+      <p>
+        Profissional em transição de carreira para Segurança da Informação, com background
+        administrativo em ambiente industrial e aprendizado autodidata em pentesting, análise
+        de redes e desenvolvimento de ferramentas em Python. Atualmente cursando Tecnólogo em
+        Defesa Cibernética e construindo um portfólio técnico orientado a vulnerabilidades reais.
+      </p>
+      <p style="margin-top: 16px;">
+        Experiência prática com Kali Linux, Metasploit, Wireshark, SQLmap, Aircrack-ng e
+        desenvolvimento de aplicações web (PWA). Foco em conseguir uma posição júnior em
+        análise de segurança da informação até 2026.
+      </p>
     </div>
-    <div style="display:flex;gap:8px;margin-bottom:14px">
-      <button onclick="abrirCoach('dia')" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:left">
-        <div style="font-size:16px;margin-bottom:2px">📊</div>
-        <div>Resumo do Dia</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:1px">Análise da última sessão</div>
-      </button>
-      <button onclick="abrirCoach('semana')" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:left">
-        <div style="font-size:16px;margin-bottom:2px">📅</div>
-        <div>Resumo da Semana</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:1px">Volume, lacunas e alertas</div>
-      </button>
-    </div>
-    <!-- Modal coach -->
-    <div id="coach-modal" style="display:none;position:fixed;inset:0;background:#000c;z-index:500;padding:16px;overflow-y:auto" onclick="if(event.target===this)this.style.display='none'">
-      <div style="background:var(--bg2);border-radius:var(--r);max-width:480px;margin:0 auto;overflow:hidden">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border)">
-          <div id="coach-modal-title" style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent);letter-spacing:1px"></div>
-          <button onclick="document.getElementById('coach-modal').style.display='none'" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1">✕</button>
+  </section>
+
+  <!-- HABILIDADES -->
+  <section id="habilidades">
+    <div class="container fade-in">
+      <div class="section-label">Habilidades</div>
+      <div class="skills-grid">
+
+        <div class="skill-group">
+          <div class="skill-group-title">Pentesting / Ofensivo</div>
+          <ul class="skill-list">
+            <li>Kali Linux</li>
+            <li>Metasploit Framework</li>
+            <li>SQLmap</li>
+            <li>Aircrack-ng / NetHunter</li>
+            <li>Nmap / Port Scanning</li>
+          </ul>
         </div>
-        <div id="coach-modal-body" style="padding:16px"></div>
-      </div>
-    </div>
-    <div class="subtext" style="margin-bottom:16px" id="stats-mes"></div>
-    <div id="stats-content"><div class="loading">Carregando...</div></div>
-    <div id="orm-chart-wrap" style="display:none">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <span class="sec-label" style="margin:0">Evolução do 1RM</span>
-          <select id="orm-select" style="width:auto;font-size:12px;padding:6px 10px"></select>
+
+        <div class="skill-group">
+          <div class="skill-group-title">Análise de Rede</div>
+          <ul class="skill-list">
+            <li>Wireshark</li>
+            <li>Packet Sniffing (Python)</li>
+            <li>TCP/IP Stack</li>
+            <li>Wi-Fi Auditing</li>
+            <li>Network Scanner Web</li>
+          </ul>
         </div>
-        <canvas id="chart-orm" height="180"></canvas>
-        <div id="orm-insight" style="margin-top:10px;font-size:12px;color:var(--muted);line-height:1.6"></div>
-      </div>
-    </div>
-  </div>
 
-  <!-- PESO -->
-  <div id="s-peso" class="screen">
-    <div class="page-title">PESO</div>
-    <div class="subtext" style="margin-bottom:16px">Acompanhamento diário</div>
-    <div id="media-semana-peso"></div>
-    <div class="card">
-      <span class="sec-label">Registrar Peso</span>
-      <div class="g2" style="margin-bottom:10px">
-        <div class="ig" style="margin:0"><label>Data</label><input type="date" id="p-data"></div>
-        <div class="ig" style="margin:0"><label>Peso (kg)</label><input type="number" id="p-peso" placeholder="65.5" step="0.1"></div>
-      </div>
-      <div class="ig"><label>Observação (opcional)</label><input type="text" id="p-obs" placeholder="Ex: após treino, em jejum..."></div>
-      <button class="btn btn-primary" id="btn-peso-save">REGISTRAR</button>
-    </div>
-    <div class="card">
-      <span class="sec-label">Evolução do Peso</span>
-      <canvas id="chart-peso" height="200"></canvas>
-    </div>
-    <div id="peso-stats"></div>
-    <div class="card" style="margin-top:10px">
-      <span class="sec-label">Bioimpedância — Próxima: 05–10/Mar/2026</span>
-      <div style="font-size:12px;color:var(--muted);line-height:1.8">
-        <div>📅 Nov/2025 — Peso: <strong style="color:var(--text)">71,5kg</strong> · Gordura: <strong style="color:var(--red)">31,1% (22,2kg)</strong></div>
-        <div>💪 Massa magra: <strong style="color:var(--blue)">45,1kg</strong> · Músculo (SMM): <strong style="color:var(--accent)">29,0kg</strong></div>
-        <div>🔥 TMB: 1.679 kcal · Gordura visceral: nível 9</div>
-      </div>
-      <div id="bio-evolucao"></div>
-    </div>
-  </div>
-
-  <!-- HISTÓRICO -->
-  <div id="s-historico" class="screen">
-    <div class="page-title">HISTÓRICO</div>
-    <div class="chips" id="chips-musculo"><div class="chip active" data-f="todos">Todos</div></div>
-    <div id="hist-list"><div class="loading">Carregando...</div></div>
-  </div>
-
-  <!-- CONFIG -->
-  <div id="s-config" class="screen">
-    <div class="page-title">CONFIG</div>
-    <div class="card">
-      <span class="sec-label">⚙️ Conexão Google Sheets</span>
-      <div class="ig"><label>URL do Apps Script</label><input type="url" id="cfg-url" placeholder="https://script.google.com/macros/s/.../exec"></div>
-      <button class="btn btn-primary" id="btn-cfg-save" style="margin-bottom:8px">💾 SALVAR URL</button>
-      <button class="btn btn-secondary" id="btn-cfg-test">🔌 TESTAR CONEXÃO</button>
-    </div>
-    <div class="card">
-      <span class="sec-label">⚖️ Peso — Registrar</span>
-      <div class="g2" style="margin-bottom:10px">
-        <div class="ig" style="margin:0"><label>Data</label><input type="date" id="peso-data"></div>
-        <div class="ig" style="margin:0"><label>Peso (kg)</label><input type="number" id="peso-val" placeholder="65.5" step="0.1"></div>
-      </div>
-      <div class="ig" style="margin-bottom:10px"><label>Observação</label><input type="text" id="peso-obs" placeholder="Ex: após treino, em jejum..."></div>
-      <button class="btn btn-primary" id="btn-peso-save">💾 REGISTRAR PESO</button>
-      <div style="margin-top:14px">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px">Progresso do Cut</div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-          <span style="font-size:13px">71,5kg → <strong style="color:var(--accent)" id="peso-atual-cut">65,5kg</strong> → 58kg</span>
-          <span style="color:var(--accent);font-weight:700" id="cut-pct">54%</span>
+        <div class="skill-group">
+          <div class="skill-group-title">Desenvolvimento</div>
+          <ul class="skill-list">
+            <li>Python</li>
+            <li>JavaScript / HTML / CSS</li>
+            <li>Google Apps Script</li>
+            <li>PWA (Progressive Web App)</li>
+            <li>REST API Integration</li>
+          </ul>
         </div>
-        <div class="bar-wrap"><div class="bar" id="cut-bar" style="width:54%"></div></div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px" id="cut-info">Perdeu 6,0kg · Faltam 7,5kg para a meta</div>
+
+        <div class="skill-group">
+          <div class="skill-group-title">Sistemas / Infra</div>
+          <ul class="skill-list">
+            <li>Linux (Debian/Ubuntu)</li>
+            <li>Dual Boot / Virtualização</li>
+            <li>Git / GitHub Pages</li>
+            <li>Android Sideloading</li>
+            <li>Home Network (AP / VLAN)</li>
+          </ul>
+        </div>
+
       </div>
     </div>
-    <div class="card">
-      <span class="sec-label">🔄 Dados</span>
-      <button class="btn btn-secondary" id="btn-reload">🔄 SINCRONIZAR / RECARREGAR</button>
-    </div>
-    <div class="card">
-      <span class="sec-label">📱 Instalar como App no Android</span>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="background:var(--bg3);border-radius:var(--r);padding:12px;font-size:12px;color:var(--text);line-height:1.8">
-          <div style="font-weight:700;color:var(--accent);margin-bottom:6px">Via GitHub Pages (recomendado):</div>
-          1. Abra o app no Chrome do Android<br>
-          2. Toque nos <strong>⋮ três pontos</strong> no canto superior<br>
-          3. Toque em <strong>"Adicionar à tela inicial"</strong><br>
-          4. Confirme → ícone aparece na gaveta de apps<br>
-          <span style="color:var(--muted);font-size:11px;margin-top:4px;display:block">Funciona offline, tela cheia, igual a um APK nativo.</span>
-        </div>
-        <div style="background:var(--bg3);border-radius:var(--r);padding:12px;font-size:12px;color:var(--text);line-height:1.8">
-          <div style="font-weight:700;color:var(--blue);margin-bottom:6px">URL do seu app:</div>
-          <div style="font-family:monospace;font-size:11px;color:var(--accent);word-break:break-all;background:var(--bg2);padding:8px;border-radius:4px">https://esplossy.github.io/Treino/</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  </section>
 
-  <!-- MODO TREINO -->
-  <div id="modo-treino">
-    <!-- Header -->
-    <div class="mt-header">
-      <div id="mt-titulo" style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--accent)">TREINO</div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <div id="mt-tempo-total" style="font-size:12px;color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px">00:00</div>
-        <button onclick="sairModoTreino()" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer">✕ SAIR</button>
-      </div>
-    </div>
-    <div class="mt-progress"><div class="mt-progress-bar" id="mt-prog-bar" style="width:0%"></div></div>
+  <!-- PROJETOS -->
+  <section id="projetos">
+    <div class="container fade-in">
+      <div class="section-label">Projetos</div>
+      <div class="projects-list">
 
-    <div class="mt-body">
-
-      <!-- FASE: EXECUTAR -->
-      <div class="mt-fase ativa" id="mt-fase-exec">
-        <div class="mt-ex-num" id="mt-ex-num">EXERCÍCIO 1 / 5</div>
-        <div class="mt-ex-nome" id="mt-ex-nome">Supino Inclinado</div>
-        <div style="margin-bottom:12px"><span id="mt-ex-musculo" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent)">Peito</span></div>
-        <div class="mt-serie-dots" id="mt-dots"></div>
-        <div class="mt-alvo">
-          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;font-weight:700">Alvo desta série</div>
-          <div class="mt-alvo-row">
-            <div class="mt-alvo-item"><div class="mt-alvo-val" id="mt-alvo-reps">12</div><div class="mt-alvo-lbl">Reps</div></div>
-            <div class="mt-alvo-item"><div class="mt-alvo-val" id="mt-alvo-carga">40</div><div class="mt-alvo-lbl">Kg</div></div>
-            <div class="mt-alvo-item"><div class="mt-alvo-val" id="mt-alvo-rpe">8</div><div class="mt-alvo-lbl">RPE</div></div>
-            <div class="mt-alvo-item"><div class="mt-alvo-val" id="mt-alvo-desc">90s</div><div class="mt-alvo-lbl">Descanso</div></div>
-          </div>
-        </div>
-        <div class="mt-last" id="mt-last" style="display:none"></div>
-        <button class="mt-btn-concluiu" id="mt-btn-concluiu">CONCLUÍ A SÉRIE ✓</button>
-      </div>
-
-      <!-- FASE: DIGITAR REPS -->
-      <div class="mt-fase" id="mt-fase-reps">
-        <div class="mt-reps-label" id="mt-reps-label">QUANTAS REPS FEZ?</div>
-        <div class="mt-reps-feitas" id="mt-reps-feitas"></div>
-        <input type="number" class="mt-reps-input" id="mt-reps-val" placeholder="0" min="0" max="99" inputmode="numeric">
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="mt-atalhos-reps"></div>
-        <button class="mt-btn-confirmar" id="mt-btn-confirmar">CONFIRMAR →</button>
-      </div>
-
-      <!-- FASE: TIMER -->
-      <div class="mt-fase" id="mt-fase-timer">
-        <div class="mt-timer-wrap">
-          <div class="mt-timer-ring">
-            <svg class="mt-timer-svg" width="200" height="200" viewBox="0 0 200 200">
-              <circle class="mt-timer-circle-bg" cx="100" cy="100" r="88"/>
-              <circle class="mt-timer-circle" id="mt-ring" cx="100" cy="100" r="88" stroke-dasharray="553" stroke-dashoffset="0"/>
-            </svg>
-            <div class="mt-timer-num" id="mt-timer-num">90</div>
-          </div>
-          <div class="mt-timer-label">DESCANSO — PRÓXIMA SÉRIE EM BREVE</div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-            <button class="mt-btn-pular" onclick="pularTimer()">PULAR ⚡</button>
-            <button class="mt-btn-pular" onclick="entrarRevezamento()" style="color:var(--blue);border-color:var(--blue)">REVEZAR 🔄</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- FASE: RESUMO DO EXERCÍCIO -->
-      <div class="mt-fase" id="mt-fase-resumo-ex">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin-bottom:16px;color:var(--accent)">EXERCÍCIO CONCLUÍDO ✓</div>
-        <div class="mt-resumo-ex" id="mt-resumo-ex-conteudo"></div>
-        <div id="mt-rec-resumo" style="margin-bottom:12px"></div>
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px">
-          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:10px">Avaliar este exercício</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div>
-              <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:5px">RPE (esforço)</label>
-              <select id="mt-rpe-input" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;outline:none;-webkit-appearance:none">
-                <option value="">—</option><option>6</option><option>7</option><option>7.5</option><option>8</option><option>8.5</option><option>9</option><option>9.5</option><option>10</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:5px">RIR (reps na reserva)</label>
-              <select id="mt-rir-input" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;outline:none;-webkit-appearance:none">
-                <option value="">—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4+</option>
-              </select>
+        <div class="project-card">
+          <div>
+            <div class="project-title">Password Strength Checker</div>
+            <p class="project-desc">
+              Ferramenta em Python para avaliar força de senhas com base em entropia, padrões
+              comuns e regras de complexidade. Saída com score e sugestões de melhoria.
+            </p>
+            <div class="project-tags">
+              <span class="tag-pill">Python</span>
+              <span class="tag-pill">Criptografia</span>
+              <span class="tag-pill">CLI</span>
             </div>
           </div>
-          <div id="mt-descanso-real-info" style="font-size:11px;color:var(--muted);margin-top:8px"></div>
+          <a class="project-link" href="https://github.com/esplossy" target="_blank">↗ GitHub</a>
         </div>
-        <button class="mt-btn-confirmar" id="mt-btn-prox-ex" style="background:var(--bg3);color:var(--text);border:1px solid var(--border)">PRÓXIMO EXERCÍCIO →</button>
-      </div>
 
-      <!-- FASE: REVEZAMENTO (compartilhar equipamento) -->
-      <div class="mt-fase" id="mt-fase-reveza">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:4px;color:var(--blue)">REVEZANDO 🔄</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:20px">Academia cheia — aguardando o equipamento ficar livre</div>
-        <div style="text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
-          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Tempo aguardando</div>
-          <div id="mt-reveza-timer" style="font-family:'Bebas Neue',sans-serif;font-size:80px;color:var(--blue);letter-spacing:4px;line-height:1">00:00</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:8px" id="mt-reveza-ex-nome"></div>
+        <div class="project-card">
+          <div>
+            <div class="project-title">Port Scanner</div>
+            <p class="project-desc">
+              Scanner de portas TCP em Python com suporte a ranges, detecção de serviços e
+              output formatado. Desenvolvido para fins educacionais em ambientes controlados.
+            </p>
+            <div class="project-tags">
+              <span class="tag-pill">Python</span>
+              <span class="tag-pill">Sockets</span>
+              <span class="tag-pill">Reconhecimento</span>
+            </div>
+          </div>
+          <a class="project-link" href="https://github.com/esplossy" target="_blank">↗ GitHub</a>
         </div>
-        <button onclick="voltarRevezamento()" style="width:100%;background:var(--blue);color:#000;border:none;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;padding:18px;cursor:pointer;margin-top:auto">
-          MINHA VEZ ✓
-        </button>
-        <button onclick="cancelarRevezamento()" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:12px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;margin-top:8px">CANCELAR REVEZAMENTO</button>
-      </div>
 
-      <!-- FASE: RESUMO FINAL -->
-      <div class="mt-fase" id="mt-fase-final">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--accent);margin-bottom:4px" id="mt-final-titulo">EXERCÍCIO CONCLUÍDO ✓</div>
-        <div id="mt-tempo-final" style="font-size:13px;color:var(--muted);margin-bottom:16px"></div>
-        <div class="mt-final-scroll" id="mt-final-lista"></div>
-        <button class="mt-btn-salvar" id="mt-btn-salvar-final">✓ VOLTAR AO TREINO</button>
-      </div>
+        <div class="project-card">
+          <div>
+            <div class="project-title">SQLi Scanner</div>
+            <p class="project-desc">
+              Scanner básico de injeção SQL em Python usando requisições HTTP, detecção de
+              parâmetros vulneráveis via payloads comuns e análise de resposta.
+            </p>
+            <div class="project-tags">
+              <span class="tag-pill">Python</span>
+              <span class="tag-pill">SQLi</span>
+              <span class="tag-pill">Web Security</span>
+            </div>
+          </div>
+          <a class="project-link" href="https://github.com/esplossy" target="_blank">↗ GitHub</a>
+        </div>
 
+        <div class="project-card">
+          <div>
+            <div class="project-title">Packet Sniffer</div>
+            <p class="project-desc">
+              Captura e análise de pacotes de rede em Python com filtragem por protocolo,
+              exibição de cabeçalhos IP/TCP/UDP e payload legível.
+            </p>
+            <div class="project-tags">
+              <span class="tag-pill">Python</span>
+              <span class="tag-pill">Scapy / Sockets</span>
+              <span class="tag-pill">Análise de Rede</span>
+            </div>
+          </div>
+          <a class="project-link" href="https://github.com/esplossy" target="_blank">↗ GitHub</a>
+        </div>
+
+        <div class="project-card">
+          <div>
+            <div class="project-title">GymLog PWA</div>
+            <p class="project-desc">
+              Aplicação web progressiva para registro de treinos com sincronização via Google
+              Sheets (Apps Script). Inclui histórico, resumos semanais e fluxo de iniciação
+              por exercício. Hospedada no GitHub Pages.
+            </p>
+            <div class="project-tags">
+              <span class="tag-pill">JavaScript</span>
+              <span class="tag-pill">PWA</span>
+              <span class="tag-pill">Google Sheets API</span>
+            </div>
+          </div>
+          <a class="project-link" href="https://esplossy.github.io/Treino/" target="_blank">↗ Demo</a>
+        </div>
+
+        <div class="project-card">
+          <div>
+            <div class="project-title">Meu Caixa PWA</div>
+            <p class="project-desc">
+              Aplicação de controle financeiro pessoal com categorias, lançamentos e resumos
+              mensais. Interface mobile-first, offline-capable via Service Worker.
+            </p>
+            <div class="project-tags">
+              <span class="tag-pill">JavaScript</span>
+              <span class="tag-pill">PWA</span>
+              <span class="tag-pill">LocalStorage</span>
+            </div>
+          </div>
+          <a class="project-link" href="https://github.com/esplossy" target="_blank">↗ GitHub</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIÊNCIA -->
+  <section id="experiencia">
+    <div class="container fade-in">
+      <div class="section-label">Experiência</div>
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-period">Nov 2021<br/>— atual</div>
+          <div class="timeline-content">
+            <h3>Auxiliar Administrativo · Armazém</h3>
+            <div class="org">CINPAL — Cia Indústria de Peças para Automóveis</div>
+            <p>
+              Controle de estoque industrial, movimentação de peças automotivas, gestão
+              de documentação interna e suporte administrativo em ambiente de manufatura.
+              Contrato CLT.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMAÇÃO -->
+  <section id="formacao">
+    <div class="container fade-in">
+      <div class="section-label">Formação</div>
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-period">Fev 2026<br/>— Jul 2028</div>
+          <div class="timeline-content">
+            <h3>Tecnólogo em Defesa Cibernética</h3>
+            <div class="org">UNIFECAF — Centro Universitário FEI / FECAF</div>
+            <p>Parceria com CINPAL. Formação técnica em segurança de redes, criptografia,
+            análise de vulnerabilidades e resposta a incidentes.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-period">Autodidata</div>
+          <div class="timeline-content">
+            <h3>Segurança Ofensiva & Desenvolvimento</h3>
+            <div class="org">Prática em laboratório próprio</div>
+            <p>Kali Linux, Metasploit, Aircrack-ng, SQLmap, Wireshark, Python scripting,
+            desenvolvimento web (PWA), administração de redes domésticas.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato">
+    <div class="container fade-in">
+      <div class="section-label">Contato</div>
+      <p style="margin-bottom: 28px; color: var(--text-dim);">
+        Prefiro contato via GitHub ou LinkedIn. Respondo em até 48h.
+      </p>
+      <div class="contact-grid">
+        <a class="contact-item" href="https://github.com/esplossy" target="_blank">
+          <span class="contact-icon">⌥</span>
+          github.com/esplossy
+        </a>
+        <a class="contact-item" href="https://linkedin.com/in/seu-linkedin" target="_blank">
+          <span class="contact-icon">↗</span>
+          LinkedIn
+        </a>
+        <a class="contact-item" href="mailto:seu@email.com">
+          <span class="contact-icon">_</span>
+          seu@email.com
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span>© 2026 Diogo Esplossy</span>
+      <span>Taboão da Serra, SP · Brasil</span>
     </div>
   </div>
-
-  <!-- MODAL RELATÓRIO -->
-  <div id="modal-rel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;overflow-y:auto;padding:16px">
-    <div style="max-width:600px;margin:0 auto">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--accent)">RELATÓRIO GERAL</div>
-        <button onclick="fecharRelatorio()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:pointer">✕ FECHAR</button>
-      </div>
-      <div id="rel-content"></div>
-    </div>
-  </div>
-
-  <nav class="bottom-nav">
-    <button class="nav-btn active" data-s="treinar"><span class="ico">🏋️</span>Treinar</button>
-    <button class="nav-btn" data-s="programa"><span class="ico">📋</span>Programa</button>
-    <button class="nav-btn" data-s="stats"><span class="ico">📊</span>Stats</button>
-    <button class="nav-btn" data-s="historico"><span class="ico">📅</span>Histórico</button>
-    <button class="nav-btn" data-s="config"><span class="ico">⚙️</span>Config</button>
-  </nav>
-</div>
-<div class="toast" id="toast"></div>
+</footer>
 
 <script>
-// =====================================================
-// TREINOS POR DIA + SUBSTITUTOS
-// =====================================================
-const TREINOS = {
-  A: {
-    nome: "Ombro (Foco Lateral) + Peito Superior",
-    dia: "Segunda",
-    cor: "#d4ff4e",
-    exercicios: [
-      {
-        nome:"Supino Inclinado Halteres",
-        musculo:"Peito", series:4, reps:"8-10", descanso:"90s",
-        foco:"Peito Superior",
-        subs:["Supino Inclinado na Máquina Smith","Supino Inclinado na Máquina Convergente","Supino Inclinado com Barra"]
-      },
-      {
-        nome:"Desenvolvimento Militar Halteres",
-        musculo:"Ombro", series:4, reps:"6-8", descanso:"2min",
-        foco:"Força Ombros",
-        subs:["Desenvolvimento na Máquina","Desenvolvimento Arnold","Desenvolvimento com Halteres Sentado"]
-      },
-      {
-        nome:"Elevação Lateral Sentado",
-        musculo:"Ombro", series:5, reps:"12-15", descanso:"60s",
-        foco:"🔥 Largura Ombros — PRIORIDADE",
-        subs:["Elevação Lateral em Pé com Halteres","Elevação Lateral na Máquina","Elevação Lateral no Cabo"]
-      },
-      {
-        nome:"Elevação Lateral a Cabo",
-        musculo:"Ombro", series:3, reps:"12-15", descanso:"45s",
-        foco:"🔥 Largura Ombros",
-        subs:["Elevação Lateral com Halteres","Elevação Lateral na Máquina","Remada Alta com Pegada Aberta"]
-      },
-      {
-        nome:"Crucifixo Inclinado a Cabo",
-        musculo:"Peito", series:3, reps:"10-12", descanso:"60s",
-        foco:"Finalização Peito",
-        subs:["Crucifixo na Máquina (Peck Deck)","Crucifixo no Cabo","Flexão de Braço com Pés Elevados"]
-      },
-      {
-        nome:"Face Pull",
-        musculo:"Ombro", series:3, reps:"15", descanso:"45s",
-        foco:"Saúde do Ombro + Posterior",
-        subs:["Crucifixo Inverso na Máquina","Crucifixo Inverso com Halteres","Remada Alta com Corda"]
-      }
-    ]
-  },
-  B: {
-    nome: "Costas (Largura) + Bíceps",
-    dia: "Terça",
-    cor: "#4e9fff",
-    exercicios: [
-      {
-        nome:"Barra Fixa / Pull-ups",
-        musculo:"Costas", series:5, reps:"5-8", descanso:"2min",
-        foco:"🔥 Largura Dorsal — PRIORIDADE",
-        subs:["Máquina de Graviton","Puxada Frontal Aberta","Puxada com Pegada Supinada (Chin-up)"]
-      },
-      {
-        nome:"Puxada Wide Pronada",
-        musculo:"Costas", series:4, reps:"8-10", descanso:"90s",
-        foco:"🔥 Largura Dorsal",
-        subs:["Puxada com Pegada Neutra","Puxada Frontal na Máquina Articulada","Barra Fixa"]
-      },
-      {
-        nome:"Remada Sentado Pegada NEUTRA ✏️",
-        musculo:"Costas", series:4, reps:"8-10", descanso:"75s",
-        foco:"✏️ Pegada neutra/fechada — ativa mais latíssimo (largura)",
-        subs:["Remada Serrote com Halter","Remada Baixa Sentado","Remada na Máquina Articulada"]
-      },
-      {
-        nome:"Pullover com Halter",
-        musculo:"Costas", series:3, reps:"10-12", descanso:"60s",
-        foco:"Extensão do Lat / Expansão",
-        subs:["Pullover na Máquina","Pulldown com Braços Retos","Pullover no Cabo"]
-      },
-      {
-        nome:"Crucifixo Inverso Halteres",
-        musculo:"Ombro", series:3, reps:"12-15", descanso:"60s",
-        foco:"Ombro Posterior — V-shape completo",
-        subs:["Crucifixo Inverso na Máquina","Remada Alta com Corda","Elevação Y com Halteres"]
-      },
-      {
-        nome:"Face Pull (manter) ✏️",
-        musculo:"Ombro", series:3, reps:"15", descanso:"60s",
-        foco:"✏️ Mantido — saúde escapular e deltóide posterior",
-        subs:["Crucifixo Inverso na Máquina","Crucifixo Inverso com Halteres","Remada Alta com Corda"]
-      },
-      {
-        nome:"Rosca Direta Barra EZ",
-        musculo:"Bíceps", series:3, reps:"8-10", descanso:"75s",
-        foco:"Bíceps",
-        subs:["Rosca Direta com Barra Reta","Rosca com Halteres em Pé","Rosca na Máquina Scott"]
-      },
-      {
-        nome:"Rosca Alternada Concentrada",
-        musculo:"Bíceps", series:2, reps:"10-12", descanso:"60s",
-        foco:"Pico de Bíceps",
-        subs:["Rosca Scott com Halter","Rosca no Cabo Unilateral","Rosca Martelo"]
-      }
-    ]
-  },
-  C: {
-    nome: "Pernas + Core",
-    dia: "Quarta",
-    cor: "#ff4e4e",
-    exercicios: [
-      {
-        nome:"Stiff com Barra",
-        musculo:"Pernas", series:4, reps:"6-8", descanso:"2min",
-        foco:"Posterior de Coxa",
-        subs:["Stiff com Halteres","Mesa Flexora","Bom Dia (Good Morning)"]
-      },
-      {
-        nome:"Agachamento Frontal / Hack",
-        musculo:"Pernas", series:4, reps:"6-8", descanso:"2min",
-        foco:"Quadríceps",
-        subs:["Agachamento no Smith","Leg Press 45°","Agachamento Hack"]
-      },
-      {
-        nome:"Leg Press 45°",
-        musculo:"Pernas", series:3, reps:"10-12", descanso:"90s",
-        foco:"Volume Pernas",
-        subs:["Agachamento Hack","Agachamento no Smith","Afundo com Halteres"]
-      },
-      {
-        nome:"Mesa Flexora",
-        musculo:"Pernas", series:3, reps:"12-15", descanso:"60s",
-        foco:"Isolamento Posterior",
-        subs:["Cadeira Flexora","Stiff Unilateral com Halter","Flexão Nórdica"]
-      },
-      {
-        nome:"Elevação de Pernas (Infra)",
-        musculo:"Core", series:4, reps:"12-15", descanso:"45s",
-        foco:"Abdômen Inferior",
-        subs:["Abdominal Infra no Banco Declinado","Abdominal na Máquina","Abdominal Remador"]
-      },
-      {
-        nome:"Prancha Frontal",
-        musculo:"Core", series:3, reps:"45-60s", descanso:"60s",
-        foco:"Estabilidade Core",
-        subs:["Abdominal na Roda (Ab Wheel)","Prancha com Toque no Ombro","Hollow Hold"]
-      }
-    ]
-  },
-  D: {
-    nome: "Ombro (Força) + Tríceps",
-    dia: "Quinta",
-    cor: "#d4ff4e",
-    exercicios: [
-      {
-        nome:"Desenvolvimento em Pé (Barra)",
-        musculo:"Ombro", series:5, reps:"5-6", descanso:"3min+",
-        foco:"🔥 Força Ombros — PRIORIDADE",
-        subs:["Desenvolvimento Sentado com Barra","Desenvolvimento na Máquina Smith","Desenvolvimento com Halteres"]
-      },
-      {
-        nome:"Elevação Lateral Máquina",
-        musculo:"Ombro", series:5, reps:"10-12", descanso:"75s",
-        foco:"🔥 Largura Ombros — VOLUME ALTO",
-        subs:["Elevação Lateral com Halteres","Elevação Lateral no Cabo","Remada Alta com Pegada Aberta"]
-      },
-      {
-        nome:"Remada Alta Leve",
-        musculo:"Ombro", series:3, reps:"8-10", descanso:"75s",
-        foco:"Trapézio Superior",
-        subs:["Elevação Frontal com Barra ou Halteres","Encolhimento de Ombros com Halteres","Desenvolvimento Arnold"]
-      },
-      {
-        nome:"Elevação Lateral Inclinada",
-        musculo:"Ombro", series:3, reps:"12-15", descanso:"60s",
-        foco:"🔥 Largura Ombros",
-        subs:["Elevação Lateral no Cabo com Inclinação","Elevação Lateral com Halter Deitado","Elevação Lateral Padrão"]
-      },
-      {
-        nome:"Tríceps Supinado (Cabo)",
-        musculo:"Tríceps", series:3, reps:"10-12", descanso:"60s",
-        foco:"Tríceps",
-        subs:["Tríceps Pulley com Corda ou Barra Reta","Tríceps na Máquina","Mergulho entre Bancos"]
-      },
-      {
-        nome:"Tríceps Francês Unilateral",
-        musculo:"Tríceps", series:2, reps:"10-12", descanso:"60s",
-        foco:"Tríceps",
-        subs:["Tríceps Testa com Barra ou Halteres","Extensão de Tríceps Acima da Cabeça","Tríceps Coice com Halter ou no Cabo"]
-      }
-    ]
-  },
-  E: {
-    nome: "Costas (Técnica) + Upper Body",
-    dia: "Sexta",
-    cor: "#4e9fff",
-    exercicios: [
-      {
-        nome:"Puxada Aberta Pronada",
-        musculo:"Costas", series:4, reps:"8-10", descanso:"90s",
-        foco:"🔥 Largura Dorsal — PRIORIDADE",
-        subs:["Puxada com Pegada Neutra","Remada Curvada com Pegada Supinada","Remada T"]
-      },
-      {
-        nome:"Remada Baixa Sentado (Pegada Neutra) ✏️",
-        musculo:"Costas", series:4, reps:"8-10", descanso:"90s",
-        foco:"✏️ Prefira pegada neutra — ativa mais latíssimo (largura)",
-        subs:["Remada na Máquina Articulada","Remada Serrote com Halter","Remada Curvada com Barra"]
-      },
-      {
-        nome:"Remada Alta com Cabo",
-        musculo:"Ombro", series:3, reps:"12-15", descanso:"60s",
-        foco:"Trapézio Médio",
-        subs:["Pull-over na Máquina","Pulldown com Braços Retos","Pullover no Cabo Declinado"]
-      },
-      {
-        nome:"Supino Reto Leve",
-        musculo:"Peito", series:3, reps:"8-10", descanso:"90s",
-        foco:"Peito Geral",
-        subs:["Supino na Máquina Convergente","Flexão de Braço","Crucifixo na Máquina (Peck Deck)"]
-      },
-      {
-        nome:"Elevação Lateral Drop Set",
-        musculo:"Ombro", series:3, reps:"3 rounds", descanso:"90s",
-        foco:"🔥 Queima Final Ombros",
-        subs:["Drop Set com Halteres","Drop Set no Cabo","Série até a Falha + Isometria"]
-      },
-      {
-        nome:"Face Pull (Sexta)",
-        musculo:"Ombro", series:3, reps:"15", descanso:"45s",
-        foco:"Saúde do Ombro",
-        subs:["Crucifixo Inverso na Máquina","Crucifixo Inverso com Halteres","Remada Alta com Corda"]
-      }
-    ]
-  }
-};
-
-// Lista completa para autocomplete livre
-const TODOS_EXERCICIOS = [...new Set(Object.values(TREINOS).flatMap(t => [...t.exercicios.map(e=>e.nome), ...t.exercicios.flatMap(e=>e.subs)]))];
-
-// =====================================================
-// STATE
-// =====================================================
-let API = localStorage.getItem('gymlog_url') || '';
-let exCount = 0;
-let sessions = [];
-let lastWeights = {};
-let knownEx = [...TODOS_EXERCICIOS];
-let pesoData = JSON.parse(localStorage.getItem('gymlog_peso') || '{}');
-let chartPeso = null;
-
-// =====================================================
-// NAV
-// =====================================================
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('s-' + btn.dataset.s).classList.add('active');
-    btn.classList.add('active');
-    if (btn.dataset.s === 'stats') renderStats();
-    if (btn.dataset.s === 'historico') renderHistorico();
-    if (btn.dataset.s === 'peso') renderPeso();
-    if (btn.dataset.s === 'config') renderConfig();
-    if (btn.dataset.s === 'programa') progShowTreino('A');
-  });
-});
-
-// =====================================================
-// INIT
-// =====================================================
-function init() {
-  const today = new Date();
-  document.getElementById('s-data').value = today.toISOString().split('T')[0];
-  document.getElementById('p-data').value = today.toISOString().split('T')[0];
-  document.getElementById('data-hoje').textContent = today.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
-  const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  document.getElementById('stats-mes').textContent = meses[today.getMonth()] + ' ' + today.getFullYear();
-  // Auto-seleciona treino pelo dia da semana
-  const diasTreino = {1:'A',2:'B',3:'C',4:'D',5:'E'};
-  const diaSem = today.getDay();
-  if (diasTreino[diaSem]) document.getElementById('s-treino').value = diasTreino[diaSem];
-  if (API) { document.getElementById('cfg-url').value = API; carregarDados(); }
-  // Seleciona dia automaticamente pela data
-  (function autoDetectDia() {
-    const hoje = new Date();
-    const diasTreino = {1:'A',2:'B',3:'C',4:'D',5:'E'};
-    const letra = diasTreino[hoje.getDay()];
-    if (letra) selecionarDia(letra);
-  })();
-}
-
-// ---- PROGRAMA: mostra exercícios por treino ----
-function progShowTreino(letra) {
-  const t = TREINOS[letra];
-  if (!t) return;
-  // Atualiza tabs
-  document.querySelectorAll('.prog-tab').forEach(btn => {
-    const isActive = btn.dataset.t === letra;
-    btn.style.background   = isActive ? (t.cor||'var(--accent)') : 'var(--bg3)';
-    btn.style.color        = isActive ? '#000' : 'var(--muted)';
-    btn.style.borderColor  = isActive ? (t.cor||'var(--accent)') : 'var(--border)';
-  });
-  const el = document.getElementById('prog-ex-lista');
-  if (!el) return;
-  el.innerHTML = t.exercicios.map((ex, i) => {
-    const isFire   = ex.foco && ex.foco.includes('🔥');
-    const isAjuste = ex.foco && ex.foco.includes('✏️');
-    const corBorda = isFire ? 'var(--accent)' : isAjuste ? 'var(--blue)' : 'var(--border)';
-    return `<div style="background:var(--bg3);border-left:3px solid ${corBorda};border-radius:0 var(--r) var(--r) 0;padding:12px 14px;margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
-        <div style="flex:1">
-          <div style="font-weight:600;font-size:13px;margin-bottom:2px">
-            ${i+1}. ${ex.nome}
-          </div>
-          <div style="font-size:10px;color:${corBorda};text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px">${ex.musculo}</div>
-          ${ex.foco ? `<div style="font-size:11px;color:${corBorda};margin-bottom:4px">${ex.foco}</div>` : ''}
-          <div style="font-size:11px;color:var(--muted)">
-            💡 Subs: ${ex.subs.slice(0,2).join(' · ')}
-          </div>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${corBorda};line-height:1">${ex.series}×${ex.reps}</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">⏱ ${ex.descanso}</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ---- Auto-popular exercícios do programa ao selecionar treino ----
-function selecionarDia(letra) {
-  if (!letra || !TREINOS[letra]) return;
-  const t = TREINOS[letra];
-
-  // Atualiza botões
-  document.querySelectorAll('.dia-btn').forEach(btn => {
-    const isAtivo = btn.dataset.letra === letra;
-    btn.style.background  = isAtivo ? (t.cor||'var(--accent)') : 'var(--bg3)';
-    btn.style.color       = isAtivo ? '#000' : 'var(--muted)';
-    btn.style.borderColor = isAtivo ? (t.cor||'var(--accent)') : 'var(--border)';
-    btn.style.fontWeight  = isAtivo ? '700' : '400';
-  });
-
-  // Atualiza hidden + nome
-  document.getElementById('s-treino').value = letra;
-  const label = document.getElementById('treino-nome-label');
-  const nomeTxt = document.getElementById('treino-nome-txt');
-  const obsTxt  = document.getElementById('treino-obs-txt');
-  if (label && nomeTxt) {
-    label.style.display = 'block';
-    label.style.borderLeftColor = t.cor || 'var(--accent)';
-    nomeTxt.style.color = t.cor || 'var(--accent)';
-    nomeTxt.textContent = `${t.dia} — ${t.nome}`;
-    obsTxt.textContent  = t.obs || '';
-  }
-
-  // Limpa e popula exercícios na ordem do programa
-  document.querySelectorAll('.ex-card').forEach(c => c.remove());
-  exCount = 0;
-  t.exercicios.forEach(ex => addExercicioProgramado(ex, false));
-
-  // Mostra/oculta estados
-  document.getElementById('treino-vazio').style.display  = 'none';
-  document.getElementById('treino-acoes').style.display  = 'block';
-
-  // Briefing do treinador
-  renderCoachBriefing(letra);
-}
-
-
-function addExercicioProgramado(exData, isExtra) {
-  exCount++;
-  const idx = exCount;
-  const list = document.getElementById('ex-list');
-  const div = document.createElement('div');
-  div.className = 'ex-card'; div.id = 'ex-'+idx;
-
-  const isFire   = exData.foco && exData.foco.includes('🔥');
-  const isAjuste = exData.foco && exData.foco.includes('✏️');
-  const corBorda = isExtra ? 'var(--blue)' : isFire ? 'var(--accent)' : isAjuste ? 'var(--blue)' : 'var(--border)';
-  div.style.borderLeftColor = corBorda;
-  div.style.borderLeft = `3px solid ${corBorda}`;
-
-  // Mapeia descanso do documento para o select
-  const descMap = {'45s':'45s','60s':'60s','75s':'75s','90s':'90s','120s':'2min','150s':'3min+','2min':'2min','3min+':'3min+'};
-  const descSel = descMap[exData.descanso] || '90s';
-
-  // Reps alvo: topo da faixa ex "8-10" → 10
-  const repsAlvoNum = exData.reps && exData.reps.toString().includes('-')
-    ? exData.reps.toString().split('-')[1].replace(/[^0-9]/g,'')
-    : (exData.reps || '12').toString().replace(/[^0-9]/g,'') || '12';
-
-  // Histórico deste exercício
-  const h = lastWeights[exData.nome];
-  const temHistorico = !!h;
-  const orm = temHistorico ? calcORM(parseFloat(h.carga)||0, parseInt(h.repeticoes)||0) : null;
-  const dAnt = temHistorico && h.data ? new Date(h.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}) : '';
-
-  div.innerHTML = `
-    <!-- Nome + musculo fixos -->
-    <input type="hidden" class="ex-nome" value="${exData.nome}">
-    ${isExtra
-      ? `<select class="ex-grupo" style="display:none"></select>`
-      : `<input type="hidden" class="ex-grupo" value="${exData.musculo||''}">`
-    }
-    <input type="hidden" class="ex-tipo"  value="">
-    <input type="hidden" class="ex-rpe"   value="">
-    <input type="hidden" class="ex-rir"   value="">
-
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">
-      <div style="flex:1;min-width:0">
-        ${isExtra ? '<div style="font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:2px">Extra</div>' : ''}
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text);line-height:1.1;margin-bottom:2px">${exData.nome}</div>
-        ${isExtra
-          ? `<select class="ex-grupo-vis" style="width:100%;margin-top:4px;background:var(--bg3);border:1px solid var(--blue);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;padding:6px 10px;outline:none;-webkit-appearance:none">
-              <option value="">Grupo Muscular</option>
-              <option value="Costas"  ${exData.musculo==='Costas' ?'selected':''}>Costas</option>
-              <option value="Ombro"   ${exData.musculo==='Ombro'  ?'selected':''}>Ombro</option>
-              <option value="Peito"   ${exData.musculo==='Peito'  ?'selected':''}>Peito</option>
-              <option value="Bíceps"  ${exData.musculo==='Bíceps' ?'selected':''}>Bíceps</option>
-              <option value="Tríceps" ${exData.musculo==='Tríceps'?'selected':''}>Tríceps</option>
-              <option value="Pernas"  ${exData.musculo==='Pernas' ?'selected':''}>Pernas</option>
-              <option value="Core"    ${exData.musculo==='Core'   ?'selected':''}>Core</option>
-              <option value="Cardio"  ${exData.musculo==='Cardio' ?'selected':''}>Cardio</option>
-            </select>`
-          : `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:${corBorda}">${exData.musculo||''}${isFire?' · 🔥 PRIORIDADE':isAjuste?' · ✏️ AJUSTE':''}</div>`
-        }
-      </div>
-      <button onclick="document.getElementById('ex-${idx}').remove()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0">✕</button>
-    </div>
-
-    <!-- Foco do programa -->
-    ${exData.foco && !isExtra ? `<div style="font-size:11px;color:${corBorda};margin-bottom:8px;padding:5px 8px;background:${corBorda}15;border-radius:4px;line-height:1.4">${exData.foco}</div>` : ''}
-
-    <!-- Alvo do programa + histórico lado a lado -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px 10px">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px;font-weight:700">Alvo do programa</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent);line-height:1">${exData.series||'?'}×${exData.reps||'?'}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">⏱ ${exData.descanso||'90s'}</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px 10px">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px;font-weight:700">Última sessão</div>
-        ${temHistorico
-          ? `<div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);line-height:1">${h.carga}kg</div>
-             <div style="font-size:10px;color:var(--muted);margin-top:2px">${h.serie}s × ${h.repeticoes} reps${dAnt?' · '+dAnt:''}${orm?' · <span style="color:var(--blue)">1RM ~'+orm+'</span>':''}</div>`
-          : `<div style="font-size:12px;color:var(--muted)">—</div><div style="font-size:10px;color:var(--muted);margin-top:2px">sem histórico</div>`
-        }
-      </div>
-    </div>
-
-    <!-- Inputs: o que você fez hoje -->
-    <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700;margin-bottom:6px">Hoje</div>
-    <div style="display:grid;grid-template-columns:80px 1fr 1fr;gap:8px;margin-bottom:6px">
-      <div class="ig" style="margin:0"><label>Séries</label>
-        <input type="number" class="ex-serie" value="${exData.series||3}" min="1">
-      </div>
-      <div class="ig" style="margin:0"><label>Carga (kg)</label>
-        <input type="number" class="ex-carga" value="${temHistorico ? h.carga : ''}" placeholder="0" step="0.5">
-      </div>
-      <div class="ig" style="margin:0">
-        <label>Reps</label>
-        <input type="text" class="ex-reps reps-input" value="${repsAlvoNum}" placeholder="${repsAlvoNum}">
-      </div>
-    </div>
-    <div id="reps-prev-${idx}" class="reps-preview"></div>
-
-    <!-- Descanso (menor destaque, já vem do programa) -->
-    <div style="margin-top:8px">
-      <div class="ig" style="margin:0">
-        <label style="display:flex;justify-content:space-between"><span>Descanso</span><span style="color:var(--muted);font-weight:400">padrão: ${exData.descanso||'90s'}</span></label>
-        <select class="ex-descanso">
-          <option value="30s"  ${descSel==='30s' ?'selected':''}>30s</option>
-          <option value="45s"  ${descSel==='45s' ?'selected':''}>45s</option>
-          <option value="60s"  ${descSel==='60s' ?'selected':''}>60s</option>
-          <option value="75s"  ${descSel==='75s' ?'selected':''}>75s</option>
-          <option value="90s"  ${descSel==='90s' ?'selected':''}>90s</option>
-          <option value="2min" ${descSel==='2min'?'selected':''}>2min</option>
-          <option value="3min+"${descSel==='3min+'?'selected':''}>3min+</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Substitutos como dica colapsável -->
-    ${exData.subs && exData.subs.length ? `
-    <details style="margin-top:10px">
-      <summary style="font-size:11px;color:var(--muted);cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px">
-        <span style="color:var(--border);font-size:14px">▸</span> Substitutos disponíveis
-      </summary>
-      <div style="margin-top:6px;padding:8px 10px;background:var(--bg3);border-radius:var(--r)">
-        ${exData.subs.map((s,i)=>`<div style="font-size:12px;padding:4px 0;color:var(--muted);${i<exData.subs.length-1?'border-bottom:1px solid var(--border)':''}">${i+1}. <span style="color:var(--text)">${s}</span></div>`).join('')}
-      </div>
-    </details>` : ''}
-
-    <div class="rec-box" id="rec-${idx}"></div>
-
-    <!-- Botão iniciar este exercício -->
-    <button id="btn-iniciar-ex-${idx}" onclick="iniciarExercicio(${idx})"
-      style="width:100%;margin-top:12px;padding:14px;background:var(--accent);color:#000;border:none;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-      ▶ INICIAR
-    </button>`;
-
-  list.appendChild(div);
-
-  // Reps preview + análise
-  const repsInput  = div.querySelector('.ex-reps');
-  const serieInput = div.querySelector('.ex-serie');
-  const repsPrev   = document.getElementById('reps-prev-'+idx);
-  const recBox     = document.getElementById('rec-'+idx);
-  function atualizarReps() {
-    const serie = parseInt(serieInput.value)||0;
-    const { repsArr, totalReps, media } = parseReps(repsInput.value, serie);
-    if (!repsArr.length) { repsPrev.textContent=''; recBox.style.display='none'; return; }
-    const carga = parseFloat(div.querySelector('.ex-carga').value)||0;
-    const vol = carga * totalReps;
-    repsPrev.textContent = `Total: ${totalReps} reps · Média: ${media}/série${vol?' · Vol: '+Math.round(vol)+'kg':''}`;
-    const rec = analisarReps(repsArr, serie);
-    if (rec) {
-      recBox.textContent = rec.msg; recBox.style.display='block';
-      recBox.style.borderLeftColor = rec.tipo==='red'?'var(--red)':rec.tipo==='green'?'var(--accent)':'var(--blue)';
-      recBox.style.color = rec.tipo==='red'?'var(--red)':rec.tipo==='green'?'var(--accent)':'var(--blue)';
-    } else { recBox.style.display='none'; }
-  }
-  repsInput.addEventListener('input', atualizarReps);
-  serieInput.addEventListener('input', atualizarReps);
-  div.querySelector('.ex-carga').addEventListener('input', atualizarReps);
-}
-
-
-// =====================================================
-// API
-// =====================================================
-async function carregarDados() {
-  if (!API) return;
-  try {
-    const r1 = await fetch(API+'?action=getHistory',{redirect:'follow'});
-    const r2 = await fetch(API+'?action=getLastWeights',{redirect:'follow'});
-    const r3 = await fetch(API+'?action=getPeso',{redirect:'follow'});
-    sessions = await r1.json();
-    lastWeights = await r2.json();
-    const doHistorico = Object.keys(lastWeights);
-    knownEx = [...new Set([...doHistorico,...TODOS_EXERCICIOS])];
-    try { const p = await r3.json(); if (p && typeof p === 'object') Object.assign(pesoData, p); } catch(e) {}
-  } catch(err) { console.warn('Aviso:', err); }
-}
-
-async function salvarTreino() {
-  if (!API) { toast('Configure a URL primeiro!', true); document.querySelector('[data-s="config"]').click(); return; }
-  const data = document.getElementById('s-data').value;
-  const treino = document.getElementById('s-treino').value;
-  const sono = document.getElementById('s-sono').value;
-  const duracao = document.getElementById('s-duracao').value;
-  if (!data) { toast('Informe a data!', true); return; }
-  const cards = document.querySelectorAll('.ex-card');
-  if (!cards.length) { toast('Adicione ao menos um exercício!', true); return; }
-  const rows = []; let erro = false;
-  cards.forEach(card => {
-    const nome = card.querySelector('.ex-nome').value.trim();
-    if (!nome) { erro = true; return; }
-    const repsRaw = card.querySelector('.ex-reps').value.trim();
-    const serie = card.querySelector('.ex-serie').value;
-    const { totalReps } = parseReps(repsRaw, parseInt(serie)||0);
-    rows.push({
-      data, treino,
-      grupoMuscular: card.querySelector('.ex-grupo-vis') 
-        ? card.querySelector('.ex-grupo-vis').value 
-        : card.querySelector('.ex-grupo').value,
-      tipo: card.querySelector('.ex-tipo').value,
-      descanso: card.querySelector('.ex-descanso').value,
-      rir: card.querySelector('.ex-rir').value,
-      sono, exercicio: nome,
-      serie,
-      carga: card.querySelector('.ex-carga').value,
-      repeticoes: totalReps,
-      repsDetalhado: repsRaw,
-      rpe: card.querySelector('.ex-rpe').value,
-      duracao
-    });
-  });
-  if (erro) { toast('Preencha o nome de todos os exercícios!', true); return; }
-  const btn = document.getElementById('btn-save');
-  btn.textContent='...'; btn.disabled=true;
-  try {
-    const response = await fetch(API,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({rows})});
-    const text = await response.text();
-    let result; try{result=JSON.parse(text);}catch(e){result={success:true};}
-    if (result.success!==false) { toast('✅ Treino salvo!'); resetarSessao(); await carregarDados(); }
-    else toast('Erro: '+(result.error||''), true);
-  } catch(err) { toast('Erro de conexão!', true); }
-  btn.textContent='SALVAR'; btn.disabled=false;
-}
-
-// =====================================================
-// PARSE REPS — aceita "12x8x7" ou "12"
-// =====================================================
-function parseReps(str, series) {
-  if (!str) return { repsArr:[], totalReps:0, media:0 };
-  const partes = str.split('x').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-  if (!partes.length) return { repsArr:[], totalReps:0, media:0 };
-  const totalReps = partes.reduce((a,b)=>a+b, 0);
-  const media = Math.round(totalReps / partes.length);
-  return { repsArr:partes, totalReps, media };
-}
-
-// Analisa desempenho e sugere ajuste
-function analisarReps(repsArr, series) {
-  if (!repsArr.length || repsArr.length < 2) return null;
-  const first = repsArr[0], last = repsArr[repsArr.length-1];
-  const queda = ((first - last) / first * 100);
-  if (queda > 30) return { tipo:'red', msg:`⚠️ Queda de ${Math.round(queda)}% nas reps (${first}→${last}). Considere reduzir a carga em 5–10% ou aumentar o descanso para 2–3min.` };
-  if (queda > 15) return { tipo:'blue', msg:`💡 Queda moderada de ${Math.round(queda)}% (${first}→${last}). Normal em séries de alta intensidade. Mantenha a carga.` };
-  if (last >= first) return { tipo:'green', msg:`✅ Ótima consistência! Reps mantidas ou crescentes. Considere aumentar a carga em 2,5–5kg na próxima sessão.` };
-  return null;
-}
-
-// =====================================================
-// EXERCÍCIOS
-
-
-function calcORM(carga, reps) {
-  if (!carga||!reps||reps>15) return null;
-  return Math.round(carga*(1+reps/30));
-}
-
-function resetarSessao() {
-  document.getElementById('s-treino').value='';
-  document.getElementById('s-sono').value='';
-  document.getElementById('s-duracao').value='';
-  document.getElementById('ex-list').innerHTML='';
-  exCount=0;
-  document.getElementById('s-data').value=new Date().toISOString().split('T')[0];
-}
-
-// =====================================================
-// STATS
-// =====================================================
-let statsPeriodo = '30'; // dias — estado global do filtro
-
-function renderStats() {
-  const el=document.getElementById('stats-content');
-  if (!API) { el.innerHTML=`<div class="warn-box">⚠️ Configure a URL em Config.</div>`; return; }
-  if (!sessions.length) { el.innerHTML=`<div class="empty">📊<br><br>Nenhum treino registrado.</div>`; return; }
-
-  // FILTRO DE PERÍODO
-  const now = new Date();
-  const periodoOpts = [
-    { val:'7',   label:'7 dias' },
-    { val:'30',  label:'30 dias' },
-    { val:'90',  label:'3 meses' },
-    { val:'180', label:'6 meses' },
-    { val:'all', label:'Tudo' }
-  ];
-  const filtroHTML = `<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px">
-    ${periodoOpts.map(o=>`<button onclick="statsPeriodo='${o.val}';renderStats()" style="padding:6px 14px;border-radius:20px;border:1px solid ${statsPeriodo===o.val?'var(--accent)':'var(--border)'};background:${statsPeriodo===o.val?'var(--accent)':'var(--bg3)'};color:${statsPeriodo===o.val?'#000':'var(--muted)'};font-size:12px;font-weight:600;white-space:nowrap;cursor:pointer;font-family:'DM Sans',sans-serif">${o.label}</button>`).join('')}
-  </div>`;
-
-  const sesMes = sessions.filter(s => {
-    if (statsPeriodo === 'all') return true;
-    const d = new Date(s.date+'T12:00:00');
-    const diffDias = (now - d) / (1000*60*60*24);
-    return diffDias <= parseInt(statsPeriodo);
-  });
-  let totalVol=0,totalSeries=0,totalReps=0;
-  const muscVol={},muscDias={},exProg={},sonoRPE=[];
-  sesMes.forEach(sess=>{
-    const diasMusc=new Set();
-    sess.exercises.forEach(ex=>{
-      const c=parseFloat(ex.carga)||0,s=parseInt(ex.serie)||0,r=parseInt(ex.repeticoes)||0;
-      const vol=c*s*r; totalVol+=vol; totalSeries+=s; totalReps+=s*r;
-      if(ex.grupoMuscular){ muscVol[ex.grupoMuscular]=(muscVol[ex.grupoMuscular]||0)+vol; diasMusc.add(ex.grupoMuscular); }
-      if(ex.exercicio){ if(!exProg[ex.exercicio]) exProg[ex.exercicio]=[]; exProg[ex.exercicio].push({data:sess.date,carga:c,reps:r,series:s}); }
-      const rpeVal = parseFloat(ex.rpe);
-      if(sess.sono && rpeVal && rpeVal > 0) {
-        const horas = sonoParaHoras(sess.sono);
-        if (horas) sonoRPE.push({sono: sess.sono, horas, rpe: rpeVal, data: sess.date});
+  // Intersection Observer para fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
       }
     });
-    diasMusc.forEach(m=>{ muscDias[m]=(muscDias[m]||0)+1; });
-  });
-  const dias=[...new Set(sesMes.map(s=>s.date))].length;
-  const volStr=totalVol>=1000?(totalVol/1000).toFixed(1)+'k':Math.round(totalVol).toString();
-  const muscs=Object.entries(muscVol).sort((a,b)=>b[1]-a[1]); const maxVol=muscs[0]?.[1]||1;
-  const periodoLabel = periodoOpts.find(o=>o.val===statsPeriodo)?.label || '';
-  let html = filtroHTML + `<div class="stat-grid">
-    <div class="stat-box"><div class="stat-val">${dias}</div><div class="stat-lbl">Treinos (${periodoLabel})</div></div>
-    <div class="stat-box"><div class="stat-val">${volStr}</div><div class="stat-lbl">Volume (kg)</div></div>
-    <div class="stat-box"><div class="stat-val">${totalSeries}</div><div class="stat-lbl">Séries totais</div></div>
-    <div class="stat-box"><div class="stat-val">${totalReps}</div><div class="stat-lbl">Reps totais</div></div>
-  </div>`;
-  // ---- SETS SEMANAIS por músculo ----
-  const muscSets = {};
-  sesMes.forEach(sess => {
-    sess.exercises.forEach(ex => {
-      const s = parseInt(ex.serie)||0;
-      if (ex.grupoMuscular && s) muscSets[ex.grupoMuscular] = (muscSets[ex.grupoMuscular]||0) + s;
-    });
-  });
-  const semanas = Math.max(1, Math.ceil(dias/5));
+  }, { threshold: 0.1 });
 
-  // Faixas MEV/MAV/MRV — calibradas para o programa V-Shape (Israetel et al.)
-  // Latíssimo (largura costas): mín 10, ideal 14-18 | Deltóide Lateral: mín 8, ideal 12-15
-  const FAIXAS = {
-    'Peito':   { mev:6,  mav:10, mrv:18 },
-    'Costas':  { mev:10, mav:16, mrv:22 },  // V-shape: latíssimo é prioridade
-    'Ombro':   { mev:8,  mav:14, mrv:22 },  // V-shape: deltóide lateral é prioridade
-    'Bíceps':  { mev:5,  mav:10, mrv:18 },
-    'Tríceps': { mev:4,  mav:8,  mrv:16 },
-    'Pernas':  { mev:8,  mav:14, mrv:20 },
-    'Glúteo':  { mev:4,  mav:10, mrv:16 },
-    'Core':    { mev:4,  mav:8,  mrv:14 }
-  };
-
-  function classificarVolume(sets, faixa) {
-    if (!faixa) return { label:'—', cor:'var(--muted)', tipo:'Sem referência' };
-    if (sets < faixa.mev)  return { label:'Insuficiente',  cor:'var(--red)',    tipo:`Abaixo do MEV — sem estímulo real de crescimento (mín. ${faixa.mev} sets/sem)` };
-    if (sets <= faixa.mav) return { label:'Low Volume',    cor:'var(--blue)',   tipo:`Entre MEV e MAV — abordagem válida com alta intensidade (${faixa.mev}–${faixa.mav} sets/sem)` };
-    if (sets <= faixa.mrv) return { label:'High Volume',   cor:'var(--accent)', tipo:`Entre MAV e MRV — faixa ótima de hipertrofia (${faixa.mav}–${faixa.mrv} sets/sem)` };
-    return                         { label:'Overreaching', cor:'var(--red)',    tipo:`Acima do MRV — recuperação comprometida, risco de overtraining (>${faixa.mrv} sets/sem)` };
-  }
-
-  if (Object.keys(muscSets).length) {
-    html += `<div class="card">
-      <span class="sec-label">Volume Semanal — MEV / MAV / MRV</span>
-      <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:11px;color:var(--muted);line-height:1.8">
-        <strong style="color:var(--text);font-size:12px">📖 Conceitos — Israetel, Krieger et al.</strong><br>
-        <span style="color:var(--red)">■</span> <strong>MEV</strong> — Volume Mínimo Efetivo: menos que isso não gera crescimento<br>
-        <span style="color:var(--blue)">■</span> <strong>Low Volume (MEV→MAV)</strong> — abordagem válida: poucos sets com alta intensidade (perto da falha). Eficiente para quem tem pouco tempo.<br>
-        <span style="color:var(--accent)">■</span> <strong>High Volume (MAV→MRV)</strong> — faixa ótima de hipertrofia para a maioria<br>
-        <span style="color:var(--red)">■</span> <strong>Overreaching (>MRV)</strong> — volume além da recuperação, risco de overtraining<br>
-        <span style="color:var(--muted)">Sets de trabalho por músculo por semana.</span>
-      </div>`;
-    Object.entries(muscSets).sort((a,b)=>b[1]-a[1]).forEach(([m, totalSets]) => {
-      const setsSem = Math.round(totalSets / semanas);
-      const faixa = FAIXAS[m];
-      const { label, cor, tipo } = classificarVolume(setsSem, faixa);
-      const maxRef = faixa ? faixa.mrv : setsSem;
-      const pct = Math.min(100, Math.round(setsSem / maxRef * 100));
-      const mevPct = faixa ? Math.round(faixa.mev/maxRef*100) : 0;
-      const mavPct = faixa ? Math.round(faixa.mav/maxRef*100) : 0;
-      html += `<div class="prog-row">
-        <div class="prog-row-top">
-          <span style="font-weight:600">${m}</span>
-          <span><span class="badge" style="background:${cor}22;color:${cor}">${label}</span> <span style="color:var(--muted)">${setsSem} sets/sem</span></span>
-        </div>
-        <div style="position:relative;background:var(--bg3);border-radius:2px;height:8px;margin-top:6px">
-          ${faixa?`<div style="position:absolute;left:${mevPct}%;top:-4px;width:2px;height:16px;background:rgba(255,255,255,.15)"></div><div style="position:absolute;left:${mavPct}%;top:-4px;width:2px;height:16px;background:rgba(255,255,255,.15)"></div>`:''}
-          <div style="height:8px;background:${cor};border-radius:2px;width:${pct}%"></div>
-        </div>
-        ${faixa?`<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:3px"><span>MEV ${faixa.mev}</span><span>MAV ${faixa.mav}</span><span>MRV ${faixa.mrv}</span></div>`:''}
-        <div style="font-size:11px;color:${cor};margin-top:3px">${tipo}</div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-
-  // ---- Frequência muscular ----
-  if(Object.keys(muscDias).length){
-    html+=`<div class="card"><span class="sec-label">Frequência por Grupo Muscular</span>`;
-    Object.entries(muscDias).sort((a,b)=>b[1]-a[1]).forEach(([m,d])=>{
-      const ok=d>=semanas*2;
-      html+=`<div class="prog-row"><div class="prog-row-top"><span style="font-weight:600">${m}</span><span>${ok?'<span class="badge badge-green">✓ 2x/sem</span>':'<span class="badge badge-red">⚠ <2x/sem</span>'} <span style="color:var(--muted)">${d}x no mês</span></span></div><div class="bar-wrap"><div class="bar ${ok?'':'red'}" style="width:${Math.min(100,d/8*100)}%"></div></div></div>`;
-    });
-    html+=`</div>`;
-  }
-
-  // ---- Volume absoluto por músculo ----
-  if(muscs.length){
-    html+=`<div class="card"><span class="sec-label">Volume Total por Grupo (kg)</span>`;
-    muscs.forEach(([m,v])=>{ const pct=Math.round(v/maxVol*100); html+=`<div class="prog-row"><div class="prog-row-top"><span style="font-weight:600">${m}</span><span style="color:var(--accent);font-weight:600">${Math.round(v)}kg</span></div><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></div>`; });
-    html+=`</div>`;
-  }
-
-  // ---- 1RM e progressão (tabela) ----
-  const topEx=Object.entries(exProg).filter(([,v])=>v.length>=1).sort((a,b)=>b[1].length-a[1].length).slice(0,10);
-  if(topEx.length){
-    html+=`<div class="card"><span class="sec-label">Progressão e 1RM Estimado</span>`;
-    topEx.forEach(([nome,pts])=>{
-      const sorted=pts.sort((a,b)=>a.data.localeCompare(b.data));
-      const first=sorted[0].carga,last=sorted[sorted.length-1].carga,lastReps=sorted[sorted.length-1].reps;
-      const orm=calcORM(last,lastReps); const diff=last-first;
-      const estagnado=pts.length>=3&&diff===0;
-      const seta=diff>0?'↑':diff<0?'↓':'→'; const cor=diff>0?'var(--accent)':diff<0?'var(--red)':'var(--muted)';
-      html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600">${nome} ${estagnado?'<span class="badge badge-red">Estagnado</span>':''}</div><div style="font-size:11px;color:var(--muted)">${first}kg → ${last}kg${orm?' | 1RM ~<strong style=color:var(--blue)>'+orm+'kg</strong>':''}</div></div><div style="font-family:'Bebas Neue';font-size:26px;color:${cor}">${seta}${Math.abs(diff)}kg</div></div>`;
-    });
-    html+=`</div>`;
-  }
-
-  // ---- SONO × RPE (ativo — RPE vem do modo treino) ----
-  if(sonoRPE.length >= 2){
-    // Agrupa por horário de dormir (chave = sono ex: "22:00")
-    const sonoGrupos = {};
-    sonoRPE.forEach(({sono, horas, rpe}) => {
-      if(!sonoGrupos[sono]) sonoGrupos[sono] = {rpes:[], horas};
-      sonoGrupos[sono].rpes.push(rpe);
-    });
-
-    const sonoMedia = Object.entries(sonoGrupos)
-      .map(([horario, {rpes, horas}]) => ({
-        horario,
-        horas,
-        label: sonoLabel(horario),
-        rpe: (rpes.reduce((a,b)=>a+b,0)/rpes.length).toFixed(1),
-        n: rpes.length
-      }))
-      .sort((a,b) => b.horas - a.horas); // mais horas = melhor = primeiro
-
-    if(sonoMedia.length >= 2){
-      const melhorSono = sonoMedia[0];
-      const piorSono   = sonoMedia[sonoMedia.length-1];
-      const diffRPE    = (parseFloat(piorSono.rpe) - parseFloat(melhorSono.rpe)).toFixed(1);
-      const temCorrel  = parseFloat(diffRPE) >= 0.3;
-      const diffHoras  = (melhorSono.horas - piorSono.horas).toFixed(1);
-
-      html += `<div class="card">
-        <span class="sec-label">Sono × RPE</span>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:4px;line-height:1.5">
-          Acorda 04:40 fixo — horas calculadas pelo horário que dormiu.
-        </p>
-        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-          <div style="background:var(--bg3);border-radius:var(--r);padding:8px 12px;text-align:center;flex:1;min-width:80px">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${melhorSono.label}</div>
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Melhor noite</div>
-          </div>
-          <div style="background:var(--bg3);border-radius:var(--r);padding:8px 12px;text-align:center;flex:1;min-width:80px">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red)">${piorSono.label}</div>
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Pior noite</div>
-          </div>
-          <div style="background:var(--bg3);border-radius:var(--r);padding:8px 12px;text-align:center;flex:1;min-width:80px">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:${temCorrel?'var(--red)':'var(--accent)'}">+${diffRPE}</div>
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Δ RPE</div>
-          </div>
-        </div>`;
-
-      // Barras por horário
-      sonoMedia.forEach(({horario, horas, label, rpe, n}) => {
-        const pct = Math.round(parseFloat(rpe)/10*100);
-        const cor = horas>=7?'var(--accent)':horas>=6?'var(--blue)':horas>=5?'var(--muted)':'var(--red)';
-        html += `<div class="prog-row">
-          <div class="prog-row-top">
-            <span style="font-weight:600;font-size:13px">
-              🌙 ${horario} — <span style="color:${cor}">${label}</span>
-              <span style="font-size:10px;color:var(--muted);font-weight:400"> (${n} treino${n>1?'s':''})</span>
-            </span>
-            <span style="color:${cor};font-weight:700;font-family:'Bebas Neue',sans-serif;font-size:20px">RPE ${rpe}</span>
-          </div>
-          <div class="bar-wrap"><div class="bar" style="width:${pct}%;background:${cor}"></div></div>
-        </div>`;
-      });
-
-      // Insight com math real
-      const horaMediaGeral = (sonoRPE.reduce((a,b)=>a+b.horas,0)/sonoRPE.length).toFixed(1);
-      if(temCorrel){
-        html += `<div style="background:rgba(255,78,78,.1);border-left:3px solid var(--red);border-radius:0 var(--r) var(--r) 0;padding:10px 12px;margin-top:10px;font-size:12px;color:var(--red);line-height:1.6">
-          ⚠️ <strong>${diffHoras}h a menos de sono = +${diffRPE} RPE.</strong> Cada hora de sono perdida eleva o esforço percebido em ~${(parseFloat(diffRPE)/parseFloat(diffHoras)).toFixed(1)} ponto.<br>
-          Sua média atual: <strong>${horaMediaGeral}h</strong>. Nos dias de sono &lt;6h, mantenha a carga — não tente bater recordes.
-        </div>`;
-      } else {
-        html += `<div style="background:rgba(212,255,78,.1);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:10px 12px;margin-top:10px;font-size:12px;color:var(--accent);line-height:1.6">
-          ✅ Sem impacto significativo do sono no esforço (Δ RPE &lt; 0.3). Média de sono: <strong>${horaMediaGeral}h</strong>. Boa recuperação consistente.
-        </div>`;
-      }
-      html += `</div>`;
-    }
-  } else if(sonoRPE.length > 0){
-    html += `<div class="card"><span class="sec-label">Sono × RPE</span>
-      <p style="font-size:12px;color:var(--muted)">Precisa de mais treinos com RPE registrado. Use o Modo Treino para coletar automaticamente.</p></div>`;
-  }
-
-  // Renderiza tudo
-  el.innerHTML = html;
-  renderOrm1Chart(exProg);
-}
-
-// =====================================================
-// GRÁFICO 1RM HISTÓRICO
-// =====================================================
-let chartOrm = null;
-
-function renderOrm1Chart(exProg) {
-  const wrap = document.getElementById('orm-chart-wrap');
-  const select = document.getElementById('orm-select');
-  if (!wrap || !select) return;
-
-  // Só exercícios com 2+ pontos
-  const validos = Object.entries(exProg).filter(([,pts])=>pts.length>=2).sort((a,b)=>b[1].length-a[1].length);
-  if (!validos.length) { wrap.style.display='none'; return; }
-  wrap.style.display='block';
-
-  // Popula select
-  const prevVal = select.value;
-  select.innerHTML = validos.map(([n])=>`<option value="${n}">${n}</option>`).join('');
-  if (prevVal && validos.find(([n])=>n===prevVal)) select.value = prevVal;
-
-  function desenhar() {
-    const nome = select.value;
-    const pts = exProg[nome];
-    if (!pts) return;
-    const sorted = pts.sort((a,b)=>a.data.localeCompare(b.data));
-    const labels = sorted.map(p=>new Date(p.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}));
-    const orms = sorted.map(p=>calcORM(p.carga,p.reps)||p.carga);
-    const cargas = sorted.map(p=>p.carga);
-
-    if (chartOrm) { chartOrm.destroy(); chartOrm=null; }
-    const ctx = document.getElementById('chart-orm');
-    chartOrm = new Chart(ctx, {
-      type:'line',
-      data:{
-        labels,
-        datasets:[
-          { label:'1RM Estimado (kg)', data:orms, borderColor:'#4e9fff', backgroundColor:'rgba(78,159,255,0.08)', borderWidth:2, pointBackgroundColor:'#4e9fff', pointRadius:4, tension:0.3, fill:true },
-          { label:'Carga usada (kg)', data:cargas, borderColor:'#d4ff4e', backgroundColor:'transparent', borderWidth:1.5, borderDash:[4,3], pointBackgroundColor:'#d4ff4e', pointRadius:3, tension:0.3 }
-        ]
-      },
-      options:{
-        responsive:true,
-        plugins:{
-          legend:{ labels:{ color:'#666', font:{size:10}, boxWidth:12 } },
-          tooltip:{ backgroundColor:'#1a1a1a', titleColor:'#d4ff4e', bodyColor:'#f0f0f0', borderColor:'#2a2a2a', borderWidth:1 }
-        },
-        scales:{
-          x:{ ticks:{color:'#666',font:{size:10}}, grid:{color:'#1a1a1a'} },
-          y:{ ticks:{color:'#666',font:{size:10}}, grid:{color:'#1a1a1a'}, suggestedMin:Math.min(...orms)-5, suggestedMax:Math.max(...orms)+5 }
-        }
-      }
-    });
-
-    // Insight automático
-    const primeiro=orms[0], ultimo=orms[orms.length-1];
-    const diff=(ultimo-primeiro).toFixed(1);
-    const semanas=sorted.length>1?Math.ceil((new Date(sorted[sorted.length-1].data)-new Date(sorted[0].data))/(7*24*3600*1000)):1;
-    const insight = document.getElementById('orm-insight');
-    let msg='', cor='var(--muted)';
-    if (parseFloat(diff)>0) { msg=`✅ 1RM subiu ${diff}kg em ${semanas} semana(s). Força em progressão — cut bem controlado.`; cor='var(--accent)'; }
-    else if (parseFloat(diff)<0) { msg=`⚠️ 1RM caiu ${Math.abs(diff)}kg em ${semanas} semana(s). Pode indicar perda de massa muscular. Revise déficit calórico e proteína.`; cor='var(--red)'; }
-    else { msg=`→ 1RM estável. Força mantida — sinal positivo para preservação muscular no cut.`; cor='var(--blue)'; }
-    insight.innerHTML=`<span style="color:${cor}">${msg}</span>`;
-  }
-
-  desenhar();
-  select.onchange = desenhar;
-}
-
-// =====================================================
-// PESO
-// =====================================================
-function renderPeso() {
-  renderMediaSemana();
-  renderChartPeso();
-  renderPesoStats();
-}
-
-function renderMediaSemana() {
-  const el = document.getElementById('media-semana-peso');
-  if (!el) return;
-  const entradas = Object.entries(pesoData).sort((a,b)=>a[0].localeCompare(b[0]));
-  if (!entradas.length) { el.innerHTML=''; return; }
-
-  // Agrupa por semana (Seg-Dom)
-  const semanas = {};
-  entradas.forEach(([data, v]) => {
-    const d = new Date(data+'T12:00:00');
-    // Início da semana = segunda
-    const diaSem = d.getDay()===0 ? 6 : d.getDay()-1;
-    const seg = new Date(d); seg.setDate(d.getDate()-diaSem);
-    const key = seg.toISOString().split('T')[0];
-    if (!semanas[key]) semanas[key] = [];
-    semanas[key].push(parseFloat(v.peso));
-  });
-
-  const semOrdenadas = Object.entries(semanas).sort((a,b)=>a[0].localeCompare(b[0])).slice(-4);
-  if (semOrdenadas.length < 1) { el.innerHTML=''; return; }
-
-  let html = '<div class="card"><span class="sec-label">Média Semanal</span><div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">';
-  semOrdenadas.forEach(([seg, pesos], i) => {
-    const media = (pesos.reduce((a,b)=>a+b,0)/pesos.length).toFixed(1);
-    const d = new Date(seg+'T12:00:00');
-    const label = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
-    const anterior = i > 0 ? parseFloat((semOrdenadas[i-1][1].reduce((a,b)=>a+b,0)/semOrdenadas[i-1][1].length).toFixed(1)) : null;
-    const diff = anterior !== null ? (parseFloat(media)-anterior).toFixed(1) : null;
-    const cor = diff===null?'var(--muted)':parseFloat(diff)<0?'var(--accent)':parseFloat(diff)>0?'var(--red)':'var(--muted)';
-    html += `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;text-align:center;min-width:90px;flex-shrink:0">
-      <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Sem. ${label}</div>
-      <div style="font-family:'Bebas Neue';font-size:26px;color:var(--accent);line-height:1">${media}kg</div>
-      <div style="font-size:11px;color:${cor};margin-top:2px">${diff!==null?(parseFloat(diff)>0?'+':'')+diff+'kg':'base'}</div>
-      <div style="font-size:10px;color:var(--muted);margin-top:2px">${pesos.length} reg.</div>
-    </div>`;
-  });
-  html += '</div></div>';
-  el.innerHTML = html;
-}
-
-function renderChartPeso() {
-  const ctx = document.getElementById('chart-peso');
-  const entradas = Object.entries(pesoData).sort((a,b)=>a[0].localeCompare(b[0]));
-  if (chartPeso) { chartPeso.destroy(); chartPeso=null; }
-  if (!entradas.length) {
-    ctx.parentElement.innerHTML += '<p style="text-align:center;color:var(--muted);font-size:12px;padding:20px">Nenhum peso registrado ainda.</p>';
-    return;
-  }
-  const labels = entradas.map(([k])=>new Date(k+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}));
-  const pesos = entradas.map(([,v])=>parseFloat(v.peso));
-  chartPeso = new Chart(ctx, {
-    type:'line',
-    data:{
-      labels,
-      datasets:[{
-        label:'Peso (kg)',
-        data:pesos,
-        borderColor:'#d4ff4e',
-        backgroundColor:'rgba(212,255,78,0.08)',
-        borderWidth:2,
-        pointBackgroundColor:'#d4ff4e',
-        pointRadius:4,
-        tension:0.3,
-        fill:true
-      }]
-    },
-    options:{
-      responsive:true,
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#1a1a1a',
-          titleColor:'#d4ff4e',
-          bodyColor:'#f0f0f0',
-          borderColor:'#2a2a2a',
-          borderWidth:1
-        }
-      },
-      scales:{
-        x:{ticks:{color:'#666',font:{size:10}},grid:{color:'#1a1a1a'}},
-        y:{
-          ticks:{color:'#666',font:{size:10}},
-          grid:{color:'#1a1a1a'},
-          suggestedMin: Math.min(...pesos)-2,
-          suggestedMax: Math.max(...pesos)+2
-        }
-      }
-    }
-  });
-}
-
-function renderPesoStats() {
-  const el = document.getElementById('peso-stats');
-  const entradas = Object.entries(pesoData).sort((a,b)=>a[0].localeCompare(b[0]));
-  if (entradas.length < 2) { el.innerHTML=''; return; }
-  const pesos = entradas.map(([,v])=>parseFloat(v.peso));
-  const primeiro=pesos[0], ultimo=pesos[pesos.length-1];
-  const diff=(ultimo-primeiro).toFixed(1);
-  const pesoInicial=71.5, pesoMeta=58;
-  const totalPerder=pesoInicial-pesoMeta;
-  const perdido=pesoInicial-ultimo;
-  const pct=Math.max(0,Math.min(100,Math.round(perdido/totalPerder*100)));
-
-  // Média últimos 7 dias
-  const ultimos7=entradas.slice(-7).map(([,v])=>parseFloat(v.peso));
-  const media7=(ultimos7.reduce((a,b)=>a+b,0)/ultimos7.length).toFixed(1);
-
-  el.innerHTML=`<div class="card">
-    <span class="sec-label">Resumo do Cut</span>
-    <div class="stat-grid" style="margin-bottom:12px">
-      <div class="stat-box"><div class="stat-val" style="font-size:26px">${ultimo}kg</div><div class="stat-lbl">Peso atual</div></div>
-      <div class="stat-box"><div class="stat-val" style="font-size:26px;color:${parseFloat(diff)<0?'var(--accent)':'var(--red)'}">${parseFloat(diff)>0?'+':''}${diff}kg</div><div class="stat-lbl">Variação total</div></div>
-      <div class="stat-box"><div class="stat-val" style="font-size:26px;color:var(--blue)">${media7}kg</div><div class="stat-lbl">Média 7 dias</div></div>
-      <div class="stat-box"><div class="stat-val" style="font-size:26px">${(ultimo-pesoMeta).toFixed(1)}kg</div><div class="stat-lbl">Para a meta</div></div>
-    </div>
-    <div style="font-size:13px;margin-bottom:6px;display:flex;justify-content:space-between">
-      <span>Progresso: 71,5kg → ${ultimo}kg → 58kg</span>
-      <span style="color:var(--accent);font-weight:700">${pct}%</span>
-    </div>
-    <div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div>
-  </div>`;
-}
-
-document.getElementById('btn-peso-save').addEventListener('click', () => {
-  const data = document.getElementById('p-data').value;
-  const peso = document.getElementById('p-peso').value;
-  const obs  = document.getElementById('p-obs').value;
-  if (!data||!peso) { toast('Preencha data e peso!', true); return; }
-  pesoData[data] = { peso, obs };
-  localStorage.setItem('gymlog_peso', JSON.stringify(pesoData));
-  toast('✅ Peso registrado!');
-  document.getElementById('p-peso').value='';
-  document.getElementById('p-obs').value='';
-  renderPeso();
-
-  // Atualiza cut na config
-  const ul=parseFloat(peso); const pi=71.5,pm=58;
-  const pct=Math.max(0,Math.min(100,Math.round((pi-ul)/(pi-pm)*100)));
-  const bar=document.getElementById('cut-bar');
-  if(bar){ bar.style.width=pct+'%'; document.getElementById('cut-pct').textContent=pct+'%'; document.getElementById('peso-atual-cut').textContent=ul+'kg'; document.getElementById('cut-info').textContent=`Perdeu ${(pi-ul).toFixed(1)}kg · Faltam ${(ul-pm).toFixed(1)}kg para a meta`; }
-});
-
-// =====================================================
-// HISTÓRICO
-// =====================================================
-function renderHistorico(filtro='todos') {
-  const el=document.getElementById('hist-list');
-  if (!API) { el.innerHTML=`<div class="warn-box">⚠️ Configure a URL em Config.</div>`; return; }
-  if (!sessions.length) { el.innerHTML=`<div class="empty">📅<br><br>Nenhum treino ainda.</div>`; return; }
-  const muscles=new Set(); sessions.forEach(s=>s.exercises.forEach(e=>{if(e.grupoMuscular)muscles.add(e.grupoMuscular);}));
-  const chips=document.getElementById('chips-musculo');
-  chips.innerHTML=`<div class="chip ${filtro==='todos'?'active':''}" data-f="todos">Todos</div>`;
-  muscles.forEach(m=>{chips.innerHTML+=`<div class="chip ${filtro===m?'active':''}" data-f="${m}">${m}</div>`;});
-  chips.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>renderHistorico(c.dataset.f)));
-  let filtered=sessions;
-  if(filtro!=='todos') filtered=sessions.map(s=>({...s,exercises:s.exercises.filter(e=>e.grupoMuscular===filtro)})).filter(s=>s.exercises.length>0);
-  if(!filtered.length){el.innerHTML=`<div class="empty"><p>Nenhum treino de <strong>${filtro}</strong>.</p></div>`;return;}
-  el.innerHTML=filtered.map((sess,i)=>{
-    const d=new Date(sess.date+'T12:00:00');
-    const dStr=d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase();
-    const vol=sess.exercises.reduce((a,e)=>a+(parseFloat(e.carga)||0)*(parseInt(e.serie)||0)*(parseInt(e.repeticoes)||0),0);
-    const rows=sess.exercises.map(e=>`
-      <div class="ex-row">
-        <div><div class="ex-row-name">${e.exercicio||'—'}</div><div class="ex-row-muscle">${e.grupoMuscular||''}</div></div>
-        <div class="ex-row-stats">${e.carga}kg × ${e.repeticoes} reps × ${e.serie}s${e.rpe?'<br>RPE '+e.rpe:''}${e.rir?' | RIR '+e.rir:''}</div>
-      </div>`).join('');
-    return `<div class="sess-card">
-      <div class="sess-head" onclick="this.nextElementSibling.classList.toggle('open')">
-        <div><div class="sess-date">${dStr}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${sess.treino?'Treino '+sess.treino:'Treino'} · ${sess.exercises.length} ex · ${Math.round(vol)}kg${sess.sono?' · 😴 '+sess.sono+' ('+sonoLabel(sess.sono)+')':''}${sess.duracao?' · ⏱'+sess.duracao+'min':''}</div></div>
-        <span class="sess-badge">${sess.treino?'Treino '+sess.treino:'—'}</span>
-      </div>
-      <div class="sess-body">${rows}<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)"><button class="btn-ghost" onclick="confirmarExclusao('${sess.date}','${sess.treino||''}',${i})">🗑 EXCLUIR</button></div></div>
-    </div>`;
-  }).join('');
-}
-
-function confirmarExclusao(date,treino,idx){
-  const d=new Date(date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
-  if(confirm(`Excluir treino de ${d}?\n\nEssa ação não pode ser desfeita.`)) excluirTreino(date,treino,idx);
-}
-
-async function excluirTreino(date,treino,idx){
-  if(!API) return; toast('Excluindo...');
-  try{
-    const r=await fetch(API,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'delete',date,treino})});
-    const t=await r.text(); let result; try{result=JSON.parse(t);}catch(e){result={success:true};}
-    if(result.success!==false){toast('✅ Treino excluído!');await carregarDados();renderHistorico();}
-    else toast('Erro: '+(result.error||''),true);
-  }catch(err){toast('Erro de conexão!',true);}
-}
-
-// =====================================================
-// CONFIG
-// =====================================================
-function renderConfig(){
-  // Inicializa campos
-  const hoje = new Date().toISOString().split('T')[0];
-  const pesoDataEl = document.getElementById('peso-data');
-  if (pesoDataEl && !pesoDataEl.value) pesoDataEl.value = hoje;
-  const entradas=Object.entries(pesoData).sort((a,b)=>a[0].localeCompare(b[0]));
-  if(entradas.length){
-    const ultimo=parseFloat(entradas[entradas.length-1][1].peso);
-    const pi=71.5,pm=58;
-    const pct=Math.max(0,Math.min(100,Math.round((pi-ultimo)/(pi-pm)*100)));
-    document.getElementById('cut-bar').style.width=pct+'%';
-    document.getElementById('cut-pct').textContent=pct+'%';
-    document.getElementById('peso-atual-cut').textContent=ultimo+'kg';
-    document.getElementById('cut-info').textContent=`Perdeu ${(pi-ultimo).toFixed(1)}kg · Faltam ${(ultimo-pm).toFixed(1)}kg para a meta`;
-  }
-}
-
-document.getElementById('btn-cfg-save').addEventListener('click',()=>{
-  const url=document.getElementById('cfg-url').value.trim();
-  if(!url){toast('Cole a URL!',true);return;}
-  if(!url.includes('script.google.com')){toast('URL inválida!',true);return;}
-  API=url; localStorage.setItem('gymlog_url',API); toast('✅ URL salva!'); carregarDados();
-});
-
-document.getElementById('btn-cfg-test').addEventListener('click',async()=>{
-  if(!API){toast('Salve a URL primeiro!',true);return;}
-  try{const r=await fetch(API+'?action=ping',{redirect:'follow'});const j=JSON.parse(await r.text());toast(j.status==='ok'?'✅ Conexão OK! Aba: '+j.sheet:'❌ Erro',j.status!=='ok');}
-  catch(err){toast('❌ Erro: '+err.message,true);}
-});
-
-document.getElementById('btn-peso-save').addEventListener('click', async () => {
-  const data = document.getElementById('peso-data').value;
-  const val  = document.getElementById('peso-val').value;
-  const obs  = document.getElementById('peso-obs').value;
-  if (!data || !val) { toast('Preencha data e peso!', true); return; }
-  if (!API) { toast('Configure a URL do Apps Script primeiro!', true); return; }
-  try {
-    const body = JSON.stringify({ rows: [{ data, peso: val, obs }], action: 'savePeso' });
-    await fetch(API, { method:'POST', redirect:'follow', headers:{'Content-Type':'text/plain'}, body });
-    pesoData[data] = { peso: val, obs };
-    toast(`✅ ${val}kg em ${data} salvo!`);
-    renderConfig();
-    document.getElementById('peso-val').value = '';
-    document.getElementById('peso-obs').value = '';
-  } catch(e) { toast('Erro ao salvar peso!', true); }
-});
-
-document.getElementById('btn-reload').addEventListener('click',async()=>{
-  toast('Recarregando...');await carregarDados();toast('✅ '+sessions.length+' sessões carregadas!');
-});
-
-// =====================================================
-// MODO TREINO
-// =====================================================
-let MT = {
-  exercicios: [],       // [{nome, musculo, tipo, descanso, series, carga, repsAlvo, cardEl}]
-  exIdx: 0,             // exercício atual
-  serieIdx: 0,          // série atual (0-based)
-  repsFeitas: [],       // [[reps por série] por exercício]
-  descansoReal: [],     // [[segundos reais descansados] por série] por exercício
-  rpeFeito: [],         // [rpe string] por exercício
-  rirFeito: [],         // [rir string] por exercício
-  timerInterval: null,
-  timerTotal: 90,
-  timerRestante: 90,
-  inicioTimer: null,    // quando o timer atual começou
-  inicioTreino: null,
-  tempoInterval: null,
-  wakeLock: null,
-  // Revezamento
-  revezando: false,     // se está em modo revezamento agora
-  revezaVoltaEx: -1,    // exIdx de onde voltará após a série de revezamento
-  revezaVoltaSerie: -1  // serieIdx de onde voltará
-};
-
-// Converte horário de dormir em horas de sono (acorda 04:40 fixo)
-function sonoParaHoras(horario) {
-  if (!horario) return null;
-  // Garante que é string no formato HH:MM
-  const str = String(horario).trim();
-  const match = str.match(/^(\d{1,2}):(\d{2})/);
-  if (!match) return null;
-  const h = parseInt(match[1]), m = parseInt(match[2]);
-  if (isNaN(h) || isNaN(m)) return null;
-  const acorda = 4*60+40; // 04:40
-  const dorme  = h*60+m;
-  // Dormiu depois de meia-noite (00:xx, 01:xx etc) → adiciona 24h
-  const dormeMins = dorme < acorda ? acorda - dorme : (24*60 - dorme + acorda);
-  const resultado = parseFloat((dormeMins/60).toFixed(2));
-  // Sanidade: sono entre 1h e 14h
-  if (resultado < 1 || resultado > 14) return null;
-  return resultado;
-}
-
-function sonoLabel(horario) {
-  const h = sonoParaHoras(horario);
-  if (!h) return '';
-  const hInt = Math.floor(h), min = Math.round((h - hInt)*60);
-  return `${hInt}h${min>0?min+'min':''}`;
-}
-
-function descansoParaSegundos(d) {
-  if (!d) return 90;
-  if (d==='30s') return 30;
-  if (d==='60s') return 60;
-  if (d==='90s') return 90;
-  if (d==='2min') return 120;
-  if (d==='3min+') return 180;
-  return 90;
-}
-
-function iniciarExercicio(idx) {
-  // Pega o card pelo idx
-  const card = document.getElementById('ex-' + idx);
-  if (!card) return;
-
-  const nome    = card.querySelector('.ex-nome').value.trim();
-  if (!nome) { toast('Exercício sem nome!', true); return; }
-
-  const series  = parseInt(card.querySelector('.ex-serie').value) || 3;
-  const carga   = parseFloat(card.querySelector('.ex-carga').value) || 0;
-  const repsRaw = card.querySelector('.ex-reps').value.trim();
-  const repsAlvo = repsRaw ? repsRaw.split('x')[0] : '12';
-
-  const ex = {
-    nome,
-    musculo: card.querySelector('.ex-grupo-vis')
-      ? card.querySelector('.ex-grupo-vis').value
-      : card.querySelector('.ex-grupo').value || '',
-    tipo:     card.querySelector('.ex-tipo').value || '',
-    descanso: card.querySelector('.ex-descanso').value || '90s',
-    rir:      card.querySelector('.ex-rir').value || '',
-    rpe:      card.querySelector('.ex-rpe').value || '',
-    series, carga, repsAlvo,
-    cardEl: card,
-    cardIdx: idx
-  };
-
-  MT.exercicios   = [ex];
-  MT.exIdx        = 0;
-  MT.serieIdx     = 0;
-  MT.repsFeitas   = [[]];
-  MT.descansoReal = [[]];
-  MT.rpeFeito     = [''];
-  MT.rirFeito     = [''];
-  MT.revezando    = false;
-  MT.inicioTreino = Date.now();
-
-  // Wake Lock
-  if ('wakeLock' in navigator) {
-    navigator.wakeLock.request('screen').then(wl => { MT.wakeLock = wl; }).catch(()=>{});
-  }
-
-  // Cronômetro do exercício
-  MT.tempoInterval = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - MT.inicioTreino) / 1000);
-    const m = String(Math.floor(elapsed/60)).padStart(2,'0');
-    const s = String(elapsed%60).padStart(2,'0');
-    document.getElementById('mt-tempo-total').textContent = m+':'+s;
-  }, 1000);
-
-  document.getElementById('modo-treino').classList.add('ativo');
-  mtMostrarExercicio();
-}
-
-// mantida para compatibilidade interna (não exposta no UI)
-function iniciarModoTreino() { iniciarExercicio(1); }
-
-function sairModoTreino() {
-  if (!confirm('Sair do modo treino? O progresso não salvo será perdido.')) return;
-  fecharModoTreino();
-}
-
-function fecharModoTreino() {
-  document.getElementById('modo-treino').classList.remove('ativo');
-  clearInterval(MT.timerInterval);
-  clearInterval(MT.tempoInterval);
-  clearInterval(revezaInterval);
-  MT.timerInterval = null;
-  revezaInterval = null;
-  if (MT.wakeLock) { MT.wakeLock.release(); MT.wakeLock = null; }
-}
-
-function mtSetFase(fase) {
-  document.querySelectorAll('.mt-fase').forEach(f => f.classList.remove('ativa'));
-  document.getElementById('mt-fase-' + fase).classList.add('ativa');
-}
-
-function mtAtualizarProgresso() {
-  const totalSeries = MT.exercicios.reduce((a,e)=>a+e.series, 0);
-  const seriesFeitas = MT.repsFeitas.reduce((a,r)=>a+r.length, 0);
-  const pct = Math.round(seriesFeitas / totalSeries * 100);
-  document.getElementById('mt-prog-bar').style.width = pct + '%';
-}
-
-function mtMostrarExercicio() {
-  const ex = MT.exercicios[MT.exIdx];
-  const totalEx = MT.exercicios.length;
-  const h = lastWeights[ex.nome];
-
-  document.getElementById('mt-titulo').textContent = `TREINO ${document.getElementById('s-treino').value || ''}`;
-  document.getElementById('mt-ex-num').textContent = `EXERCÍCIO ${MT.exIdx+1} / ${totalEx}`;
-  document.getElementById('mt-ex-nome').textContent = ex.nome;
-  document.getElementById('mt-ex-musculo').textContent = ex.musculo;
-  document.getElementById('mt-alvo-carga').textContent = ex.carga || '—';
-  document.getElementById('mt-alvo-rpe').textContent = ex.rpe || '—';
-  document.getElementById('mt-alvo-desc').textContent = ex.descanso || '90s';
-
-  // Reps alvo — usa o que foi digitado pro campo, ou padrão
-  const repsAlvoArr = ex.repsAlvo ? ex.repsAlvo.split('x').map(n=>parseInt(n)).filter(n=>!isNaN(n)) : [12];
-  const repsAlvoSerie = repsAlvoArr[MT.serieIdx] || repsAlvoArr[repsAlvoArr.length-1] || 12;
-  document.getElementById('mt-alvo-reps').textContent = repsAlvoSerie;
-
-  // Dots de séries
-  const dots = document.getElementById('mt-dots');
-  dots.innerHTML = '';
-  for (let i=0; i<ex.series; i++) {
-    const d = document.createElement('div');
-    d.className = 'mt-dot' + (i < MT.repsFeitas[MT.exIdx].length ? ' feita' : i===MT.serieIdx ? ' atual' : '');
-    dots.appendChild(d);
-  }
-
-  // Hint último peso
-  const last = document.getElementById('mt-last');
-  if (h) {
-    last.innerHTML = `📌 Última vez: <strong style="color:var(--accent)">${h.carga}kg × ${h.repeticoes} reps × ${h.serie}s${h.rpe?' | RPE '+h.rpe:''}</strong>`;
-    last.style.display = 'block';
-  } else {
-    last.style.display = 'none';
-  }
-
-  // Atalhos de reps (baseado na última sessão ou alvo)
-  const alvoNum = repsAlvoSerie;
-  const atalhos = [...new Set([alvoNum-2, alvoNum-1, alvoNum, alvoNum+1, alvoNum+2].filter(n=>n>0))];
-  document.getElementById('mt-atalhos-reps').innerHTML = atalhos.map(n =>
-    `<button onclick="document.getElementById('mt-reps-val').value='${n}'" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:18px;cursor:pointer">${n}</button>`
-  ).join('');
-
-  mtAtualizarProgresso();
-  mtSetFase('exec');
-}
-
-// Botão CONCLUÍ A SÉRIE
-document.getElementById('mt-btn-concluiu').addEventListener('click', () => {
-  const ex = MT.exercicios[MT.exIdx];
-  const serieAtual = MT.serieIdx + 1;
-  document.getElementById('mt-reps-label').textContent = `SÉRIE ${serieAtual} DE ${ex.series} — QUANTAS REPS?`;
-
-  // Mostra reps já feitas desta sessão neste exercício
-  const feitas = MT.repsFeitas[MT.exIdx];
-  document.getElementById('mt-reps-feitas').innerHTML = feitas.length
-    ? feitas.map((r,i)=>`<div class="mt-rep-badge">S${i+1}: ${r}</div>`).join('')
-    : '';
-
-  document.getElementById('mt-reps-val').value = '';
-  setTimeout(()=>{ document.getElementById('mt-reps-val').focus(); }, 100);
-  mtSetFase('reps');
-});
-
-// Botão CONFIRMAR reps
-document.getElementById('mt-btn-confirmar').addEventListener('click', () => {
-  const val = parseInt(document.getElementById('mt-reps-val').value);
-  if (isNaN(val) || val < 0) { document.getElementById('mt-reps-val').focus(); return; }
-
-  const ex = MT.exercicios[MT.exIdx];
-  MT.repsFeitas[MT.exIdx].push(val);
-  MT.serieIdx++;
-
-  beep();
-  mtAtualizarProgresso();
-
-  if (MT.serieIdx < ex.series) {
-    // Ainda tem séries → inicia timer
-    iniciarTimer(descansoParaSegundos(ex.descanso));
-  } else {
-    // Acabou as séries deste exercício
-    mtMostrarResumoExercicio();
-  }
-});
-
-function iniciarTimer(segundos) {
-  MT.timerTotal = segundos;
-  MT.timerRestante = segundos;
-  MT.inicioTimer = Date.now();
-  const circ = 2 * Math.PI * 88; // 553
-  const ring = document.getElementById('mt-ring');
-  ring.style.strokeDasharray = circ;
-
-  clearInterval(MT.timerInterval);
-  function tick() {
-    document.getElementById('mt-timer-num').textContent = MT.timerRestante;
-    const offset = circ * (1 - MT.timerRestante / MT.timerTotal);
-    ring.style.strokeDashoffset = offset;
-
-    if (MT.timerRestante <= 0) {
-      clearInterval(MT.timerInterval);
-      MT.timerInterval = null;
-      // Registra descanso completo
-      const serieAnterior = MT.serieIdx - 1;
-      if (serieAnterior >= 0 && MT.descansoReal[MT.exIdx]) {
-        MT.descansoReal[MT.exIdx][serieAnterior] = MT.timerTotal;
-      }
-      beep(3);
-      vibrar();
-      setTimeout(() => {
-        if (MT.revezando) { MT.revezando = false; mtVoltarDeRevezamento(); }
-        else { mtMostrarExercicio(); }
-      }, 600);
-    } else {
-      MT.timerRestante--;
-    }
-  }
-  tick();
-  MT.timerInterval = setInterval(tick, 1000);
-  mtSetFase('timer');
-}
-
-function pularTimer() {
-  const descReal = MT.inicioTimer ? Math.round((Date.now() - MT.inicioTimer) / 1000) : (MT.timerTotal - MT.timerRestante);
-  clearInterval(MT.timerInterval);
-  MT.timerInterval = null;
-  // Registra o descanso real na série que acabou de passar
-  const serieAnterior = MT.serieIdx - 1;
-  if (serieAnterior >= 0 && MT.descansoReal[MT.exIdx]) {
-    MT.descansoReal[MT.exIdx][serieAnterior] = descReal;
-  }
-  mtMostrarExercicio();
-}
-
-function mtMostrarResumoExercicio() {
-  const ex = MT.exercicios[MT.exIdx];
-  const reps = MT.repsFeitas[MT.exIdx];
-  const repsStr = reps.join('x');
-  const totalReps = reps.reduce((a,b)=>a+b,0);
-  const vol = ex.carga * totalReps;
-  const orm = calcORM(ex.carga, Math.max(...reps));
-
-  // Análise
-  const rec = analisarReps(reps, ex.series);
-
-  document.getElementById('mt-resumo-ex-conteudo').innerHTML = `
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--text);margin-bottom:8px">${ex.nome}</div>
-    <div style="font-size:28px;font-family:'Bebas Neue',sans-serif;color:var(--accent);letter-spacing:2px;margin-bottom:8px">${repsStr}</div>
-    <div style="display:flex;gap:16px;font-size:13px;color:var(--muted)">
-      <span>📦 Vol: <strong style="color:var(--text)">${Math.round(vol)}kg</strong></span>
-      <span>🔢 Total: <strong style="color:var(--text)">${totalReps} reps</strong></span>
-      ${orm?`<span>💪 1RM: <strong style="color:var(--blue)">~${orm}kg</strong></span>`:''}
-    </div>`;
-
-  const recEl = document.getElementById('mt-rec-resumo');
-  if (rec) {
-    const cor = rec.tipo==='red'?'var(--red)':rec.tipo==='green'?'var(--accent)':'var(--blue)';
-    recEl.innerHTML = `<div style="background:${cor}18;border-left:3px solid ${cor};border-radius:0 var(--r) var(--r) 0;padding:10px 12px;font-size:13px;color:${cor};line-height:1.5">${rec.msg}</div>`;
-  } else {
-    recEl.innerHTML = '';
-  }
-
-  // Botão próximo
-  const btnProx = document.getElementById('mt-btn-prox-ex');
-  const isUltimo = MT.exIdx >= MT.exercicios.length - 1;
-  btnProx.textContent = isUltimo ? '🏁 VER RESUMO FINAL' : 'PRÓXIMO EXERCÍCIO →';
-  btnProx.style.background = isUltimo ? 'var(--accent)' : 'var(--bg3)';
-  btnProx.style.color = isUltimo ? '#000' : 'var(--text)';
-
-  mtSetFase('resumo-ex');
-}
-
-document.getElementById('mt-btn-prox-ex').addEventListener('click', () => {
-  // Salva RPE e RIR do exercício atual
-  MT.rpeFeito[MT.exIdx] = document.getElementById('mt-rpe-input').value;
-  MT.rirFeito[MT.exIdx] = document.getElementById('mt-rir-input').value;
-  MT.exIdx++;
-  MT.serieIdx = 0;
-  if (MT.exIdx < MT.exercicios.length) {
-    mtMostrarExercicio();
-  } else {
-    mtMostrarFinal();
-  }
-});
-
-function mtMostrarFinal() {
-  clearInterval(MT.tempoInterval);
-  const elapsed = Math.floor((Date.now() - MT.inicioTreino) / 1000);
-  const m = Math.floor(elapsed/60), s = elapsed%60;
-  document.getElementById('mt-tempo-final').textContent = `Duração: ${m}min${s>0?' '+s+'s':''}`;
-  document.getElementById('mt-final-titulo').textContent = MT.exercicios[0]?.nome
-    ? MT.exercicios[0].nome + ' ✓'
-    : 'EXERCÍCIO CONCLUÍDO ✓';
-
-  // Atualiza campo duração no formulário
-  document.getElementById('s-duracao').value = m;
-
-  // Monta lista final
-  let html = '';
-  let volTotal = 0;
-  MT.exercicios.forEach((ex, i) => {
-    const reps = MT.repsFeitas[i];
-    if (!reps.length) return;
-    const repsStr = reps.join('x');
-    const total = reps.reduce((a,b)=>a+b,0);
-    const vol = ex.carga * total;
-    volTotal += vol;
-    html += `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div style="font-weight:600;font-size:14px">${ex.nome}</div>
-          <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-top:2px">${ex.musculo}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${repsStr}</div>
-          <div style="font-size:11px;color:var(--muted)">${ex.carga}kg · Vol ${Math.round(vol)}kg</div>
-        </div>
-      </div>
-    </div>`;
-
-    // Escreve reps, RPE e RIR de volta nos cards para salvarTreino usar
-    ex.cardEl.querySelector('.ex-reps').value = repsStr;
-    ex.cardEl.querySelector('.ex-reps').dispatchEvent(new Event('input'));
-    if (MT.rpeFeito[i]) ex.cardEl.querySelector('.ex-rpe').value = MT.rpeFeito[i];
-    if (MT.rirFeito[i]) ex.cardEl.querySelector('.ex-rir').value = MT.rirFeito[i];
-    // Descanso real médio
-    const descArr2 = MT.descansoReal[i].filter(d=>d>0);
-    if (descArr2.length) {
-      const descMed = Math.round(descArr2.reduce((a,b)=>a+b,0)/descArr2.length);
-      const descStr = descMed<=30?'30s':descMed<=60?'60s':descMed<=90?'90s':descMed<=120?'2min':'3min+';
-      ex.cardEl.querySelector('.ex-descanso').value = descStr;
-    }
-  });
-
-  html += `<div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center;margin-top:4px">
-    <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Volume Total</div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent)">${volTotal>=1000?(volTotal/1000).toFixed(1)+'k':Math.round(volTotal)} kg</div>
-  </div>`;
-
-  document.getElementById('mt-final-lista').innerHTML = html;
-  mtSetFase('final');
-}
-
-document.getElementById('mt-btn-salvar-final').addEventListener('click', () => {
-  // Escreve dados de volta no card e marca como feito
-  const ex = MT.exercicios[0];
-  if (ex && ex.cardEl) {
-    const repsStr = MT.repsFeitas[0].join('x');
-    if (repsStr) {
-      ex.cardEl.querySelector('.ex-reps').value = repsStr;
-      ex.cardEl.querySelector('.ex-reps').dispatchEvent(new Event('input'));
-      if (ex.cardEl.querySelector('.ex-carga') && ex.carga)
-        ex.cardEl.querySelector('.ex-carga').value = ex.carga;
-    }
-    if (MT.rpeFeito[0]) ex.cardEl.querySelector('.ex-rpe').value = MT.rpeFeito[0];
-    if (MT.rirFeito[0]) ex.cardEl.querySelector('.ex-rir').value = MT.rirFeito[0];
-    const descArr = MT.descansoReal[0].filter(d => d > 0);
-    if (descArr.length) {
-      const med = Math.round(descArr.reduce((a,b)=>a+b,0)/descArr.length);
-      const str = med<=30?'30s':med<=60?'60s':med<=90?'90s':med<=120?'2min':'3min+';
-      ex.cardEl.querySelector('.ex-descanso').value = str;
-    }
-    // Marca card como concluído visualmente
-    const btnIniciar = document.getElementById('btn-iniciar-ex-' + ex.cardIdx);
-    if (btnIniciar) {
-      btnIniciar.textContent = '✓ CONCLUÍDO';
-      btnIniciar.style.background = 'var(--bg3)';
-      btnIniciar.style.color = 'var(--accent)';
-      btnIniciar.style.border = '1px solid var(--accent)';
-      btnIniciar.style.cursor = 'default';
-      btnIniciar.onclick = null;
-    }
-    ex.cardEl.style.opacity = '0.7';
-  }
-  fecharModoTreino();
-  // Rola para o próximo card não concluído
-  const prox = [...document.querySelectorAll('.ex-card')].find(c => c.style.opacity !== '0.7');
-  if (prox) prox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-});
-
-// ---- REVEZAMENTO (compartilhar equipamento com outra pessoa) ----
-let revezaInterval = null;
-let revezaInicio = null;
-
-function entrarRevezamento() {
-  // Para o timer de descanso e começa a contar o tempo de espera
-  clearInterval(MT.timerInterval);
-  MT.timerInterval = null;
-
-  // Registra descanso parcial até agora
-  const descParcial = MT.inicioTimer ? Math.round((Date.now() - MT.inicioTimer) / 1000) : 0;
-  const serieAnterior = MT.serieIdx - 1;
-  if (serieAnterior >= 0) MT.descansoReal[MT.exIdx][serieAnterior] = descParcial;
-
-  MT.revezando = true;
-  revezaInicio = Date.now();
-
-  // Mostra nome do exercício atual
-  document.getElementById('mt-reveza-ex-nome').textContent =
-    MT.exercicios[MT.exIdx].nome + ' — série ' + (MT.serieIdx + 1);
-
-  // Contador de espera
-  clearInterval(revezaInterval);
-  revezaInterval = setInterval(() => {
-    const seg = Math.floor((Date.now() - revezaInicio) / 1000);
-    const m = String(Math.floor(seg/60)).padStart(2,'0');
-    const s = String(seg%60).padStart(2,'0');
-    document.getElementById('mt-reveza-timer').textContent = m+':'+s;
-  }, 1000);
-
-  mtSetFase('reveza');
-}
-
-function voltarRevezamento() {
-  // Equipamento livre — soma tempo de espera ao descanso real
-  const tempoEspera = Math.round((Date.now() - revezaInicio) / 1000);
-  clearInterval(revezaInterval);
-  revezaInterval = null;
-  MT.revezando = false;
-
-  // Adiciona o tempo de espera ao descanso registrado da última série
-  const serieAnterior = MT.serieIdx - 1;
-  if (serieAnterior >= 0) {
-    MT.descansoReal[MT.exIdx][serieAnterior] =
-      (MT.descansoReal[MT.exIdx][serieAnterior] || 0) + tempoEspera;
-  }
-
-  // Volta direto para a série — sem timer adicional, já descansou bastante
-  mtMostrarExercicio();
-}
-
-function cancelarRevezamento() {
-  clearInterval(revezaInterval);
-  revezaInterval = null;
-  MT.revezando = false;
-  // Retoma timer normal com o tempo restante
-  const tempoEspera = Math.round((Date.now() - revezaInicio) / 1000);
-  const restante = Math.max(0, (MT.timerTotal - (MT.timerTotal - MT.timerRestante) - tempoEspera));
-  if (restante > 0) iniciarTimer(restante);
-  else mtMostrarExercicio();
-}
-
-function mtVoltarDeRevezamento() {
-  // Não usado mais — mantido para compatibilidade
-  MT.revezando = false;
-  mtMostrarExercicio();
-}
-
-function addExercicioLivre() {
-  const nome = prompt('Nome do exercício extra:');
-  if (!nome || !nome.trim()) return;
-  const exLivre = {
-    nome: nome.trim(), musculo:'', foco:'', subs:[],
-    series:3, reps:'12', descanso:'90s'
-  };
-  addExercicioProgramado(exLivre, true);
-  const cards = document.querySelectorAll('.ex-card');
-  const newCard = cards[cards.length-1];
-  if (newCard) newCard.scrollIntoView({behavior:'smooth'});
-}
-
-
-// Beep com Web Audio
-function beep(vezes=1) {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    for (let i=0; i<vezes; i++) {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.frequency.value = vezes>1 ? (i===0?880:i===1?1100:1320) : 880;
-      osc.type = 'sine';
-      gain.gain.setValueAtTime(0.3, ctx.currentTime + i*0.15);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i*0.15 + 0.3);
-      osc.start(ctx.currentTime + i*0.15);
-      osc.stop(ctx.currentTime + i*0.15 + 0.3);
-    }
-  } catch(e) {}
-}
-
-function vibrar() {
-  if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
-}
-
-// =====================================================
-// =====================================================
-// COACH — BRIEFING E RESUMOS
-// =====================================================
-
-// Cores e emojis de status
-function coachStatus(tipo) {
-  return {
-    sobe:    { emoji:'🔺', cor:'var(--accent)',  label:'SOBE A CARGA' },
-    desce:   { emoji:'🔻', cor:'var(--red)',     label:'REDUZ A CARGA' },
-    ok:      { emoji:'✅', cor:'var(--accent)',  label:'MANTÉM' },
-    alerta:  { emoji:'⚠️', cor:'#f97316',       label:'ATENÇÃO' },
-    info:    { emoji:'💡', cor:'var(--blue)',    label:'INFO' },
-    erro:    { emoji:'🔴', cor:'var(--red)',     label:'CRÍTICO' },
-  }[tipo] || { emoji:'—', cor:'var(--muted)', label:'' };
-}
-
-// ---- BRIEFING automático ao selecionar dia ----
-function renderCoachBriefing(letra) {
-  const el = document.getElementById('coach-briefing');
-  if (!el || !sessions.length) return;
-
-  const treino = TREINOS[letra];
-  if (!treino) return;
-
-  const linhas = [];
-
-  // 1. Alertas de volume semanal dos músculos do dia
-  const hoje = new Date();
-  const semanaAtras = new Date(hoje - 7*24*60*60*1000).toISOString().split('T')[0];
-  const sessSemana = sessions.filter(s => s.date >= semanaAtras);
-
-  // Sets por músculo nos últimos 7 dias
-  const setsMus = {};
-  sessSemana.forEach(sess => sess.exercises.forEach(ex => {
-    const m = ex.grupoMuscular;
-    if (m) setsMus[m] = (setsMus[m]||0) + (parseInt(ex.serie)||0);
-  }));
-
-  const MEV_VSHAPE = {
-    'Costas': 10, 'Ombro': 8, 'Peito': 6,
-    'Bíceps': 5, 'Tríceps': 4, 'Pernas': 8, 'Core': 4
-  };
-
-  const muscDoTreino = [...new Set(treino.exercicios.map(e => e.musculo))];
-  muscDoTreino.forEach(m => {
-    const sets = setsMus[m] || 0;
-    const mev  = MEV_VSHAPE[m] || 0;
-    if (mev && sets < mev) {
-      linhas.push({ tipo:'alerta', msg:`${m}: ${sets} sets esta semana — mínimo é ${mev}. Hoje é essencial completar todas as séries.` });
-    }
-  });
-
-  // 2. Por exercício — carga e reps da última sessão
-  const exAlertas = [];
-  treino.exercicios.forEach(ex => {
-    const h = lastWeights[ex.nome];
-    if (!h) return;
-
-    const carga    = parseFloat(h.carga) || 0;
-    const reps     = parseInt(h.repeticoes) || 0;
-    const serie    = parseInt(h.serie) || 0;
-    const repsStr  = h.repsDetalhado || '';
-    const alvo     = ex.reps; // ex: "8-10"
-    const alvoMax  = alvo.toString().includes('-') ? parseInt(alvo.split('-')[1]) : parseInt(alvo);
-
-    // Analisa queda de reps se detalhado
-    if (repsStr && repsStr.includes('x')) {
-      const arr = repsStr.split('x').map(Number).filter(n => !isNaN(n));
-      if (arr.length >= 2) {
-        const queda = ((arr[0] - arr[arr.length-1]) / arr[0]) * 100;
-        if (queda > 30) {
-          exAlertas.push({ tipo:'desce', nome:ex.nome, msg:`Queda de ${Math.round(queda)}% nas reps (${repsStr}). Reduz 5% da carga hoje — ${(carga*0.95).toFixed(1)}kg.` });
-          return;
-        }
-      }
-    }
-
-    // Completou no topo da faixa → sobe
-    if (reps >= alvoMax && serie >= ex.series) {
-      const nova = (carga + 2.5).toFixed(1);
-      exAlertas.push({ tipo:'sobe', nome:ex.nome, msg:`Completou ${serie}×${reps} (alvo ${ex.series}×${alvo}) — SOBE para ${nova}kg hoje.` });
-    }
-    // Completou mas abaixo do alvo máximo → mantém
-    else if (reps >= alvoMax - 2) {
-      exAlertas.push({ tipo:'ok', nome:ex.nome, msg:`Mantém ${carga}kg. Faltou ${alvoMax - reps} rep(s) para liberar aumento.` });
-    }
-  });
-
-  if (!linhas.length && !exAlertas.length) {
-    el.style.display = 'none';
-    return;
-  }
-
-  // Renderiza
-  let html = `<div style="border-radius:var(--r);overflow:hidden;border:1px solid var(--border)">
-    <div style="background:var(--bg3);padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent)">🧠 Briefing do Treinador</div>
-      <button onclick="document.getElementById('coach-briefing').style.display='none'" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:0;line-height:1">✕</button>
-    </div>`;
-
-  // Volume alerts primeiro (mais urgente)
-  linhas.forEach(l => {
-    const s = coachStatus(l.tipo);
-    html += `<div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
-      <span style="font-size:16px;flex-shrink:0">${s.emoji}</span>
-      <span style="font-size:12px;color:var(--text);line-height:1.5">${l.msg}</span>
-    </div>`;
-  });
-
-  // Exercícios
-  exAlertas.slice(0, 5).forEach(a => {
-    const s = coachStatus(a.tipo);
-    html += `<div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
-      <span style="font-size:16px;flex-shrink:0">${s.emoji}</span>
-      <div style="flex:1">
-        <div style="font-size:10px;font-weight:700;color:${s.cor};text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">${a.nome.length>30?a.nome.slice(0,30)+'…':a.nome}</div>
-        <div style="font-size:12px;color:var(--text);line-height:1.5">${a.msg}</div>
-      </div>
-    </div>`;
-  });
-
-  html += `</div>`;
-  el.innerHTML = html;
-  el.style.display = 'block';
-}
-
-// ---- Abre modal coach (dia ou semana) ----
-function abrirCoach(tipo) {
-  const modal = document.getElementById('coach-modal');
-  const title = document.getElementById('coach-modal-title');
-  const body  = document.getElementById('coach-modal-body');
-  if (!modal || !sessions.length) {
-    toast('Sem dados ainda — registre alguns treinos primeiro.', true);
-    return;
-  }
-  modal.style.display = 'block';
-  if (tipo === 'dia') {
-    title.textContent = '📊 RESUMO DO DIA';
-    body.innerHTML = gerarResumoDia();
-  } else {
-    title.textContent = '📅 RESUMO DA SEMANA';
-    body.innerHTML = gerarResumoSemana();
-  }
-}
-
-// ---- Resumo do Dia ----
-function gerarResumoDia() {
-  // Pega a sessão mais recente
-  const sorted = [...sessions].sort((a,b) => b.date.localeCompare(a.date));
-  const sess = sorted[0];
-  if (!sess) return '<p style="color:var(--muted)">Nenhum treino registrado ainda.</p>';
-
-  const d = new Date(sess.date+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit'});
-  const nomeTreino = TREINOS[sess.treino] ? TREINOS[sess.treino].nome : sess.treino;
-
-  let totalVol = 0, totalSeries = 0, totalReps = 0;
-  let html = `<div style="font-size:11px;color:var(--muted);margin-bottom:12px">${d} · ${nomeTreino}</div>`;
-
-  // Cards de exercício
-  const exHtml = [];
-  sess.exercises.forEach(ex => {
-    const carga = parseFloat(ex.carga)||0;
-    const serie = parseInt(ex.serie)||0;
-    const reps  = parseInt(ex.repeticoes)||0;
-    const vol   = carga * serie * reps;
-    totalVol   += vol; totalSeries += serie; totalReps += serie*reps;
-    const orm   = calcORM(carga, reps);
-
-    // Compara com anterior (penúltima sessão com esse exercício)
-    const hist = sessions.filter(s => s.date < sess.date && s.exercises.some(e => e.exercicio === ex.exercicio));
-    const ant  = hist.length ? hist[hist.length-1].exercises.find(e => e.exercicio === ex.exercicio) : null;
-    const diffCarga = ant ? (carga - (parseFloat(ant.carga)||0)).toFixed(1) : null;
-    const seta = diffCarga === null ? '' : parseFloat(diffCarga) > 0 ? `<span style="color:var(--accent)">↑${diffCarga}kg</span>` : parseFloat(diffCarga) < 0 ? `<span style="color:var(--red)">↓${Math.abs(diffCarga)}kg</span>` : '<span style="color:var(--muted)">→</span>';
-
-    // Análise de reps
-    let recMsg = '', recCor = 'var(--muted)';
-    if (ex.repsDetalhado && ex.repsDetalhado.includes('x')) {
-      const arr = ex.repsDetalhado.split('x').map(Number).filter(n=>!isNaN(n));
-      const rec = analisarReps(arr, serie);
-      if (rec) { recMsg = rec.msg; recCor = rec.tipo==='red'?'var(--red)':rec.tipo==='green'?'var(--accent)':'var(--blue)'; }
-    }
-
-    // Sugestão de carga para próxima
-    const exProg = TREINOS[sess.treino]?.exercicios.find(e=>e.nome===ex.exercicio);
-    let sugestao = '';
-    if (exProg) {
-      const alvoMax = exProg.reps.toString().includes('-') ? parseInt(exProg.reps.split('-')[1]) : parseInt(exProg.reps);
-      if (reps >= alvoMax && serie >= exProg.series) {
-        sugestao = `<div style="margin-top:4px;padding:4px 8px;background:var(--accent)1a;border-radius:4px;font-size:11px;color:var(--accent)">🔺 Próximo treino: tente ${(carga+2.5).toFixed(1)}kg</div>`;
-      } else if (reps < alvoMax - 3) {
-        sugestao = `<div style="margin-top:4px;padding:4px 8px;background:var(--red)1a;border-radius:4px;font-size:11px;color:var(--red)">🔻 Considere ${(carga*0.95).toFixed(1)}kg na próxima</div>`;
-      }
-    }
-
-    exHtml.push(`<div style="padding:10px 0;border-bottom:1px solid var(--border)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
-        <span style="font-size:13px;font-weight:600">${ex.exercicio}</span>
-        <span style="font-size:12px;font-family:'Bebas Neue',sans-serif;color:var(--accent)">${serie}×${reps} · ${carga}kg ${seta}</span>
-      </div>
-      <div style="font-size:11px;color:var(--muted)">Volume: ${Math.round(vol)}kg${orm?' · 1RM ~<span style="color:var(--blue)">'+orm+'kg</span>':''}${ex.rpe?' · RPE '+ex.rpe:''}</div>
-      ${recMsg ? `<div style="font-size:11px;color:${recCor};margin-top:3px">${recMsg}</div>` : ''}
-      ${sugestao}
-    </div>`);
-  });
-
-  // Totais
-  const volStr = totalVol >= 1000 ? (totalVol/1000).toFixed(1)+'k' : Math.round(totalVol)+'';
-  html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
-    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${volStr}kg</div>
-      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Volume</div>
-    </div>
-    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${totalSeries}</div>
-      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Séries</div>
-    </div>
-    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${sess.sono?sonoLabel(sess.sono):'—'}</div>
-      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Sono</div>
-    </div>
-  </div>`;
-
-  html += exHtml.join('');
-  return html;
-}
-
-// ---- Resumo da Semana ----
-function gerarResumoSemana() {
-  const hoje = new Date();
-  const seteDias = new Date(hoje - 7*24*60*60*1000).toISOString().split('T')[0];
-  const sessSem  = sessions.filter(s => s.date >= seteDias);
-  if (!sessSem.length) return '<p style="color:var(--muted)">Nenhum treino nos últimos 7 dias.</p>';
-
-  // Volume e sets por músculo
-  const setsMus = {}, volMus = {};
-  let totalVol = 0, totalSeries = 0;
-  sessSem.forEach(sess => {
-    sess.exercises.forEach(ex => {
-      const m = ex.grupoMuscular; if(!m) return;
-      const s = parseInt(ex.serie)||0;
-      const c = parseFloat(ex.carga)||0;
-      const r = parseInt(ex.repeticoes)||0;
-      setsMus[m] = (setsMus[m]||0) + s;
-      volMus[m]  = (volMus[m]||0) + c*s*r;
-      totalVol   += c*s*r; totalSeries += s;
-    });
-  });
-
-  const MEV = { 'Costas':10,'Ombro':8,'Peito':6,'Bíceps':5,'Tríceps':4,'Pernas':8,'Core':4 };
-  const MAV = { 'Costas':16,'Ombro':14,'Peito':10,'Bíceps':10,'Tríceps':8,'Pernas':14,'Core':8 };
-  const MRV = { 'Costas':22,'Ombro':22,'Peito':18,'Bíceps':18,'Tríceps':16,'Pernas':20,'Core':14 };
-
-  // Treinos feitos
-  const treinosStr = sessSem.map(s => s.treino).filter(Boolean).join(', ') || '—';
-  const volStr = totalVol>=1000?(totalVol/1000).toFixed(1)+'k':Math.round(totalVol)+'';
-
-  let html = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
-    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${sessSem.length}</div>
-      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Treinos</div>
-    </div>
-    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${volStr}kg</div>
-      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Volume</div>
-    </div>
-    <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${totalSeries}</div>
-      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Séries</div>
-    </div>
-  </div>`;
-
-  // Volume por músculo com status
-  html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px">Volume por músculo</div>`;
-
-  const muscOrdem = ['Costas','Ombro','Pernas','Peito','Bíceps','Tríceps','Core'];
-  muscOrdem.forEach(m => {
-    const sets = setsMus[m] || 0;
-    const mev  = MEV[m] || 0;
-    const mav  = MAV[m] || 0;
-    const mrv  = MRV[m] || 0;
-    const pct  = mrv ? Math.min(100, Math.round(sets/mrv*100)) : 0;
-    let cor, label, msg;
-    if (!sets) {
-      cor='var(--red)'; label='❌ Não treinou'; msg=`Mínimo: ${mev} sets`;
-    } else if (sets < mev) {
-      cor='var(--red)'; label=`⚠️ ${sets}/${mev} sets`; msg=`Faltam ${mev-sets} sets para o mínimo`;
-    } else if (sets <= mav) {
-      cor='var(--blue)'; label=`✅ ${sets} sets`; msg='Low Volume — válido com alta intensidade';
-    } else if (sets <= mrv) {
-      cor='var(--accent)'; label=`🔥 ${sets} sets`; msg='Faixa ótima de hipertrofia';
-    } else {
-      cor='var(--red)'; label=`⛔ ${sets} sets`; msg='Acima do MRV — risco de overtraining';
-    }
-
-    html += `<div style="margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-        <span style="font-size:13px;font-weight:600">${m}</span>
-        <span style="font-size:12px;color:${cor};font-weight:700">${label}</span>
-      </div>
-      <div style="background:var(--bg3);border-radius:2px;height:6px;margin-bottom:3px">
-        <div style="height:6px;background:${cor};border-radius:2px;width:${pct}%"></div>
-      </div>
-      <div style="font-size:10px;color:var(--muted)">${msg}</div>
-    </div>`;
-  });
-
-  // Alertas de estagnação (exercícios sem progresso há 3+ sessões)
-  const estagnados = [];
-  const allEx = [...new Set(sessSem.flatMap(s=>s.exercises.map(e=>e.exercicio)))];
-  allEx.forEach(nome => {
-    const hist = sessions.filter(s => s.exercises.some(e=>e.exercicio===nome));
-    if (hist.length < 3) return;
-    const cargas = hist.slice(-3).map(s => parseFloat(s.exercises.find(e=>e.exercicio===nome)?.carga)||0);
-    if (cargas.every(c=>c===cargas[0]) && cargas[0] > 0) estagnados.push(nome);
-  });
-
-  if (estagnados.length) {
-    html += `<div style="margin-top:8px;padding:10px 12px;background:var(--red)1a;border-left:3px solid var(--red);border-radius:0 var(--r) var(--r) 0">
-      <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px">⚠️ Estagnação detectada (3+ sessões sem progresso)</div>
-      <div style="font-size:12px;color:var(--text)">${estagnados.join(' · ')}</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px">Adicione 1 rep ou 2,5kg no próximo treino</div>
-    </div>`;
-  }
-
-  // Sono médio da semana
-  const sonoSess = sessSem.filter(s=>s.sono);
-  if (sonoSess.length) {
-    const medH = sonoSess.reduce((a,s)=>a+(sonoParaHoras(s.sono)||0),0)/sonoSess.length;
-    const corSono = medH>=7?'var(--accent)':medH>=6?'var(--blue)':medH>=5?'#f97316':'var(--red)';
-    const hInt=Math.floor(medH), mInt=Math.round((medH-hInt)*60);
-    html += `<div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg3);border-radius:var(--r)">
-      <span style="font-size:13px">😴 Sono médio da semana</span>
-      <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${corSono}">${hInt}h${mInt>0?mInt+'min':''}</span>
-    </div>`;
-  }
-
-  return html;
-}
-
-// RELATÓRIO GERAL
-// =====================================================
-function gerarRelatorio() {
-  const el = document.getElementById('rel-content');
-  const now = new Date();
-  const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  const mesAtual = meses[now.getMonth()] + ' ' + now.getFullYear();
-
-  // --- Peso ---
-  const pesoEntradas = Object.entries(pesoData).sort((a,b)=>a[0].localeCompare(b[0]));
-  const pesoAtual = pesoEntradas.length ? parseFloat(pesoEntradas[pesoEntradas.length-1][1].peso) : 65.5;
-  const pesoInicial = 71.5, pesoMeta = 58;
-  const perdido = (pesoInicial - pesoAtual).toFixed(1);
-  const falta = (pesoAtual - pesoMeta).toFixed(1);
-  const pctCut = Math.max(0,Math.min(100,Math.round((pesoInicial-pesoAtual)/(pesoInicial-pesoMeta)*100)));
-
-  // Média última semana
-  const ultimos7peso = pesoEntradas.slice(-7).map(([,v])=>parseFloat(v.peso));
-  const media7 = ultimos7peso.length ? (ultimos7peso.reduce((a,b)=>a+b,0)/ultimos7peso.length).toFixed(1) : '—';
-
-  // --- Treinos do mês ---
-  const sesMes = sessions.filter(s=>{ const d=new Date(s.date+'T12:00:00'); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); });
-  let totalVol=0, totalSeries=0, totalReps=0;
-  const muscSetsRel={}, exProgRel={}, sonoRPERel=[];
-  sesMes.forEach(sess=>{
-    sess.exercises.forEach(ex=>{
-      const c=parseFloat(ex.carga)||0,s=parseInt(ex.serie)||0,r=parseInt(ex.repeticoes)||0;
-      totalVol+=c*s*r; totalSeries+=s; totalReps+=s*r;
-      if(ex.grupoMuscular&&s) muscSetsRel[ex.grupoMuscular]=(muscSetsRel[ex.grupoMuscular]||0)+s;
-      if(ex.exercicio){ if(!exProgRel[ex.exercicio]) exProgRel[ex.exercicio]=[]; exProgRel[ex.exercicio].push({data:sess.date,carga:c,reps:r}); }
-      if(sess.sono&&ex.rpe) sonoRPERel.push({sono:parseInt(sess.sono),rpe:parseFloat(ex.rpe)});
-    });
-  });
-  const diasTreino=[...new Set(sesMes.map(s=>s.date))].length;
-  const semanas=Math.max(1,Math.ceil(diasTreino/5));
-
-  const FAIXAS2={'Peito':{mev:8,mav:12,mrv:20},'Costas':{mev:10,mav:14,mrv:25},'Ombro':{mev:6,mav:16,mrv:22},'Bíceps':{mev:6,mav:14,mrv:20},'Tríceps':{mev:6,mav:12,mrv:18},'Pernas':{mev:8,mav:16,mrv:20},'Glúteo':{mev:4,mav:12,mrv:16},'Core':{mev:4,mav:10,mrv:16}};
-
-  // RPE médio
-  const rpeMedio = sonoRPERel.length ? (sonoRPERel.reduce((a,b)=>a+b.rpe,0)/sonoRPERel.length).toFixed(1) : '—';
-  const sonoMedio = (() => {
-    const comSono = sesMes.filter(s=>s.sono).map(s=>sonoParaHoras(s.sono)).filter(Boolean);
-    if (!comSono.length) return '—';
-    const med = comSono.reduce((a,b)=>a+b,0)/comSono.length;
-    const h = Math.floor(med), m = Math.round((med-h)*60);
-    return h+'h'+(m>0?m+'min':'');
-  })();
-
-  // Progresso força (exercícios com 2+ registros)
-  const progressoForca = Object.entries(exProgRel).filter(([,v])=>v.length>=2).map(([nome,pts])=>{
-    const sorted=pts.sort((a,b)=>a.data.localeCompare(b.data));
-    const diff=sorted[sorted.length-1].carga-sorted[0].carga;
-    return {nome,diff};
-  });
-  const forcaSubindo = progressoForca.filter(p=>p.diff>0).length;
-  const forcaEstavel = progressoForca.filter(p=>p.diff===0).length;
-  const forcaCaindo  = progressoForca.filter(p=>p.diff<0).length;
-
-  const card = (titulo, corpo) => `<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:10px">${titulo}</span>${corpo}</div>`;
-  const linha = (label, valor, cor='var(--text)') => `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--muted)">${label}</span><strong style="color:${cor}">${valor}</strong></div>`;
-  const alertBox = (msg, tipo='info') => { const cor=tipo==='ok'?'var(--accent)':tipo==='warn'?'var(--red)':'var(--blue)'; return `<div style="background:${cor}18;border-left:3px solid ${cor};border-radius:0 var(--r) var(--r) 0;padding:8px 10px;margin:6px 0;font-size:12px;color:${cor};line-height:1.5">${msg}</div>`; };
-
-  let html = '';
-
-  // CABEÇALHO
-  html += `<div style="background:var(--bg3);border-radius:var(--r);padding:14px;margin-bottom:10px;text-align:center">
-    <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Gerado em ${now.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'})} às ${now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</div>
-    <div style="font-size:13px;color:var(--muted)">Período: <strong style="color:var(--text)">${mesAtual}</strong></div>
-  </div>`;
-
-  // PESO E CUT
-  html += card('⚖️ Progresso do Cut', `
-    ${linha('Peso inicial (Nov/2025)', '71,5kg')}
-    ${linha('Peso atual', pesoAtual+'kg', 'var(--accent)')}
-    ${linha('Peso médio (7 dias)', media7+'kg', 'var(--blue)')}
-    ${linha('Meta', '58kg')}
-    ${linha('Já perdeu', perdido+'kg', 'var(--accent)')}
-    ${linha('Falta', falta+'kg')}
-    <div style="margin-top:10px">
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--muted)">Progresso geral do cut</span><span style="color:var(--accent);font-weight:700">${pctCut}%</span></div>
-      <div style="background:var(--bg3);border-radius:2px;height:8px"><div style="height:8px;background:var(--accent);border-radius:2px;width:${pctCut}%"></div></div>
-    </div>
-    ${parseFloat(perdido)/semanas > 0.7 ? alertBox('⚠️ Taxa de perda acima de 0,7%/semana — risco de perda muscular. Considere aumentar calorias ou reduzir déficit temporariamente.','warn') : alertBox('✅ Taxa de perda dentro do ideal para preservação muscular.','ok')}
-  `);
-
-  // TREINOS
-  html += card(`🏋️ Treinos — ${mesAtual}`, `
-    ${linha('Dias treinados', diasTreino+'x')}
-    ${linha('Volume total', totalVol>=1000?(totalVol/1000).toFixed(1)+'k kg':Math.round(totalVol)+'kg', 'var(--accent)')}
-    ${linha('Séries totais', totalSeries+'')}
-    ${linha('Reps totais', totalReps+'')}
-    ${linha('RPE médio', rpeMedio, rpeMedio>='8.5'?'var(--red)':rpeMedio>='7'?'var(--accent)':'var(--muted)')}
-    ${linha('Sono médio', sonoMedio, sonoMedio!='—'?'var(--accent)':'var(--muted)')}
-  `);
-
-  // FORÇA
-  if (progressoForca.length) {
-    html += card('💪 Análise de Força', `
-      ${linha('Exercícios subindo carga', forcaSubindo+'', 'var(--accent)')}
-      ${linha('Exercícios estáveis', forcaEstavel+'', 'var(--blue)')}
-      ${linha('Exercícios caindo', forcaCaindo+'', forcaCaindo>0?'var(--red)':'var(--muted)')}
-      ${forcaCaindo > forcaSubindo ? alertBox('⚠️ Mais exercícios caindo do que subindo. Sinal de déficit muito agressivo ou recuperação insuficiente. Revise proteína e calorias.','warn') : alertBox('✅ Força sendo preservada no cut. Déficit bem calibrado.','ok')}
-    `);
-  }
-
-  // VOLUME MEV/MAV/MRV
-  if (Object.keys(muscSetsRel).length) {
-    let volHtml = '';
-    const insuficientes=[], otimos=[], excessivos=[];
-    Object.entries(muscSetsRel).forEach(([m,totalS])=>{
-      const setsSem=Math.round(totalS/semanas);
-      const f=FAIXAS2[m];
-      if(!f) return;
-      if(setsSem<f.mev) insuficientes.push(m);
-      else if(setsSem>f.mrv) excessivos.push(m);
-      else otimos.push(m);
-      const cor=setsSem<f.mev?'var(--red)':setsSem<=f.mav?'var(--blue)':setsSem<=f.mrv?'var(--accent)':'var(--red)';
-      const label=setsSem<f.mev?'Insuficiente':setsSem<=f.mav?'Low Volume':setsSem<=f.mrv?'High Volume':'Overreaching';
-      volHtml+=linha(m, `${setsSem} sets/sem — ${label}`, cor);
-    });
-    html += card('📊 Volume por Músculo (MEV/MAV/MRV)', volHtml +
-      (insuficientes.length?alertBox(`⚠️ Volume insuficiente: ${insuficientes.join(', ')}. Abaixo do MEV — sem estímulo real de crescimento.`,'warn'):'') +
-      (excessivos.length?alertBox(`🔴 Overreaching: ${excessivos.join(', ')}. Volume acima do MRV — risco de overtraining.`,'warn'):'') +
-      (insuficientes.length===0&&excessivos.length===0?alertBox('✅ Todos os grupos musculares dentro das faixas MEV–MRV.','ok'):'')
-    );
-  }
-
-  // BIOIMPEDÂNCIA
-  html += card('🔬 Bioimpedância — Baseline Nov/2025', `
-    ${linha('Peso', '71,5kg')}
-    ${linha('Gordura corporal', '31,1% (22,2kg)', 'var(--red)')}
-    ${linha('Massa magra', '45,1kg', 'var(--blue)')}
-    ${linha('Músculo (SMM)', '29,0kg', 'var(--accent)')}
-    ${linha('TMB', '1.679 kcal/dia')}
-    ${linha('Gordura visceral', 'Nível 9')}
-    <div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:var(--r);font-size:12px;color:var(--muted)">
-      📅 Próxima bioimp: <strong style="color:var(--accent)">05–10/Mar/2026</strong><br>
-      Meta: reduzir gordura de 22,2kg mantendo SMM ≥ 28kg
-    </div>
-  `);
-
-  // DIETA
-  html += card('🍽️ Dieta — Metas Atuais', `
-    ${linha('Calorias alvo', '1.350 kcal/dia')}
-    ${linha('Proteína alvo', '134g/dia (~2g/kg)')}
-    ${linha('Estratégia', 'Cut agressivo + alto teor proteico')}
-    ${linha('Déficit estimado', '~330 kcal/dia abaixo da TMB', 'var(--red)')}
-    ${alertBox('⚠️ Déficit abaixo da TMB (1.679 kcal). Monitorar força e massa muscular de perto. Se 1RM cair em 2+ exercícios, considere subir para 1.500 kcal.','warn')}
-  `);
-
-  el.innerHTML = html;
-  document.getElementById('modal-rel').style.display='block';
-}
-
-function fecharRelatorio() {
-  document.getElementById('modal-rel').style.display='none';
-}
-
-// =====================================================
-// TOAST
-// =====================================================
-let toastTimer;
-function toast(msg,err=false){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.className='toast show'+(err?' err':'');
-  clearTimeout(toastTimer); toastTimer=setTimeout(()=>{el.className='toast';},3500);
-}
-
-document.getElementById('btn-add-livre').addEventListener('click', addExercicioLivre);
-document.getElementById('btn-save').addEventListener('click', salvarTreino);
-document.getElementById('btn-relatorio').addEventListener('click', gerarRelatorio);
-init();
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 </script>
+
 </body>
 </html>
-
